@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Concesionaria.Api/Concesionaria.Api.csproj" />
+  <Project Path="Concesionaria.Application/Concesionaria.Application.csproj" />
+  <Project Path="Concesionaria.Domain/Concesionaria.Domain.csproj" />
+  <Project Path="Concesionaria.Infrastructure/Concesionaria.Infrastructure.csproj" />
+</Solution>
