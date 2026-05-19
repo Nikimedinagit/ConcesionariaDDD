@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@source "./src/**/*.{js,jsx,ts,tsx}";
+
+:root {
+  /* Fondo general gris clarito corporativo para las vistas */
+  --background: 210 20% 98%; 
+  --foreground: 222 47% 11%;
+  
+  --card: 0 0% 100%; 
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  
+  /* Color del Nav por defecto */
+  --nav-bg: 224 100% 26%; 
+  --nav-foreground: 0 0% 100%;
+  
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222 47% 11%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --radius: 0.5rem;
+}
+
+/* 12 TEMAS RENOVADOS CON COLORES BIEN FUERTES Y VIVOS */
+[data-theme="ford-blue"]        { --nav-bg: 223 100% 33%; --nav-foreground: 0 0% 100%; }
+[data-theme="ferrari-red"]       { --nav-bg: 356 91% 46%;  --nav-foreground: 0 0% 100%; }
+[data-theme="mclaren-orange"]   { --nav-bg: 14 100% 50%;  --nav-foreground: 0 0% 100%; }
+[data-theme="amg-green"]       { --nav-bg: 143 100% 35%; --nav-foreground: 0 0% 100%; }
+[data-theme="lamborghini-yellow"]{ --nav-bg: 54 98% 50%;   --nav-foreground: 222 47% 11%; } 
+[data-theme="porsche-gold"]     { --nav-bg: 35 77% 50%;   --nav-foreground: 0 0% 100%; }
+[data-theme="bmw-m"]            { --nav-bg: 202 100% 46%; --nav-foreground: 0 0% 100%; }
+[data-theme="premium-purple"]   { --nav-bg: 262 89% 60%;  --nav-foreground: 0 0% 100%; }
+[data-theme="bugatti-cyan"]     { --nav-bg: 213 100% 48%; --nav-foreground: 0 0% 100%; }
+[data-theme="f1-pink"]          { --nav-bg: 330 81% 60%;  --nav-foreground: 0 0% 100%; }
+[data-theme="carbon-dark"]      { --nav-bg: 222 47% 11%;  --nav-foreground: 0 0% 100%; }
+[data-theme="slate-corporate"]  { --nav-bg: 215 25% 27%;  --nav-foreground: 0 0% 100%; }
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+}
+
+/* Anula de raíz cualquier borde o sombra negra/gris nativa de Radix Popper */
+[data-radix-popper-content-wrapper], 
+.border,
+[data-side] {
+  border: none !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
