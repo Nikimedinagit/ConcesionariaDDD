@@ -40,16 +40,36 @@
 [data-theme="carbon-dark"]      { --nav-bg: 222 47% 11%;  --nav-foreground: 0 0% 100%; }
 [data-theme="slate-corporate"]  { --nav-bg: 215 25% 27%;  --nav-foreground: 0 0% 100%; }
 
+
+/* BG PARA EL BODY GENERAL */
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   min-height: 100vh;
 }
 
-/* Anula de raíz cualquier borde o sombra negra/gris nativa de Radix Popper */
+/* ANULDA BORDER A LO DROOP */
 [data-radix-popper-content-wrapper], 
 .border,
 [data-side] {
   border: none !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
+
+
+/* CONFIGURACIÓN DE LA SCROLLBAR */
+::-webkit-scrollbar {
+  width: 5px; 
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--nav-bg)); 
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--nav-bg) / 0.5); 
+  border-radius: 5px;
+  border: 1px solid hsl(var(--nav-bg)); 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--nav-bg) / 0.8); 
 }

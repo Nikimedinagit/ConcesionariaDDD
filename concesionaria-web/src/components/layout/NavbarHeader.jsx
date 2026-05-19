@@ -16,7 +16,7 @@ import {
   Palette,
   LogOut,
 } from "lucide-react";
-import { THEMES } from "../constants/themes";
+import { THEMES } from "../../constants/themes";
 
 export function NavbarHeader() {
   const [currentTheme, setCurrentTheme] = useState("slate");
@@ -236,7 +236,7 @@ export function NavbarHeader() {
                 onClick={() =>
                   setOpenGroup(openGroup === group.title ? null : group.title)
                 }
-                className="w-full flex items-center justify-between p-3 text-sm font-bold text-white/70 uppercase tracking-wider hover:bg-white/5 transition-colors"
+                className="w-full flex items-center justify-between p-3 text-sm font-bold text-white/70 tracking-wider hover:bg-white/5 transition-colors"
               >
                 {group.title}
                 <ChevronDown
