@@ -8,6 +8,7 @@ public class Localidad : BaseEntity<Guid>, ISoftDelete
     public string Nombre { get; private set; }
     public string CodigoPostal { get; private set; }
     public bool Eliminado { get; set; } = false;
+    public Provincia Provincia { get; private set; }
 
     public Localidad(Guid provinciaId, string nombre, string codigoPostal)
     {

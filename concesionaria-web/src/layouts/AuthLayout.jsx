@@ -2,8 +2,8 @@ import { Outlet } from "react-router-dom"
 
 export function AuthLayout() {
   return (
-    <div className="min-h-screen overflow-hidden bg-white">
-      <div className="mx-auto grid h-screen box-border max-w-[1400px] items-center justify-center gap-6 px-4 md:px-8 lg:grid-cols-[1.2fr_1fr]">
+    <div className="min-h-screen overflow-x-hidden bg-white">
+      <div className="mx-auto grid min-h-screen box-border max-w-[1400px] items-center justify-center gap-6 px-4 md:px-8 lg:grid-cols-[1.2fr_1fr]">
         <div className="hidden h-full min-h-0 lg:flex items-center justify-start">
           <div className="w-full max-w-xl">
             <img

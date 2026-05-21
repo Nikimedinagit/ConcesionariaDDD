@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 
 import {
   ArrowRight,
@@ -7,12 +8,47 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-
 import { Input } from "@/components/ui/input"
+import { loginRequest } from "@/services/authService"
+import { loginSchema } from "@/validations/authSchemas"
 
 export function LoginForm() {
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const loginValid = loginSchema.safeParse({ email, password }).success
+
+ async function handleSubmit(event) {
+  event.preventDefault()
+  setError("")
+
+  if (!loginValid) {
+    setError("Completa con un email y contraseña válidos.")
+    return
+  }
+
+  setIsSubmitting(true)
+
+  try {
+    const response = await loginRequest({ email, password })
+    
+    if (response.token) {
+      localStorage.setItem("token", response.token)
+    }
+
+    navigate("/layout")
+  } catch (err) {
+    const message = err?.response?.data?.message ?? err?.message ?? "Error al iniciar sesión."
+    setError(message)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-7 shadow-sm w-full max-w-[1080px] mx-auto max-h-[calc(100vh-20vh)] overflow-hidden">
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-7 shadow-sm w-full max-w-[1080px] mx-auto">
       <div className="mb-5">
         <p className="text-sm uppercase tracking-[0.24em] text-slate-500">
           Acceso
@@ -28,7 +64,13 @@ export function LoginForm() {
       </div>
 
       {/* FORM */}
-      <div className="space-y-2.5">
+      {error ? (
+        <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {error}
+        </div>
+      ) : null}
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
 
         {/* EMAIL */}
         <div className="space-y-1">
@@ -41,8 +83,10 @@ export function LoginForm() {
 
             <Input
               type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               placeholder="tuemail@empresa.com"
-              className="h-10 rounded-xl border border-slate-200 bg-white pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-slate-300"
+              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-slate-300"
             />
           </div>
         </div>
@@ -68,13 +112,15 @@ export function LoginForm() {
 
             <Input
               type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
               className="
-                h-10
+                h-[44px]
                 rounded-xl
                 border border-slate-200
                 bg-white
-                pl-10
+                pl-11
                 text-slate-900
                 placeholder:text-slate-400
                 focus-visible:ring-2
@@ -86,25 +132,12 @@ export function LoginForm() {
 
         {/* BUTTON */}
         <Button
-          className="
-            w-full
-            h-10
-            rounded-2xl
-            font-semibold
-            text-[14px]
-            mt-1
-            text-white
-            cursor-pointer
-            hover:shadow-lg
-            transition-shadow
-          "
-          style={{
-            background:
-              "hsl(var(--nav-bg))",
-          }}
+          type="submit"
+          disabled={!loginValid || isSubmitting}
+          className="w-full h-[44px] rounded-2xl font-semibold text-[14px] mt-1 text-white cursor-pointer hover:shadow-lg transition-shadow disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ background: "hsl(var(--nav-bg))" }}
         >
-          Ingresar
-
+          {isSubmitting ? "Ingresando..." : "Ingresar"}
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
 
@@ -135,7 +168,7 @@ export function LoginForm() {
             Crear cuenta
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

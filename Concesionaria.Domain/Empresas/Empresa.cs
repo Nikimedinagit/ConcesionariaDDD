@@ -23,4 +23,9 @@ public class Empresa : BaseEntity<Guid>, ISoftDelete
         NombreFantasia = nombreFantasia;
         MonedaPrincipal = moneda;
     }
+
+    public static Empresa Crear(string razonSocial, string cuit, string nombreFantasia, Moneda moneda)
+    {
+        return new Empresa(razonSocial, cuit, nombreFantasia, moneda);
+    }
 }

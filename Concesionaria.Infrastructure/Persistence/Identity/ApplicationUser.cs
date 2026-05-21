@@ -7,9 +7,9 @@ public class ApplicationUser : IdentityUser
     // Campos de Negocio
     public Guid EmpresaId { get; private set; }
     public string NombreCompleto { get; private set; } = string.Empty;
+    public string? Telefono { get; private set; }
     public Guid? RolId { get; private set; }
 
-    // Constructor vacío para EF
     protected ApplicationUser() { }
 
     // Constructor para crear el usuario
