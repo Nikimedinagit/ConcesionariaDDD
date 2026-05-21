@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input"
 
 export function LoginForm() {
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-5 sm:p-7 shadow-sm w-full max-w-[900px] mx-auto max-h-[calc(100vh-2rem)] overflow-hidden">
-      <div className="mb-8">
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-7 shadow-sm w-full max-w-[1080px] mx-auto max-h-[calc(100vh-20vh)] overflow-hidden">
+      <div className="mb-5">
         <p className="text-sm uppercase tracking-[0.24em] text-slate-500">
           Acceso
         </p>
@@ -28,7 +28,7 @@ export function LoginForm() {
       </div>
 
       {/* FORM */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
 
         {/* EMAIL */}
         <div className="space-y-1">
@@ -94,6 +94,9 @@ export function LoginForm() {
             text-[14px]
             mt-1
             text-white
+            cursor-pointer
+            hover:shadow-lg
+            transition-shadow
           "
           style={{
             background:
@@ -118,13 +121,16 @@ export function LoginForm() {
             text-sm
           "
         >
-          <button className="text-slate-500 hover:text-slate-900 transition-colors">
+            <Link
+            to="/recuperar-acceso"
+            className="text-slate-500 hover:text-slate-900 transition-colors underline-offset-4 hover:underline"
+          >
             Recuperar acceso
-          </button>
+          </Link>
 
           <Link
             to="/register"
-            className="font-semibold text-slate-900"
+            className="font-semibold text-slate-900 hover:text-slate-700 transition-colors underline-offset-4 hover:underline"
           >
             Crear cuenta
           </Link>

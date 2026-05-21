@@ -9,6 +9,7 @@ import { AuthLayout } from "@/layouts/AuthLayout"
 
 import LoginPage from "@/pages/Auth/LoginPage"
 import RegisterPage from "@/pages/Auth/RegisterPage"
+import RecoverAccessPage from "@/pages/Auth/RecoverAccessPage"
 
 export default function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function AppRoutes() {
         <Route element={<AuthLayout />}>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/recuperar-acceso" element={<RecoverAccessPage />} />
         </Route>
 
         {/* SISTEMA */}

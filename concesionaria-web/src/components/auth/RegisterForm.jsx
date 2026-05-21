@@ -37,6 +37,7 @@ export function RegisterForm() {
     nombreCompleto: "",
     email: "",
     password: "",
+    confirmPassword: "",
     aceptoTerminos: false,
   })
   const [localidadSearch, setLocalidadSearch] = useState("")
@@ -61,8 +62,8 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="w-full max-w-full rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-sm lg:max-w-[980px] mx-auto lg:max-h-[calc(100vh-3rem)] lg:overflow-hidden min-h-0">
-      <div className="mb-6">
+    <div className="w-full max-w-full rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-sm lg:max-w-[1080px] mx-auto max-h-[calc(100vh-20vh)] overflow-hidden min-h-0">
+      <div className="mb-5">
         <p className="text-sm uppercase tracking-[0.24em] text-slate-500">
           Registro
         </p>
@@ -76,11 +77,11 @@ export function RegisterForm() {
         </p>
       </div>
 
-      <div className="mb-6 flex flex-wrap justify-center gap-2 text-sm font-semibold text-slate-500">
+      <div className="mb-5 flex flex-wrap justify-center gap-2 text-sm font-semibold text-slate-500">
         {stepLabels.map((label, index) => (
           <span
             key={label}
-            className={`rounded-full px-4 py-2 transition ${
+            className={`rounded-full px-3 py-1.5 transition ${
               step === index + 1 ? "bg-slate-900 text-white" : "bg-slate-100"
             }`}
           >
@@ -89,7 +90,7 @@ export function RegisterForm() {
         ))}
       </div>
 
-      <form className="space-y-4" onSubmit={step === 2 ? handleSubmit : handleNext}>
+      <form className="space-y-3" onSubmit={step === 2 ? handleSubmit : handleNext}>
         {step === 1 && (
           <div className="space-y-3">
             <label className="block text-sm font-medium text-slate-700">
@@ -200,46 +201,68 @@ export function RegisterForm() {
         )}
 
         {step === 2 && (
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-slate-700">
-              Nombre Completo
-              <div className="relative mt-1">
-                <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <Input
-                  value={form.nombreCompleto}
-                  onChange={(event) => updateField("nombreCompleto", event.target.value)}
-                  placeholder="Ej. Juan Pérez"
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                />
-              </div>
-            </label>
+          <div className="space-y-4">
+            <div className="grid gap-2 sm:grid-cols-2">
+              <label className="block text-sm font-medium text-slate-700">
+                Nombre Completo
+                <div className="relative mt-1">
+                  <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    value={form.nombreCompleto}
+                    onChange={(event) => updateField("nombreCompleto", event.target.value)}
+                    placeholder="Ej. Juan Pérez"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+              </label>
 
-            <label className="block text-sm font-medium text-slate-700">
-              Correo Electrónico
-              <div className="relative mt-1">
-                <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <Input
-                  value={form.email}
-                  onChange={(event) => updateField("email", event.target.value)}
-                  placeholder="correo@empresa.com"
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                />
-              </div>
-            </label>
+              <label className="block text-sm font-medium text-slate-700">
+                Email
+                <div className="relative mt-1">
+                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    value={form.email}
+                    onChange={(event) => updateField("email", event.target.value)}
+                    placeholder="correo@empresa.com"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+              </label>
+            </div>
 
-            <label className="block text-sm font-medium text-slate-700">
-              Contraseña
-              <div className="relative mt-1">
-                <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <Input
-                  type="password"
-                  value={form.password}
-                  onChange={(event) => updateField("password", event.target.value)}
-                  placeholder="••••••••"
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                />
-              </div>
-            </label>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <label className="block text-sm font-medium text-slate-700">
+                Contraseña
+                <div className="relative mt-1">
+                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={form.password}
+                    onChange={(event) => updateField("password", event.target.value)}
+                    placeholder="••••••••"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+              </label>
+
+              <label className="block text-sm font-medium text-slate-700">
+                Confirmar contraseña
+                <div className="relative mt-1">
+                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={form.confirmPassword}
+                    onChange={(event) => updateField("confirmPassword", event.target.value)}
+                    placeholder="••••••••"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+              </label>
+            </div>
+
+            {form.confirmPassword && form.password !== form.confirmPassword ? (
+              <p className="text-sm text-rose-500">Las contraseñas no coinciden.</p>
+            ) : null}
 
             <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-700">
               <input
@@ -254,23 +277,23 @@ export function RegisterForm() {
         )}
 
         {step === 3 && (
-          <div className="space-y-6 rounded-3xl border border-slate-200 bg-slate-50 p-8 text-slate-700">
+          <div className="space-y-5 text-slate-700">
             <div className="flex items-center gap-3 text-slate-900">
               <span className="inline-flex h-3 w-3 rounded-full bg-slate-900" />
               <h3 className="text-lg font-semibold">¡Solicitud recibida!</h3>
             </div>
 
-            <p>
+            <p className="text-sm leading-relaxed text-slate-600">
               Gracias por registrarte. Ya recibimos los datos de tu empresa y tu usuario. Te avisaremos cuando el pago sea recibido o si necesitamos información adicional.
             </p>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl bg-white p-4 text-sm text-slate-600">
+            <div className="grid gap-3 sm:grid-cols-2 text-sm text-slate-600">
+              <div>
                 <p className="font-semibold text-slate-900">Empresa</p>
                 <p>{form.razonSocial || "-"}</p>
                 <p>{form.nombreFantasia || "-"}</p>
               </div>
-              <div className="rounded-2xl bg-white p-4 text-sm text-slate-600">
+              <div>
                 <p className="font-semibold text-slate-900">Contacto</p>
                 <p>{form.nombreCompleto || "-"}</p>
                 <p>{form.email || "-"}</p>
@@ -292,7 +315,7 @@ export function RegisterForm() {
             {step > 1 ? (
               <button
                 onClick={handleBack}
-                className="inline-flex h-10 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+                className="inline-flex h-10 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 cursor-pointer hover:shadow-sm transition-shadow"
               >
                 Volver
               </button>
@@ -300,7 +323,7 @@ export function RegisterForm() {
 
             <Button
               type="submit"
-              className="h-10 rounded-2xl px-6 font-semibold text-white"
+              className="h-10 rounded-2xl px-6 font-semibold text-white cursor-pointer hover:shadow-lg transition-shadow"
               style={{ background: "hsl(var(--nav-bg))" }}
             >
               {step === 1 ? "Siguiente" : "Crear"}
@@ -311,7 +334,7 @@ export function RegisterForm() {
 
         {step !== 3 && (
           <p className="text-center text-sm text-slate-500">
-            ¿Ya tenés cuenta? <Link to="/" className="font-semibold text-slate-900">Ingresar</Link>
+            ¿Ya tenés cuenta? <Link to="/" className="font-semibold text-slate-900 hover:text-slate-700 transition-colors underline-offset-4 hover:underline">Ingresar</Link>
           </p>
         )}
       </form>
