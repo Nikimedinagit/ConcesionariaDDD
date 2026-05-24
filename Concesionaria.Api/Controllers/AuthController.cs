@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Empresas.Enums;
+using Concesionaria.Domain.Identity;
 using Concesionaria.Infrastructure.Persistence;
-using Concesionaria.Infrastructure.Persistence.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +56,13 @@ public class AuthController : ControllerBase
             _ => throw new InvalidOperationException("Moneda inválida."),
         };
 
-        var empresa = Empresa.Crear(request.RazonSocial.ToUpper().Trim(), request.Cuit, request.NombreFantasia.ToUpper().Trim(), moneda);
+        var localidad = await _context.Localidades.FindAsync(request.LocalidadId);
+        if (localidad is null)
+        {
+            return BadRequest(new { message = "La localidad seleccionada no es válida." });
+        }
+
+        var empresa = Empresa.Crear(request.RazonSocial.ToUpper().Trim(), request.Cuit, request.NombreFantasia.ToUpper().Trim(), moneda, localidad);
         _context.Empresas.Add(empresa);
 
         var user = new ApplicationUser(empresa.Id, request.Email.ToLower().Trim(), request.NombreCompleto.ToUpper().Trim())

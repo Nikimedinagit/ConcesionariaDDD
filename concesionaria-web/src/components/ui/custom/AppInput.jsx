@@ -1,0 +1,31 @@
+import { Input } from "@/components/ui/input";
+
+export function AppInput({
+  label,
+  icon: Icon,
+  error, 
+  className,
+  ...props 
+}) {
+  return (
+    <div className={`space-y-1.5 ${className}`}>
+      {label && <label className="text-sm font-medium text-slate-700">{label}</label>}
+      <div className="relative">
+        {Icon && (
+          <Icon className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+        )}
+        <Input
+          {...props}
+          className={`h-[40px] w-full rounded-lg border border-slate-200 bg-white 
+            ${Icon ? "pl-10" : "pl-4"} pr-4 
+            focus-visible:ring-1 focus-visible:ring-slate-900 
+            ${props.disabled ? "bg-slate-50 text-slate-500 cursor-not-allowed" : ""}
+            ${error ? "border-red-500 focus-visible:ring-red-500" : ""}
+            
+          `}
+        />
+      </div>
+      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+    </div>
+  );
+}

@@ -1,0 +1,69 @@
+using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Identity;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Concesionaria.Application.Perfil.Queries.GetPerfil;
+
+public class GetPerfilQueryHandler
+    : IRequestHandler<GetPerfilQuery, PerfilDto>
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+
+private readonly ICurrentUserService _currentUserService;
+    public GetPerfilQueryHandler(
+        UserManager<ApplicationUser> userManager,
+        ICurrentUserService currentUserService)
+    {
+        _userManager = userManager;
+        _currentUserService = currentUserService;
+    }
+
+    public async Task<PerfilDto> Handle(
+        GetPerfilQuery request,
+        CancellationToken cancellationToken)
+    {
+        var userId = _currentUserService.UserId;
+
+        if (userId == null)
+            throw new Exception("Usuario no autenticado");
+
+        var usuario = await _userManager.Users
+            .Include(x => x.Empresa)
+            .ThenInclude(x => x.Localidad)
+            .FirstOrDefaultAsync(
+                x => x.Id == userId,
+                cancellationToken);
+
+        if (usuario == null)
+            throw new Exception("Usuario no encontrado");
+
+        return new PerfilDto
+        {
+            EmpresaId = usuario.Empresa.Id,
+
+            RazonSocial = usuario.Empresa.RazonSocial,
+
+            Cuit = usuario.Empresa.Cuit,
+
+            NombreFantasia = usuario.Empresa.NombreFantasia,
+
+            Moneda = usuario.Empresa.MonedaPrincipal.ToString(),
+
+            LocalidadId = usuario.Empresa.LocalidadId,
+
+            Activa = usuario.Empresa.Activa,
+
+            UsuarioId = usuario.Id,
+
+            NombreCompleto = usuario.NombreCompleto,
+
+            Email = usuario.Email ?? "",
+
+            Telefono = usuario.Telefono,
+
+            AvatarUrl = usuario.AvatarUrl
+        };
+    }
+}

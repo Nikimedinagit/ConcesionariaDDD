@@ -1,4 +1,4 @@
-import { PerfilForm } from "@/components/profile/PerfilForm";
+import { PerfilForm } from "@/components/perfil/PerfilForm";
 
 export function PerfilPage() {
   return (

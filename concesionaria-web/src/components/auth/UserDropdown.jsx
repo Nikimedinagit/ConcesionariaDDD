@@ -20,7 +20,6 @@ export function UserDropdown() {
   if (token) {
     try {
       const decoded = jwtDecode(token);
-      console.log("Qué hay en el token:", decoded);
       userData = {
         name: decoded.unique_name || decoded.name || "Usuario",
         email: decoded.email || decoded.emailaddress || "",

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Concesionaria.Application\Concesionaria.Application.csproj" />
+    <ProjectReference Include="..\Concesionaria.Domain\Concesionaria.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

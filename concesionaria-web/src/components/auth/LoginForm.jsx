@@ -33,19 +33,35 @@ export function LoginForm() {
   setIsSubmitting(true)
 
   try {
-    const response = await loginRequest({ email, password })
-    
-    if (response.token) {
-      localStorage.setItem("token", response.token)
-    }
+  const response = await loginRequest({
+    email,
+    password
+  });
 
-    navigate("/layout")
-  } catch (err) {
-    const message = err?.response?.data?.message ?? err?.message ?? "Error al iniciar sesión."
-    setError(message)
-  } finally {
-    setIsSubmitting(false)
+  const token = response.token;
+
+  if (!token) {
+    setError("No se recibió el token.");
+    return;
   }
+
+  localStorage.setItem("token", token);
+
+  navigate("/layout");
+
+} catch (err) {
+  console.error(err);
+
+  const message =
+    err?.response?.data?.message ??
+    err?.message ??
+    "Error al iniciar sesión.";
+
+  setError(message);
+
+} finally {
+  setIsSubmitting(false);
+}
 }
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-7 shadow-sm w-full max-w-[1080px] mx-auto">

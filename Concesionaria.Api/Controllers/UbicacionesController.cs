@@ -15,12 +15,6 @@ public class UbicacionesController : ControllerBase
         _service = service;
     }
 
-    // GET: api/ubicaciones/provincias
-    [HttpGet("provincias")]
-    public async Task<ActionResult<IEnumerable<ProvinciaDto>>> GetProvincias()
-    {
-        return Ok(await _service.GetAllProvinciasAsync());
-    }
 
     // GET: api/ubicaciones/localidades
     [HttpGet("localidades")] 
