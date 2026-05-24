@@ -36,24 +36,6 @@ builder.Services
 
             ClockSkew = TimeSpan.Zero
         };
-
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine("JWT ERROR:");
-                Console.WriteLine(context.Exception);
-
-                return Task.CompletedTask;
-            },
-
-            OnTokenValidated = context =>
-            {
-                Console.WriteLine("TOKEN VALIDADO");
-
-                return Task.CompletedTask;
-            }
-        };
     });
 
 builder.Services.AddCors(options =>
@@ -63,8 +45,7 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:5173",
-                "https://localhost:5173",
-                "http://127.0.0.1:5173"
+                "https://localhost:5173"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
