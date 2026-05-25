@@ -35,7 +35,7 @@ public class Empresa : BaseEntity<Guid>, ISoftDelete
 
     public void ActualizarNombreFantasia(string nombreFantasia)
     {
-        NombreFantasia = nombreFantasia;
+        NombreFantasia = nombreFantasia.ToUpper().Trim();
     }
 
     public void ActualizarMoneda(Moneda moneda)

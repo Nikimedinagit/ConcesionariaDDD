@@ -63,6 +63,6 @@ const show = (type, message, options = {}) => {
 export const toastService = {
   success: (message, options) => show("success", message, options),
   error: (message, options) => show("error", message, options),
-  warning: (message, options) => show("loading", message, options), // fallback visual
+  warning: (message, options) => show("loading", message, options),
   info: (message, options) => show("blank", message, options),
 };

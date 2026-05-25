@@ -4,6 +4,7 @@ public record PerfilDto(
     string Cuit,
     string NombreFantasia,
     Guid LocalidadId,
+    string Telefono,
     string Moneda,
     string Estado,
     string NombreCompleto,

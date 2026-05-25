@@ -20,6 +20,7 @@ export function PerfilEmpresaSection({
   localidades,
   onSave,
   saving,
+  errors,
 }) {
   return (
     <Section
@@ -37,13 +38,18 @@ export function PerfilEmpresaSection({
           />
         </div>
 
-        <div className="lg:col-span-2">
+       <div className="lg:col-span-2 space-y-1"> 
           <AppInput
             label="Nombre Fantasía"
-            value={form.nombreFantasia}
+            value={form.nombreFantasia || ""}
             onChange={(e) => updateField("nombreFantasia", e.target.value)}
             icon={Tag}
           />
+          {errors?.nombreFantasia && (
+            <p className="text-red-500 text-sm font-medium mt-1">
+              {errors.nombreFantasia[0]}
+            </p>
+          )}
         </div>
 
         <AppInput label="CUIT" value={form.cuit} disabled icon={Hash} />
@@ -103,7 +109,7 @@ export function PerfilEmpresaSection({
           disabled={saving}
           className="h-[40px] rounded-lg bg-[hsl(var(--nav-bg))] text-white font-bold px-8"
         >
-          {saving ? "Guardando..." : "Guardar Empresa"}
+          {saving ? "Guardando..." : "Actualizar Empresa"}
         </Button>
       </div>
     </Section>

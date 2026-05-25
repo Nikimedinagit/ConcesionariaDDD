@@ -22,7 +22,7 @@ public class PerfilDto
 
     public string UsuarioId { get; set; } = string.Empty;
 
-    public string NombreCompleto { get; set; } = string.Empty;
+    public string? NombreCompleto { get; set; }
 
     public string Email { get; set; } = string.Empty;
 

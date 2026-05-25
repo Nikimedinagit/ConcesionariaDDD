@@ -40,10 +40,27 @@ public class PerfilController : ControllerBase
 
     [HttpPut("usuario")]
     public async Task<IActionResult> ActualizarUsuario(
-        ActualizarUsuarioCommand command)
+    ActualizarUsuarioCommand command)
     {
-        var result = await _mediator.Send(command);
+        var token = await _mediator.Send(command);
 
-        return Ok(result);
+        return Ok(new
+        {
+            token
+        });
+    }
+
+    [HttpPost("seguridad")] 
+    public async Task<IActionResult> ActualizarContraseña(ActualizarContraseñaCommand command)
+    {
+        try
+        {
+            await _mediator.Send(command);
+            return Ok(new { message = "Contraseña actualizada exitosamente." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

@@ -33,7 +33,8 @@ public class GetPerfilQueryHandler
             Estado: usuario.Empresa.Activa ? "Activo" : "Suspendido",
             NombreCompleto: usuario.NombreCompleto,
             Email: usuario.Email,
-            AvatarUrl: usuario.AvatarUrl ?? "/avatars/default.png"
+            AvatarUrl: usuario.AvatarUrl ?? "/avatars/default.png",
+            Telefono: usuario.Telefono
         );
     }
 }

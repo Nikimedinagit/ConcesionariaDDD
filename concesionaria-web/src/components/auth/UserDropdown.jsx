@@ -10,19 +10,23 @@ import {
 import { User, ChevronDown, Settings, Palette } from "lucide-react";
 import { THEMES } from "../../constants/themes";
 import { LogoutButton } from "./LogoutButton";
-
+import { useAuth } from "@/context/AuthContext";
 
 export function UserDropdown() {
-  // Lógica para obtener el usuario
+  const { user } = useAuth();
+ if (!user) return null;
+ 
   const token = localStorage.getItem("token");
-  let userData = { name: "Invitado", email: "" };
+  let userData = { name: "Invitado", email: "", avatarURL: "" };
 
   if (token) {
     try {
       const decoded = jwtDecode(token);
+
       userData = {
-        name: decoded.unique_name || decoded.name || "Usuario",
-        email: decoded.email || decoded.emailaddress || "",
+        name: decoded.nombre || "Usuario",
+        email: decoded.email || "",
+        avatarURL: decoded.avatarUrl || "",
       };
     } catch (e) {
       console.error("Error al decodificar token", e);
@@ -36,14 +40,14 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 md:px-4 h-10 text-sm font-medium text-white hover:bg-white/15 transition-colors cursor-pointer outline-none">
-        <div className="h-6 w-6 rounded-full bg-white/20 overflow-hidden flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full bg-white/20 overflow-hidden flex items-center justify-center">
           <img
-            src="/logo-solo.png"
+            src={user.avatarURL || "/logo-solo.png"}
             alt="Perfil"
             className="h-full w-full object-cover"
           />
         </div>
-        <span className="hidden sm:inline">{userData.name}</span>
+        <span className="hidden sm:inline">{user.name}</span>
         <ChevronDown className="h-3.5 w-3.5 opacity-75" />
       </DropdownMenuTrigger>
 

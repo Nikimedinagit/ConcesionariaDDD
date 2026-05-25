@@ -4,8 +4,9 @@ using System.Text;
 using Concesionaria.Domain.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Concesionaria.Application.Common.Interfaces;
 
-public class TokenService
+public class TokenService : ITokenService
 {
     private readonly SymmetricSecurityKey _key;
 
@@ -22,7 +23,8 @@ public class TokenService
         {
             new Claim("nameid", user.Id),
             new Claim("email", user.Email!),
-            new Claim("name", user.NombreCompleto)
+            new Claim("nombre", user.NombreCompleto),
+            new Claim("avatarUrl", user.AvatarUrl ?? "")
         };
 
         var creds = new SigningCredentials(

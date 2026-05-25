@@ -26,7 +26,7 @@ public class ApplicationUser : IdentityUser
 
     // Métodos de negocio (mantienes tu lógica)
     public void AsignarRol(Guid rolId) => RolId = rolId;
-    public void ActualizarNombre(string nombre) => NombreCompleto = nombre;
+    public void ActualizarNombre(string nombre) => NombreCompleto = nombre.ToUpper().Trim();
     public void ActualizarAvatar(string url) => AvatarUrl = url;
     public void ActualizarTelefono(string telefono)
         => Telefono = telefono;

@@ -16,18 +16,30 @@ import { PerfilSeguridadSection } from "./SeguridadForm";
 
 import { PerfilAvatarSection } from "./AvatarForm";
 
+import { RecuperacionForm } from "./RecuperacionForm";
+
 import { toastService } from "@/services/toastService";
+import { useAuth } from "@/context/AuthContext";
+
+import { passwordSchema } from "@/validations/perfil.validation";
+import { nombreFantasiaSchema } from "@/validations/perfil.validation";
+import { nombreCompletoSchema } from "@/validations/perfil.validation";
+import { telefonoSchema } from "@/validations/perfil.validation";
 
 export function PerfilForm() {
+  const { updateUserData } = useAuth();
+
   const { perfil, loading } = usePerfil();
 
   const [localidades, setLocalidades] = useState([]);
-
   const [savingEmpresa, setSavingEmpresa] = useState(false);
-
   const [savingUsuario, setSavingUsuario] = useState(false);
-
   const [savingPassword, setSavingPassword] = useState(false);
+
+  const [passwordErrors, setPasswordErrors] = useState({});
+  const [empresaErrors, setEmpresaErrors] = useState({});
+  const [usuarioErrors, setUsuarioErrors] = useState({});
+  const [telefonoErrors, setTelefonoErrors] = useState({});
 
   const [form, setForm] = useState({
     razonSocial: "",
@@ -74,12 +86,18 @@ export function PerfilForm() {
     }));
   };
 
-  // =========================
-  // EMPRESA
-  // =========================
-
   const handleGuardarEmpresa = async () => {
+    const result = nombreFantasiaSchema.safeParse({
+      nombreFantasia: form.nombreFantasia,
+    });
+
+    if (!result.success) {
+      setEmpresaErrors(result.error.flatten().fieldErrors);
+      return;
+    }
+
     try {
+      setEmpresaErrors({});
       setSavingEmpresa(true);
 
       const payload = {
@@ -92,25 +110,29 @@ export function PerfilForm() {
       await empresaService.updateEmpresa(payload);
 
       toastService.success("¡Éxito!", {
-      description: "La empresa ha sido actualizada correctamente.",
-    });
+        description: "La empresa ha sido actualizada correctamente.",
+      });
     } catch (error) {
       console.error(error);
-
-      toastService.error("Error al guardar", {
-      description: "Ocurrió un problema, intenta nuevamente.",
-    });
+      toastService.error("Error al guardar empresa", {
+        description: "Ocurrió un problema, intenta nuevamente.",
+      });
     } finally {
       setSavingEmpresa(false);
     }
   };
 
-  // =========================
-  // USUARIO
-  // =========================
-
   const handleGuardarUsuario = async () => {
+    const result = nombreCompletoSchema.safeParse({
+      nombreCompleto: form.nombreCompleto,
+    });
+
+    if (!result.success) {
+      setUsuarioErrors(result.error.flatten().fieldErrors);
+      return;
+    }
     try {
+      setUsuarioErrors({});
       setSavingUsuario(true);
 
       const payload = {
@@ -119,50 +141,115 @@ export function PerfilForm() {
         avatarUrl: form.avatar,
       };
 
-      console.log(payload);
+      const response = await usuarioService.updateUsuario(payload);
 
-      await usuarioService.updateUsuario(payload);
+      localStorage.setItem("token", response.token);
+
+      updateUserData();
 
       toastService.success("¡Éxito!", {
-      description: "El usuario ha sido actualizado correctamente.",
-    });
+        description: "El usuario ha sido actualizado correctamente.",
+      });
     } catch (error) {
       console.error(error);
 
       toastService.error("Error al guardar usuario", {
-      description: "Ocurrió un problema, intenta nuevamente.",
-    });
+        description: "Ocurrió un problema, intenta nuevamente.",
+      });
     } finally {
       setSavingUsuario(false);
     }
   };
 
-  // =========================
-  // PASSWORD
-  // =========================
-
-  const handleCambiarPassword = async () => {
+  const handleActualizarAvatar = async (nuevoAvatar) => {
     try {
-      setSavingPassword(true);
-
       const payload = {
-        passwordActual: form.passwordActual,
-        passwordNueva: form.passwordNueva,
+        nombreCompleto: form.nombreCompleto,
+        telefono: form.telefono,
+        avatarUrl: nuevoAvatar,
       };
 
-      console.log(payload);
+      const response = await usuarioService.updateAvatar(payload);
 
-      await usuarioService.cambiarPassword(payload);
+      localStorage.setItem("token", response.token);
+      updateUserData();
 
-      alert("Contraseña actualizada");
-
-      updateField("passwordActual", "");
-
-      updateField("passwordNueva", "");
+      toastService.success("¡Éxito!", {
+        description: "El avatar ha sido actualizado correctamente.",
+      });
     } catch (error) {
       console.error(error);
+      toastService.error("Error al actualizar avatar", {
+        description: "Ocurrió un problema, intenta nuevamente.",
+      });
+    }
+  };
 
-      alert("Error al actualizar contraseña");
+  const handleActualizarRecuperacion = async () => {
+    const result = telefonoSchema.safeParse({ telefono: form.telefono });
+
+    if (!result.success) {
+      setTelefonoErrors(result.error.flatten().fieldErrors);
+      return;
+    }
+
+    try {
+      setSavingUsuario(true);
+      const payload = {
+        nombreCompleto: form.nombreCompleto,
+        telefono: form.telefono,
+        avatarUrl: form.avatar,
+      };
+
+      await usuarioService.updateRecuperacion(payload);
+
+      toastService.success("¡Éxito!", {
+        description: "La recuperación ha sido actualizada correctamente.",
+      });
+    } catch (error) {
+      console.error(error);
+      toastService.error("Error al actualizar recuperación", {
+        description: "Ocurrió un problema, intenta nuevamente.",
+      });
+    } finally {
+      setSavingUsuario(false);
+    }
+  };
+
+  const handleCambiarPassword = async () => {
+    const result = passwordSchema.safeParse({
+      passwordActual: form.passwordActual,
+      passwordNueva: form.passwordNueva,
+    });
+
+    if (!result.success) {
+      setPasswordErrors(result.error.flatten().fieldErrors);
+      return;
+    }
+
+    try {
+      setPasswordErrors({});
+      setSavingPassword(true);
+
+      await usuarioService.updateContraseña({
+        passwordActual: form.passwordActual,
+        passwordNueva: form.passwordNueva,
+      });
+
+      toastService.success("¡Éxito!", {
+        description: "La contraseña ha sido actualizada correctamente.",
+      });
+
+      updateField("passwordActual", "");
+      updateField("passwordNueva", "");
+    } catch (error) {
+      if (error.response?.data?.message === "Contraseña incorrecta.") {
+        setPasswordErrors({ passwordActual: ["Contraseña incorrecta."] });
+      } else {
+        toastService.error("Error al actualizar contraseña", {
+          description: "Ocurrió un problema, intenta nuevamente.",
+        });
+      }
     } finally {
       setSavingPassword(false);
     }
@@ -182,6 +269,7 @@ export function PerfilForm() {
         localidades={localidades}
         onSave={handleGuardarEmpresa}
         saving={savingEmpresa}
+        errors={empresaErrors}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -190,6 +278,7 @@ export function PerfilForm() {
           updateField={updateField}
           onSave={handleGuardarUsuario}
           saving={savingUsuario}
+          errors={usuarioErrors}
         />
 
         <PerfilSeguridadSection
@@ -197,10 +286,22 @@ export function PerfilForm() {
           updateField={updateField}
           onSave={handleCambiarPassword}
           saving={savingPassword}
+          errors={passwordErrors}
         />
       </div>
+      <RecuperacionForm
+        form={form}
+        updateField={updateField}
+        onSave={handleActualizarRecuperacion}
+        saving={savingUsuario}
+        errors={telefonoErrors}
+      />
 
-      <PerfilAvatarSection form={form} updateField={updateField} />
+      <PerfilAvatarSection
+        form={form}
+        updateField={updateField}
+        onSave={handleActualizarAvatar}
+      />
     </div>
   );
 }

@@ -17,9 +17,12 @@ public class AuthController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    private readonly TokenService _tokenService;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, TokenService tokenService)
+    public AuthController(
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        ITokenService tokenService)
     {
         _context = context;
         _userManager = userManager;

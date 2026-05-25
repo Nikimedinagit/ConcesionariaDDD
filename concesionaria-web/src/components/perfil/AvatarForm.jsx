@@ -1,35 +1,33 @@
 import { Camera } from "lucide-react";
-
 import { Section } from "./Section";
 
 const AVATARS = Array.from(
-  { length: 16 },
+  { length: 18 },
   (_, i) => `/avatars/av-${i + 1}.png`,
 );
 
-export function PerfilAvatarSection({
-  form,
-  updateField,
-}) {
+export function PerfilAvatarSection({ form, updateField, onSave }) {
   return (
     <Section title="Imagen de Perfil" icon={Camera}>
-      <div className="flex flex-wrap gap-4 items-center justify-center">
+      <div className="flex flex-wrap gap-6 items-center justify-center p-4">
         {AVATARS.map((src, index) => (
           <button
             key={index}
             type="button"
-            onClick={() =>
-              updateField("avatar", src)
-            }
-            className={`relative rounded-full p-1 transition-all ${
+            onClick={async () => {
+              updateField("avatar", src);
+              await onSave(src);
+            }}
+            className={`relative rounded-full p-1 transition-all outline-none ${
               form.avatar === src
-                ? "ring-2 ring-slate-900 ring-offset-2"
+                ? "ring-4 ring-[hsl(var(--nav-bg))] ring-offset-2" 
                 : "hover:scale-105"
             }`}
           >
-            <img
-              src={src}
-              className="rounded-full w-12 h-12 object-cover"
+            <img 
+              src={src} 
+              alt={`Avatar ${index + 1}`}
+              className="rounded-full w-24 h-24 object-cover" 
             />
           </button>
         ))}
