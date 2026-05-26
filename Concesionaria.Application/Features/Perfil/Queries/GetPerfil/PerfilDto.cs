@@ -22,11 +22,11 @@ public class PerfilDto
 
     public string UsuarioId { get; set; } = string.Empty;
 
-    public string? NombreCompleto { get; set; }
+    public string NombreCompleto { get; set; }
 
     public string Email { get; set; } = string.Empty;
 
-    public string? Telefono { get; set; }
+    public string Telefono { get; set; }
 
-    public string? AvatarUrl { get; set; }
+    public string AvatarUrl { get; set; }
 }

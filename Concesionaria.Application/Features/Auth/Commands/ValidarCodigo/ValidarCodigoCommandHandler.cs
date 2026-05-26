@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-public class ValidarCodigoCommandHandler : IRequestHandler<ValidarCodigoCommand, string?>
+public class ValidarCodigoCommandHandler : IRequestHandler<ValidarCodigoCommand, string>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
@@ -15,7 +15,7 @@ public class ValidarCodigoCommandHandler : IRequestHandler<ValidarCodigoCommand,
         _tokenService = tokenService;
     }
 
-    public async Task<string?> Handle(ValidarCodigoCommand request, CancellationToken ct)
+    public async Task<string> Handle(ValidarCodigoCommand request, CancellationToken ct)
     {
         var contactoLimpio = request.Contacto.Replace(" ", "").Replace("+", "").Replace("-", "");
 

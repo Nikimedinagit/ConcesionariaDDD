@@ -7,7 +7,7 @@ public class ActualizarUsuarioCommand : IRequest<string>{
 
     public string NombreCompleto { get; set; } = string.Empty;
 
-    public string? Telefono { get; set; }
+    public string Telefono { get; set; }
 
-    public string? AvatarUrl { get; set; }
+    public string AvatarUrl { get; set; }
 }

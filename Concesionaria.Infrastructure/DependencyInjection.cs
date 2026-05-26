@@ -4,7 +4,6 @@ using Concesionaria.Application.Interfaces;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Infrastructure.Identity;
 using Concesionaria.Infrastructure.Persistence;
-using Concesionaria.Infrastructure.Persistence;
 using Concesionaria.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
