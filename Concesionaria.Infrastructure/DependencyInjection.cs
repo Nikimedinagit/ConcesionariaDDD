@@ -56,6 +56,7 @@ public static class DependencyInjection
         services.AddScoped<ISmsService, SmsService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ICategoriaGastoRepository, CategoriaGastoRepository>();
+        services.AddScoped<ICuentaRepository, CuentaRepository>();
 
         return services;
     }
