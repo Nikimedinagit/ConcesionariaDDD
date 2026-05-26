@@ -7,6 +7,7 @@ using Concesionaria.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using TuProyecto.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,6 +91,8 @@ app.UseCors("FrontendCors");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

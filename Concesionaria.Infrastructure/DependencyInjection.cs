@@ -1,3 +1,4 @@
+using System.Reflection;
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Application.Empresas.Queries;
 using Concesionaria.Application.Interfaces;
@@ -6,7 +7,9 @@ using Concesionaria.Domain.Identity;
 using Concesionaria.Infrastructure.Identity;
 using Concesionaria.Infrastructure.Persistence;
 using Concesionaria.Infrastructure.Services;
+using FluentValidation;
 using Infrastructure.Persistence.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +43,9 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddHttpContextAccessor();
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
