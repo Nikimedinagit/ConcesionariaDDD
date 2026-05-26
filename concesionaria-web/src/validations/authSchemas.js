@@ -23,3 +23,14 @@ export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
+
+export const recuperarAccesoSchema = z.object({
+  contact: z.string().min(1, "El campo es obligatorio.")
+    .refine((val) => {
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      const isPhone = /^\+?\d{10,15}$/.test(val.replace(/\s/g, ''));
+      return isEmail || isPhone;
+    }, { 
+      message: "Ingresá un email (con @ y .) o un número (ej: +543562123456)." 
+    }),
+});

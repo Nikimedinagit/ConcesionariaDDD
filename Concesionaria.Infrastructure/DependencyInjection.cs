@@ -38,9 +38,11 @@ public static class DependencyInjection
             CurrentUserService>();
 
         // 3. Servicios de Aplicación y Negocio (Aquí agrupas los que mencionaste)
-        services.AddScoped<ITokenService, TokenService>(); 
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILocalidadService, LocalidadService>();
         services.AddScoped<GetPerfilQueryHandler>();
+        services.AddScoped<ISmsService, SmsService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }

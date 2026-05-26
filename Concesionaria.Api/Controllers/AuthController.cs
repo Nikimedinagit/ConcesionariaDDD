@@ -1,12 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using Concesionaria.Application.Auth.Commands.SolicitarCodigo;
+using Concesionaria.Application.Auth.Commands.ValidarCodigo;
 using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Empresas.Enums;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TuProyecto.Application.Auth.Commands.CambiarContraseña;
 
 namespace Concesionaria.API.Controllers;
 
@@ -16,18 +20,68 @@ public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMediator _mediator;
 
     private readonly ITokenService _tokenService;
 
     public AuthController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
+        IMediator mediator,
         ITokenService tokenService)
     {
         _context = context;
         _userManager = userManager;
+        _mediator = mediator;
         _tokenService = tokenService;
     }
+
+
+    [HttpPost("solicitar-codigo")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SolicitarCodigo([FromBody] SolicitarCodigoCommand command)
+    {
+        try
+        {
+            await _mediator.Send(command);
+            return Ok(new { message = "Código enviado correctamente." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("validar-codigo")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ValidarCodigo([FromBody] ValidarCodigoCommand command)
+    {
+        try
+        {
+            var resultado = await _mediator.Send(command);
+            return Ok(resultado);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("cambiar-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CambiarContraseña([FromBody] CambiarContraseñaCommand command)
+    {
+        bool result = await _mediator.Send(command);
+
+        if (!result)
+        {
+            return BadRequest(new { message = "No se pudo cambiar la contraseña. Verificá que los datos sean correctos." });
+        }
+
+        return Ok(new { message = "Contraseña actualizada correctamente." });
+    }
+
+
 
     [HttpPost("register")]
     [AllowAnonymous]

@@ -4,7 +4,6 @@ using Concesionaria.Domain.Ubicaciones;
 
 namespace Concesionaria.Domain.Empresas;
 
-// Implementamos ISoftDelete para poder "suspender" la empresa
 public class Empresa : BaseEntity<Guid>, ISoftDelete
 {
     public string RazonSocial { get; private set; }
