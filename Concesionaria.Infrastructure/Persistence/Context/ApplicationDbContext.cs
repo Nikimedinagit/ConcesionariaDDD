@@ -1,5 +1,6 @@
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.CategoriasGastos;
+using Concesionaria.Domain.Cuentas;
 using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Domain.Ubicaciones;
@@ -13,7 +14,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
-
+    
+    public DbSet<Cuenta> Cuentas => Set<Cuenta>();
     public DbSet<CategoriaGasto> CategoriasGastos => Set<CategoriaGasto>();
     public DbSet<Empresa> Empresas => Set<Empresa>();
     public DbSet<Provincia> Provincias => Set<Provincia>();
