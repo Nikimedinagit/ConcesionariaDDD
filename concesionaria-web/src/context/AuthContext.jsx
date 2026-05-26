@@ -4,18 +4,26 @@ import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
+// src/context/AuthContext.jsx
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const updateUserData = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token);
-      setUser({
-        name: decoded.nombre || "Usuario",
-        email: decoded.email || "",
-        avatarURL: decoded.avatarUrl || "",
-      });
+      try {
+        const decoded = jwtDecode(token);
+        setUser({
+          name: decoded.nombre || "Usuario",
+          email: decoded.email || "",
+          avatarURL: decoded.avatarUrl || "",
+        });
+      } catch (error) {
+        console.error("Token inválido", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
     }
   };
 
@@ -24,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, updateUserData }}>
+    <AuthContext.Provider value={{ user, setUser, updateUserData }}>
       {children}
     </AuthContext.Provider>
   );

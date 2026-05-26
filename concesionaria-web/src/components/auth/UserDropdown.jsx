@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -13,25 +12,9 @@ import { LogoutButton } from "./LogoutButton";
 import { useAuth } from "@/context/AuthContext";
 
 export function UserDropdown() {
-  const { user } = useAuth();
- if (!user) return null;
- 
-  const token = localStorage.getItem("token");
-  let userData = { name: "Invitado", email: "", avatarURL: "" };
+  const { user } = useAuth(); 
 
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-
-      userData = {
-        name: decoded.nombre || "Usuario",
-        email: decoded.email || "",
-        avatarURL: decoded.avatarUrl || "",
-      };
-    } catch (e) {
-      console.error("Error al decodificar token", e);
-    }
-  }
+  if (!user) return null; 
 
   const changeTheme = (themeId) => {
     document.documentElement.setAttribute("data-theme", themeId);
@@ -57,9 +40,9 @@ export function UserDropdown() {
         style={{ backgroundColor: "hsl(var(--nav-bg))", border: "none" }}
       >
         <div className="px-3 py-2">
-          <p className="text-sm font-semibold text-white">{userData.name}</p>
+          <p className="text-sm font-semibold text-white">{user.name}</p>
           <p className="text-sm font-medium text-white/60 truncate">
-            {userData.email}
+            {user.email}
           </p>
         </div>
 

@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { loginRequest } from "@/services/authService"
-import { loginSchema } from "@/validations/authSchemas"
 
 export function LoginForm() {
   const navigate = useNavigate()
@@ -19,50 +18,54 @@ export function LoginForm() {
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const loginValid = loginSchema.safeParse({ email, password }).success
+  // Validación manual: debe contener @ y .
+  const emailError = email.length > 0 && (!email.includes("@") || !email.includes("."));
+  const passwordError = password.length > 0 && password.length < 6;
 
- async function handleSubmit(event) {
-  event.preventDefault()
-  setError("")
+  const loginValid = email.length > 0 && password.length >= 6 && !emailError && !passwordError;
 
-  if (!loginValid) {
-    setError("Completa con un email y contraseña válidos.")
-    return
+  async function handleSubmit(event) {
+    event.preventDefault()
+    setError("")
+
+    if (!loginValid) {
+      setError("Completa con un email y contraseña válidos.")
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await loginRequest({
+        email,
+        password
+      });
+
+      const token = response.token;
+
+      if (!token) {
+        setError("No se recibió el token.");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      navigate("/layout");
+
+    } catch (err) {
+      console.error(err);
+
+      const message =
+        err?.response?.data?.message ??
+        err?.message ??
+        "Error al iniciar sesión.";
+
+      setError(message);
+
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
-  setIsSubmitting(true)
-
-  try {
-  const response = await loginRequest({
-    email,
-    password
-  });
-
-  const token = response.token;
-
-  if (!token) {
-    setError("No se recibió el token.");
-    return;
-  }
-
-  localStorage.setItem("token", token);
-
-  navigate("/layout");
-
-} catch (err) {
-  console.error(err);
-
-  const message =
-    err?.response?.data?.message ??
-    err?.message ??
-    "Error al iniciar sesión.";
-
-  setError(message);
-
-} finally {
-  setIsSubmitting(false);
-}
-}
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-7 shadow-sm w-full max-w-[1080px] mx-auto">
       <div className="mb-5">
@@ -79,7 +82,6 @@ export function LoginForm() {
         </p>
       </div>
 
-      {/* FORM */}
       {error ? (
         <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
@@ -90,63 +92,36 @@ export function LoginForm() {
 
         {/* EMAIL */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">
-            Email
-          </label>
-
+          <label className="text-sm font-medium text-slate-700">Email</label>
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-
             <Input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="tuemail@empresa.com"
-              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-slate-300"
+              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400"
             />
           </div>
+          {emailError && <p className="text-sm font-mediu text-rose-500">El email debe contener @ y .</p>}
         </div>
 
         {/* PASSWORD */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">
-            Contraseña
-          </label>
-
+          <label className="text-sm font-medium text-slate-700">Contraseña</label>
           <div className="relative">
-            <LockKeyhole
-              className="
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                w-4
-                h-4
-                text-slate-400
-              "
-            />
-
+            <LockKeyhole className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
-              className="
-                h-[44px]
-                rounded-xl
-                border border-slate-200
-                bg-white
-                pl-11
-                text-slate-900
-                placeholder:text-slate-400
-                focus-visible:ring-2
-                focus-visible:ring-slate-300
-              "
+              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400"
             />
           </div>
+          {passwordError && <p className="text-sm font-medium text-rose-500">Mínimo 6 caracteres.</p>}
         </div>
 
-        {/* BUTTON */}
         <Button
           type="submit"
           disabled={!loginValid || isSubmitting}
@@ -157,20 +132,8 @@ export function LoginForm() {
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
 
-        {/* FOOTER */}
-        <div
-          className="
-            flex
-            flex-row
-            flex-wrap
-            items-center
-            justify-between
-            gap-3
-            pt-2
-            text-sm
-          "
-        >
-            <Link
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 pt-2 text-sm">
+          <Link
             to="/recuperar-acceso"
             className="text-slate-500 hover:text-slate-900 transition-colors underline-offset-4 hover:underline"
           >

@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Mail, Smartphone, KeyRound, Lock } from "lucide-react";
+import {
+  ArrowRight,
+  Mail,
+  Smartphone,
+  KeyRound,
+  LockKeyhole,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { recuperarAccesoSchema } from "@/validations/authSchemas";
@@ -10,8 +16,10 @@ import {
   cambiarPassword,
 } from "@/services/authService";
 
+const MIN_PASSWORD_LENGTH = 6;
+
 export default function RecoverAccessPage() {
-  const [step, setStep] = useState("REQUEST"); // "REQUEST" | "VERIFY" | "RESET"
+  const [step, setStep] = useState("REQUEST"); 
   const [contact, setContact] = useState("");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +28,16 @@ export default function RecoverAccessPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const passwordError =
+    password.length > 0 && password.length < MIN_PASSWORD_LENGTH;
+  const confirmPasswordError =
+    confirmPassword.length > 0 && password !== confirmPassword;
+
+  const isResetValid =
+    password.length >= MIN_PASSWORD_LENGTH &&
+    confirmPassword.length >= MIN_PASSWORD_LENGTH &&
+    password === confirmPassword;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -45,8 +63,10 @@ export default function RecoverAccessPage() {
         setSuccessMessage("Código confirmado. Elegí tu nueva contraseña.");
         setStep("RESET");
       } else if (step === "RESET") {
-        if (password !== confirmPassword) {
-          setApiError("Las contraseñas no coinciden.");
+        if (!isResetValid) {
+          setApiError(
+            "Verificá que las contraseñas coincidan y tengan al menos 6 caracteres.",
+          );
           setLoading(false);
           return;
         }
@@ -102,7 +122,7 @@ export default function RecoverAccessPage() {
         </div>
       )}
 
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700">
             {step === "REQUEST"
@@ -111,49 +131,62 @@ export default function RecoverAccessPage() {
                 ? "Código de verificación"
                 : "Nueva contraseña"}
           </label>
-          <div className="relative space-y-3">
+
+          <div className="relative space-y-4">
             {step === "REQUEST" ? (
               <>
-                <Smartphone className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
-                <Input
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  placeholder="correo@empresa.com o +54..."
-                  className="h-11 rounded-xl border border-slate-200 pl-11"
-                />
-                <p className="text-sm text-slate-500">
-                  <strong>Formatos válidos</strong> :{" "}
-                  <strong>correo@empresa.com</strong> o{" "}
-                  <strong>+54 3562 123456</strong>
-                </p>
+                <div className="relative">
+                  <Smartphone className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+                  <Input
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    placeholder="correo@empresa.com o +54..."
+                    className="h-11 rounded-xl border border-slate-200 pl-11"
+                  />
+                </div>
               </>
             ) : step === "VERIFY" ? (
-              <>
-                <KeyRound className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
+              <div className="relative">
+                <KeyRound className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
                 <Input
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="******"
                   className="h-11 rounded-xl border border-slate-200 pl-11"
                 />
-              </>
+              </div>
             ) : (
               <>
-                <Lock className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Nueva contraseña"
-                  className="h-11 rounded-xl border border-slate-200 pl-11"
-                />
-                <Input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirmar contraseña"
-                  className="h-11 rounded-xl border border-slate-200 pl-11"
-                />
+                <div className="relative">
+                  <LockKeyhole className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Nueva contraseña"
+                    className="h-11 rounded-xl border border-slate-200 pl-11"
+                  />
+                  {passwordError && (
+                    <p className="mt-1 text-sm text-rose-500">
+                      Mínimo 6 caracteres.
+                    </p>
+                  )}
+                </div>
+                <div className="relative">
+                  <LockKeyhole className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirmar contraseña"
+                    className="h-11 rounded-xl border border-slate-200 pl-11"
+                  />
+                  {confirmPasswordError && (
+                    <p className="mt-1 text-sm text-rose-500">
+                      Las contraseñas no coinciden.
+                    </p>
+                  )}
+                </div>
               </>
             )}
           </div>
@@ -161,8 +194,8 @@ export default function RecoverAccessPage() {
 
         <Button
           type="submit"
-          disabled={loading}
-          className="w-full h-11 rounded-2xl font-semibold text-white cursor-pointer mt-4"
+          disabled={loading || (step === "RESET" && !isResetValid)}
+          className="w-full h-11 rounded-2xl font-semibold text-white cursor-pointer mt-4 disabled:opacity-50"
           style={{ background: "hsl(var(--nav-bg))" }}
         >
           {loading
