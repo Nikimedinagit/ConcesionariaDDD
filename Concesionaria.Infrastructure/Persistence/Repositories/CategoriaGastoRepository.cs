@@ -18,5 +18,8 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
         return await _context.CategoriasGastos.Where(cg => !cg.Eliminado).ToListAsync();
     }
 
-    
+    public async Task<List<CategoriaGasto>> ObtenerInactivasAsync()
+    {
+        return await _context.CategoriasGastos.Where(cg => cg.Eliminado).ToListAsync();
+    }
 }

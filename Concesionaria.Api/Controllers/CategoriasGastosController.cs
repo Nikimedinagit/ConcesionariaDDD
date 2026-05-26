@@ -1,4 +1,5 @@
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
+using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosInactivas;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -27,5 +28,15 @@ public class CategoriasGastosController : ControllerBase
         );
 
         return Ok(resultadoCategoriasGastosActivas);
+    }
+
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas()
+    {
+        var resultadoCategoriasGastosInactivas = await _mediator.Send(
+            new ObtenerCategoriasGastosInactivasQuery()
+        );
+
+        return Ok(resultadoCategoriasGastosInactivas);
     }
 }
