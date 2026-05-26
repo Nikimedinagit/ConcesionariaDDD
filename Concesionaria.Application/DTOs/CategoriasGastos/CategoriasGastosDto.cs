@@ -1,7 +1,7 @@
 public record CategoriasGastosDto
-(
-    Guid CategoriaGastoId,
-    Guid EmpresaId,
-    string Nombre,
-    bool Eliminado
-);
+{
+    public Guid CategoriaGastoId { get; set; }
+    public Guid EmpresaId { get; set; }
+    public string Nombre { get; set; }
+    public bool Eliminado { get; set; }
+};

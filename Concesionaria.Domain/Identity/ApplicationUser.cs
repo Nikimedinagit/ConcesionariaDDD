@@ -9,11 +9,11 @@ public class ApplicationUser : IdentityUser
     public Guid EmpresaId { get; private set; }
     public virtual Empresa Empresa { get; private set; } = null!;
     public string NombreCompleto { get; private set; } = string.Empty;
-    public string? Telefono { get; private set; }
+    public string Telefono { get; private set; }
     public Guid? RolId { get; private set; }
-    public string? AvatarUrl { get; private set; }
+    public string AvatarUrl { get; private set; }
 
-    public string? CodigoRecuperacion { get; private set; }
+    public string CodigoRecuperacion { get; private set; }
     public DateTime? ExpiracionCodigo { get; private set; }
 
     protected ApplicationUser() { }
