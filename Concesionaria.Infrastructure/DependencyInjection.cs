@@ -1,15 +1,12 @@
-using System.Reflection;
 using Concesionaria.Application.Common.Interfaces;
-using Concesionaria.Application.Empresas.Queries;
 using Concesionaria.Application.Interfaces;
 using Concesionaria.Domain.CategoriasGastos;
 using Concesionaria.Domain.Identity;
+using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Identity;
 using Concesionaria.Infrastructure.Persistence;
 using Concesionaria.Infrastructure.Services;
-using FluentValidation;
 using Infrastructure.Persistence.Repositories;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,16 +21,23 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        // 1. Configuración de Base de Datos
+        // =========================
+        // Base de Datos
+        // =========================
+
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"))
         );
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>()
         );
 
-        // 2. Configuración de Identity
+        // =========================
+        // Identity
+        // =========================
+
         services
             .AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -42,21 +46,35 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        // =========================
+        // HttpContext
+        // =========================
+
         services.AddHttpContextAccessor();
 
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        // =========================
+        // Servicios
+        // =========================
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-        // 3. Servicios de Aplicación y Negocio (Aquí agrupas los que mencionaste)
         services.AddScoped<ITokenService, TokenService>();
+
         services.AddScoped<ILocalidadService, LocalidadService>();
-        services.AddScoped<GetPerfilQueryHandler>();
+
         services.AddScoped<ISmsService, SmsService>();
+
         services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<ICategoriaGastoRepository, CategoriaGastoRepository>();
-        services.AddScoped<ICuentaRepository, CuentaRepository>();
+
+        // =========================
+        // Repositories
+        // =========================
+
+        services.AddScoped<ICategoriaGastoRepository,
+            CategoriaGastoRepository>();
+
+        services.AddScoped<ICuentaRepository,
+            CuentaRepository>();
 
         return services;
     }

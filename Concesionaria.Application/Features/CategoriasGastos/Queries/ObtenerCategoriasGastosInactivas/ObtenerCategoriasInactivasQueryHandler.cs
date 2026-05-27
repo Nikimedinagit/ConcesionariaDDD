@@ -1,4 +1,5 @@
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
+using Concesionaria.Domain.Interfaces.IRepositories;
 using MediatR;
 
 namespace Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosInactivas;

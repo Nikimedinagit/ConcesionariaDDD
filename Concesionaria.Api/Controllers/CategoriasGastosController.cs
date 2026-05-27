@@ -1,3 +1,4 @@
+using Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosInactivas;
 using MediatR;
@@ -38,5 +39,15 @@ public class CategoriasGastosController : ControllerBase
         );
 
         return Ok(resultadoCategoriasGastosInactivas);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarCategoriaGastoCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Categoría de gasto creada correctamente.", categoriaGastoId = id }
+        );
     }
 }

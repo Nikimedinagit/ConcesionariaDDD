@@ -1,7 +1,14 @@
 using Concesionaria.Domain.CategoriasGastos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public interface ICategoriaGastoRepository
+namespace Concesionaria.Domain.Interfaces.IRepositories
 {
-    Task<List<CategoriaGasto>> ObtenerActivasAsync();
-    Task<List<CategoriaGasto>> ObtenerInactivasAsync();
+    public interface ICategoriaGastoRepository
+    {
+        Task AddAsync(CategoriaGasto categoriaGasto);
+        Task<List<CategoriaGasto>> ObtenerActivasAsync();
+        Task<List<CategoriaGasto>> ObtenerInactivasAsync();
+        Task<bool> ExistePorNombreAsync(string nombre);
+    }
 }

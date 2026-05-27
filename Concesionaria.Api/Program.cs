@@ -11,12 +11,15 @@ using TuProyecto.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(cfg => {
-    cfg.RegisterServicesFromAssembly(typeof(Concesionaria.Application.DependencyInjection).Assembly);
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(
+        typeof(Concesionaria.Application.DependencyInjection).Assembly
+    );
 });
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.RequireHttpsMetadata = false;
@@ -35,25 +38,26 @@ builder.Services
             ValidateAudience = false,
             ValidateLifetime = true,
 
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendCors", policy =>
-    {
-        policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "https://localhost:5173"
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
+    options.AddPolicy(
+        "FrontendCors",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173", "https://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
 });
 
+builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -66,15 +70,13 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = false;
 });
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager =
-        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
     await RoleSeeder.SeedRolesAsync(roleManager);
 }
