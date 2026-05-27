@@ -1,5 +1,6 @@
 using Concesionaria.Application.Common.Interfaces;
 using MediatR;
+
 namespace Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
 
 public class AgregarCategoriaGastoCommandHandler
@@ -10,26 +11,25 @@ public class AgregarCategoriaGastoCommandHandler
 
     public AgregarCategoriaGastoCommandHandler(
         IApplicationDbContext context,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser
+    )
     {
         _context = context;
         _currentUser = currentUser;
     }
 
     public async Task<Guid> Handle(
-    AgregarCategoriaGastoCommand request,
-    CancellationToken cancellationToken)
-{
-    var empresaId = _currentUser.EmpresaId;
+        AgregarCategoriaGastoCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var empresaId = _currentUser.EmpresaId;
 
-    var categoriaGasto = CategoriaGasto.Crear(
-        request.Nombre,
-        empresaId
-    );
+        var categoriaGasto = CategoriaGasto.Crear(request.Nombre, empresaId);
 
-    await _context.CategoriasGastos.AddAsync(categoriaGasto, cancellationToken);
-    await _context.SaveChangesAsync(cancellationToken);
+        await _context.CategoriasGastos.AddAsync(categoriaGasto, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-    return categoriaGasto.Id;
-}
+        return categoriaGasto.Id;
+    }
 }

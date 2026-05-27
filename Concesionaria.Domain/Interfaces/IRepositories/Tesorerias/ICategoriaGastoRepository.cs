@@ -5,9 +5,26 @@ namespace Concesionaria.Domain.Interfaces.IRepositories
 {
     public interface ICategoriaGastoRepository
     {
+        // TAREA PARA AGREGAR
         Task AddAsync(CategoriaGasto categoriaGasto);
+
+        // TAREA PARA ACTUALIZAR
+        Task UpdateAsync();
+
+        // TAREA PARA OBTENER ACTIVAS
         Task<List<CategoriaGasto>> ObtenerActivasAsync();
+
+        // TAREA PARA OBTENER INACTIVAS
         Task<List<CategoriaGasto>> ObtenerInactivasAsync();
+
+        // TAREA PARA EXTIENCIA AGREGAR
         Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
+
+        // TAREA PARA EXISTENCIA ACTUALIZAR
+        Task<bool> ExistePorNombreExluyendoIdAsync(
+            string nombre,
+            Guid empresaId,
+            Guid CategoriaGastoId
+        );
     }
 }
