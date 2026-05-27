@@ -34,7 +34,7 @@ namespace TuProyecto.Api.Middleware
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsJsonAsync(new { Message = "Ocurrió un error inesperado." });
+                await context.Response.WriteAsJsonAsync(new { Message = ex.Message, Detail = ex.InnerException?.Message });
             }
         }
     }
