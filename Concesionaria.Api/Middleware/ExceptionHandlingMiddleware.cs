@@ -32,7 +32,6 @@ namespace TuProyecto.Api.Middleware
             }
             catch (Exception ex)
             {
-                // Manejo de errores genéricos (500) para no exponer detalles internos
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsJsonAsync(new { Message = "Ocurrió un error inesperado." });

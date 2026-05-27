@@ -2,7 +2,6 @@ namespace Concesionaria.Application.Perfil.Queries.GetPerfil;
 
 public class PerfilDto
 {
-    // EMPRESA
 
     public Guid EmpresaId { get; set; }
 
@@ -18,7 +17,6 @@ public class PerfilDto
 
     public bool Activa { get; set; }
 
-    // USUARIO
 
     public string UsuarioId { get; set; } = string.Empty;
 

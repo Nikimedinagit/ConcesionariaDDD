@@ -16,19 +16,17 @@ public class ObtenerCategoriasGastosInactivasQueryHandler
 
     public async Task<List<CategoriasGastosDto>> Handle(
         ObtenerCategoriasGastosInactivasQuery request,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
-        var obtenerCategoriasGastosInactivas = await _repository.ObtenerInactivasAsync();
+        var categorias = await _repository.ObtenerInactivasAsync();
 
-        return obtenerCategoriasGastosInactivas
+        return categorias
             .Select(cg => new CategoriasGastosDto
             {
                 CategoriaGastoId = cg.Id,
-                EmpresaId = cg.EmpresaId,
-                Nombre = cg.Nombre,
-                Eliminado = cg.Eliminado,
+                Nombre = cg.Nombre
             })
             .ToList();
     }
 }
+

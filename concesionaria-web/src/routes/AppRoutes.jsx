@@ -7,7 +7,9 @@ import { AuthLayout } from "@/layouts/AuthLayout"
 import LoginPage from "@/pages/Auth/LoginPage"
 import RegisterPage from "@/pages/Auth/RegisterPage"
 import RecoverAccessPage from "@/pages/Auth/RecoverAccessPage"
-import { PerfilPage } from "@/pages/profile/PerfilPage";
+import { PerfilPage } from "@/pages/Profile/PerfilPage";
+
+import { CategoriaGastoPage } from "@/pages/Tesoseria/CategoriaGastoPage";
 
 export default function AppRoutes() {
   return (
@@ -24,8 +26,10 @@ export default function AppRoutes() {
         {/* SISTEMA (Protegido) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/layout" element={<MainLayout />}>
-          
+  
             <Route path="perfil" element={<PerfilPage />} />
+
+            <Route path="categorias-gastos" element={<CategoriaGastoPage />} />
           </Route>
         </Route>
 

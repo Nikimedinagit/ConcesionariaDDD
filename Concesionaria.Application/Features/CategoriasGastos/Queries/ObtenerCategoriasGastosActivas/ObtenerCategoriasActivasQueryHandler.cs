@@ -14,20 +14,17 @@ public class ObtenerCategoriasGastosActivasQueryHandler
     }
 
     public async Task<List<CategoriasGastosDto>> Handle(
-        ObtenerCategoriasGastosActivasQuery request,
-        CancellationToken cancellationToken
-    )
-    {
-        var obtenerCategoriasGastosActivas = await _repository.ObtenerActivasAsync();
+    ObtenerCategoriasGastosActivasQuery request,
+    CancellationToken cancellationToken)
+{
+    var categorias = await _repository.ObtenerActivasAsync();
 
-        return obtenerCategoriasGastosActivas
-            .Select(cg => new CategoriasGastosDto
-            {
-                CategoriaGastoId = cg.Id,
-                EmpresaId = cg.EmpresaId,
-                Nombre = cg.Nombre,
-                Eliminado = cg.Eliminado,
-            })
-            .ToList();
-    }
+    return categorias
+        .Select(cg => new CategoriasGastosDto
+        {
+            CategoriaGastoId = cg.Id,
+            Nombre = cg.Nombre
+        })
+        .ToList();
+}
 }

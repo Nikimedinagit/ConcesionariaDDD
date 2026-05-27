@@ -37,7 +37,7 @@ export function NavbarHeader() {
       items: [
         { to: "/cheques", name: "Cheques" },
         { to: "/gastos", name: "Gastos" },
-        { to: "/categorias-gastos", name: "Categorías de Gastos" },
+        { to: "/layout/categorias-gastos", name: "Categorías de Gastos" },
       ],
     },
     {

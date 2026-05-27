@@ -1,8 +1,5 @@
 using Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
-//using Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Concesionaria.API.Controllers;

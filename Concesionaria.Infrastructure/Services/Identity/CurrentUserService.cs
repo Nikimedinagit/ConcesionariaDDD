@@ -18,5 +18,24 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor
             .HttpContext?
             .User?
-            .FindFirstValue(ClaimTypes.NameIdentifier);
+            .FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? string.Empty;
+
+   public Guid EmpresaId
+{
+    get
+    {
+        var empresaId = _httpContextAccessor
+            .HttpContext?
+            .User?
+            .FindFirst("EmpresaId")?
+            .Value;
+
+        Console.WriteLine("EMPRESA ID: " + empresaId);
+
+        return empresaId != null
+            ? Guid.Parse(empresaId)
+            : Guid.Empty;
+    }
+}
 }

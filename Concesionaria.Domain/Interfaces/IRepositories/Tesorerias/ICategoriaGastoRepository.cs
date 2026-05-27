@@ -1,4 +1,3 @@
-using Concesionaria.Domain.CategoriasGastos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +8,6 @@ namespace Concesionaria.Domain.Interfaces.IRepositories
         Task AddAsync(CategoriaGasto categoriaGasto);
         Task<List<CategoriaGasto>> ObtenerActivasAsync();
         Task<List<CategoriaGasto>> ObtenerInactivasAsync();
-        Task<bool> ExistePorNombreAsync(string nombre);
+        Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
     }
 }

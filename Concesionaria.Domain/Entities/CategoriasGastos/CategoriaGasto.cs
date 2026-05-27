@@ -1,28 +1,36 @@
 using Concesionaria.Domain.Common;
+using Concesionaria.Domain.Common.Interfaces;
 using Concesionaria.Domain.Empresas;
 
-namespace Concesionaria.Domain.CategoriasGastos;
-
-public class CategoriaGasto : BaseEntity<Guid>, ISoftDelete
+public class CategoriaGasto : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 {
     public string Nombre { get; private set; }
-    public bool Eliminado { get; set; } = false;
-    public Guid EmpresaId {get; private set;}
-    public Empresa Empresa {get; private set;}
 
+    public bool Eliminado { get; set; }
 
-    protected CategoriaGasto(){}
+    public Guid EmpresaId { get; private set; }
+    public Empresa Empresa { get; private set; }
 
-    private CategoriaGasto(string nombre, Empresa empresa)
+    public DateTime CreatedAt { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
+
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+
+    protected CategoriaGasto() { }
+
+    private CategoriaGasto(string nombre, Guid empresaId)
     {
         Id = Guid.NewGuid();
-        Nombre = nombre;
-        Empresa = empresa;
+
+        Nombre = nombre.ToUpper().Trim();
+        EmpresaId = empresaId;
+        Eliminado = false;
     }
 
-    public static CategoriaGasto Crear(string nombre, Empresa empresa)
+    public static CategoriaGasto Crear(string nombre, Guid empresaId)
     {
-        return new CategoriaGasto(nombre, empresa);
+        return new CategoriaGasto(nombre, empresaId);
     }
 
     public void ActualizarCategoriaGasto(string nombre)
@@ -30,14 +38,7 @@ public class CategoriaGasto : BaseEntity<Guid>, ISoftDelete
         Nombre = nombre.ToUpper().Trim();
     }
 
-    public void Desactivar()
-    {
-        Eliminado = true;
-    }
-    
-    public void Activar()
-    {
-        Eliminado = false;
-    }
+    public void Desactivar() => Eliminado = true;
 
+    public void Activar() => Eliminado = false;
 }

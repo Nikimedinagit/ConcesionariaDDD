@@ -1,4 +1,3 @@
-// Concesionaria.Infrastructure/Services/LocalidadService.cs
 using Concesionaria.Application;
 using Concesionaria.Application.Interfaces;
 using Concesionaria.Infrastructure.Persistence;

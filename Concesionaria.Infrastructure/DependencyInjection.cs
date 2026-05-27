@@ -1,6 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Application.Interfaces;
-using Concesionaria.Domain.CategoriasGastos;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Identity;
@@ -25,10 +24,13 @@ public static class DependencyInjection
         // Base de Datos
         // =========================
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+        {
+            var currentUser = serviceProvider.GetRequiredService<ICurrentUserService>();
+
             options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"))
-        );
+                configuration.GetConnectionString("DefaultConnection"));
+        });
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>()

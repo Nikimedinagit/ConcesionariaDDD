@@ -2,7 +2,8 @@ using MediatR;
 
 namespace Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
 
-public class ObtenerCuentasActivasQueryHandler : IRequestHandler<ObtenerCuentasActivasQuery, List<CuentaDto>>
+public class ObtenerCuentasActivasQueryHandler
+    : IRequestHandler<ObtenerCuentasActivasQuery, List<CuentaDto>>
 {
     private readonly ICuentaRepository _repository;
 
@@ -13,18 +14,18 @@ public class ObtenerCuentasActivasQueryHandler : IRequestHandler<ObtenerCuentasA
 
     public async Task<List<CuentaDto>> Handle(
         ObtenerCuentasActivasQuery request,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
-        var obtenerCuentasActivas = await _repository.ObtenerActivasAsync();
+        var cuentas = await _repository.ObtenerActivasAsync();
 
-        return obtenerCuentasActivas
+        return cuentas
             .Select(c => new CuentaDto
             {
                 CuentaId = c.Id,
-                EmpresaId = c.EmpresaId,
+                Codigo = c.Codigo,
                 Nombre = c.Nombre,
-                Eliminado = c.Eliminado,
+                Tipo = c.Tipo,
+                Nivel = c.Nivel
             })
             .ToList();
     }

@@ -4,7 +4,6 @@ using System.Text;
 using Concesionaria.Domain.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Concesionaria.Application.Common.Interfaces;
 
 public class TokenService : ITokenService
 {
@@ -24,7 +23,9 @@ public class TokenService : ITokenService
             new Claim("nameid", user.Id),
             new Claim("email", user.Email!),
             new Claim("nombre", user.NombreCompleto),
-            new Claim("avatarUrl", user.AvatarUrl ?? "")
+            new Claim("avatarUrl", user.AvatarUrl ?? ""),
+            new Claim("EmpresaId", user.EmpresaId.ToString())
+
         };
 
         var creds = new SigningCredentials(

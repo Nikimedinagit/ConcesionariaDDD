@@ -1,6 +1,5 @@
 using Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
-using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosInactivas;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -10,10 +9,9 @@ namespace Concesionaria.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CategoriasGastosController : ControllerBase
 {
-    // private readonly ObtenerCategoriasGastosActivasQuery _handler;
     private readonly IMediator _mediator;
 
     public CategoriasGastosController(IMediator mediator)

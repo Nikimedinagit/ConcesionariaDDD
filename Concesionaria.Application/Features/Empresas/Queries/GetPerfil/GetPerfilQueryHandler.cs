@@ -1,4 +1,4 @@
-using Concesionaria.Application.Common.Interfaces; // Donde vive tu IApplicationDbContext
+using Concesionaria.Application.Common.Interfaces; 
 using Microsoft.EntityFrameworkCore;
 
 namespace Concesionaria.Application.Empresas.Queries;
