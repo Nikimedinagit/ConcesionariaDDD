@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // 1. Importa useState
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -12,12 +13,28 @@ import { LogoutButton } from "./LogoutButton";
 import { useAuth } from "@/context/AuthContext";
 
 export function UserDropdown() {
-  const { user } = useAuth(); 
+  const { user, loading } = useAuth();
 
-  if (!user) return null; 
+  // 2. Estado para rastrear el ID del tema activo
+  const [activeTheme, setActiveTheme] = useState(
+    () => localStorage.getItem("app-theme") || "default",
+  );
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("app-theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      setActiveTheme(savedTheme);
+    }
+  }, []);
+
+  if (loading) return null;
+  if (!user) return null;
 
   const changeTheme = (themeId) => {
     document.documentElement.setAttribute("data-theme", themeId);
+    localStorage.setItem("app-theme", themeId);
+    setActiveTheme(themeId); // 3. Actualiza el estado al cambiar
   };
 
   return (
@@ -76,10 +93,14 @@ export function UserDropdown() {
             {THEMES.map((t) => (
               <button
                 key={t.id}
-                className="h-6 w-6 rounded-full border border-black/20 transition-all cursor-pointer hover:scale-105"
-                style={{ backgroundColor: t.color }}
                 onClick={() => changeTheme(t.id)}
-                title={t.name}
+                className={`h-7 w-7 rounded-full transition-all cursor-pointer hover:scale-105 
+                ${
+                  activeTheme === t.id
+                    ? "ring-2 ring-white outline outline-2 outline-black/20"
+                    : "border border-black/20"
+                }`}
+                style={{ backgroundColor: t.color }}
               />
             ))}
           </div>

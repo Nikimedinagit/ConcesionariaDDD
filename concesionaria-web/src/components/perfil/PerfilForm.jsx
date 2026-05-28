@@ -17,12 +17,15 @@ import { PerfilAvatarSection } from "./AvatarForm";
 import { RecuperacionForm } from "./RecuperacionForm";
 
 import { toastService } from "@/services/toastService";
+
 import { useAuth } from "@/context/AuthContext";
 
-import { passwordSchema } from "@/validations/perfil.validation";
-import { nombreFantasiaSchema } from "@/validations/perfil.validation";
-import { nombreCompletoSchema } from "@/validations/perfil.validation";
-import { telefonoSchema } from "@/validations/perfil.validation";
+import {
+  passwordSchema,
+  nombreFantasiaSchema,
+  nombreCompletoSchema,
+  telefonoSchema,
+} from "@/validations/perfil.validation";
 
 export function PerfilForm() {
   const { updateUserData } = useAuth();
@@ -30,27 +33,48 @@ export function PerfilForm() {
   const { perfil, loading } = usePerfil();
 
   const [localidades, setLocalidades] = useState([]);
+
   const [savingEmpresa, setSavingEmpresa] = useState(false);
+
   const [savingUsuario, setSavingUsuario] = useState(false);
+
   const [savingPassword, setSavingPassword] = useState(false);
 
   const [passwordErrors, setPasswordErrors] = useState({});
+
   const [empresaErrors, setEmpresaErrors] = useState({});
+
   const [usuarioErrors, setUsuarioErrors] = useState({});
+
   const [telefonoErrors, setTelefonoErrors] = useState({});
 
   const [form, setForm] = useState({
     razonSocial: "",
+
     nombreFantasia: "",
+
     cuit: "",
+
     localidadId: "",
+
     moneda: "ARG",
+
     estado: "Activo",
+
     nombreCompleto: "",
+
     email: "",
+
+    codigoPais: "+54",
+
+    codigoArea: "",
+
     telefono: "",
+
     avatar: "",
+
     passwordActual: "",
+
     passwordNueva: "",
   });
 
@@ -60,19 +84,44 @@ export function PerfilForm() {
 
   useEffect(() => {
     if (perfil) {
+      const telefonoCompleto = perfil.telefono || "";
+
+      const partes = telefonoCompleto.trim().split(" ");
+
+      const codigoPais = partes[0] || "+54";
+
+      const codigoArea = partes[1] || "";
+
+      const telefono = partes.slice(2).join(" ") || "";
+
       setForm((prev) => ({
         ...prev,
+
         empresaId: perfil.id || perfil.empresaId || perfil.EmpresaId,
-        razonSocial: perfil.razonSocial,
-        nombreFantasia: perfil.nombreFantasia || perfil.nombreFantasia,
-        cuit: perfil.cuit,
-        localidadId: perfil.localidadId || perfil.localidadId,
-        moneda: perfil.moneda || perfil.moneda,
-        estado: perfil.estado,
-        nombreCompleto: perfil.nombreCompleto || perfil.nombreCompleto,
-        email: perfil.email,
-        telefono: perfil.telefono,
-        avatar: perfil.avatarUrl,
+
+        razonSocial: perfil.razonSocial || "",
+
+        nombreFantasia: perfil.nombreFantasia || "",
+
+        cuit: perfil.cuit || "",
+
+        localidadId: perfil.localidadId || "",
+
+        moneda: perfil.moneda || "ARG",
+
+        estado: perfil.estado || "Activo",
+
+        nombreCompleto: perfil.nombreCompleto || "",
+
+        email: perfil.email || "",
+
+        codigoPais,
+
+        codigoArea,
+
+        telefono,
+
+        avatar: perfil.avatarUrl || "",
       }));
     }
   }, [perfil]);
@@ -80,8 +129,13 @@ export function PerfilForm() {
   const updateField = (field, value) => {
     setForm((prev) => ({
       ...prev,
+
       [field]: value,
     }));
+  };
+
+  const buildTelefono = () => {
+    return `${form.codigoPais} ${form.codigoArea} ${form.telefono}`;
   };
 
   const handleGuardarEmpresa = async () => {
@@ -91,17 +145,22 @@ export function PerfilForm() {
 
     if (!result.success) {
       setEmpresaErrors(result.error.flatten().fieldErrors);
+
       return;
     }
 
     try {
       setEmpresaErrors({});
+
       setSavingEmpresa(true);
 
       const payload = {
         empresaId: form.empresaId,
+
         nombreFantasia: form.nombreFantasia,
+
         localidadId: form.localidadId,
+
         moneda: form.moneda,
       };
 
@@ -112,6 +171,7 @@ export function PerfilForm() {
       });
     } catch (error) {
       console.error(error);
+
       toastService.error("Error al guardar empresa", {
         description: "Ocurrió un problema, intenta nuevamente.",
       });
@@ -127,15 +187,22 @@ export function PerfilForm() {
 
     if (!result.success) {
       setUsuarioErrors(result.error.flatten().fieldErrors);
+
       return;
     }
+
     try {
       setUsuarioErrors({});
+
       setSavingUsuario(true);
+
+      const telefonoCompleto = buildTelefono();
 
       const payload = {
         nombreCompleto: form.nombreCompleto,
-        telefono: form.telefono,
+
+        telefono: telefonoCompleto,
+
         avatarUrl: form.avatar,
       };
 
@@ -161,15 +228,20 @@ export function PerfilForm() {
 
   const handleActualizarAvatar = async (nuevoAvatar) => {
     try {
+      const telefonoCompleto = buildTelefono();
+
       const payload = {
         nombreCompleto: form.nombreCompleto,
-        telefono: form.telefono,
+
+        telefono: telefonoCompleto,
+
         avatarUrl: nuevoAvatar,
       };
 
       const response = await usuarioService.updateAvatar(payload);
 
       localStorage.setItem("token", response.token);
+
       updateUserData();
 
       toastService.success("¡Éxito!", {
@@ -177,6 +249,7 @@ export function PerfilForm() {
       });
     } catch (error) {
       console.error(error);
+
       toastService.error("Error al actualizar avatar", {
         description: "Ocurrió un problema, intenta nuevamente.",
       });
@@ -184,18 +257,28 @@ export function PerfilForm() {
   };
 
   const handleActualizarRecuperacion = async () => {
-    const result = telefonoSchema.safeParse({ telefono: form.telefono });
+    const result = telefonoSchema.safeParse({
+      codigoPais: form.codigoPais,
+      codigoArea: form.codigoArea,
+      telefono: form.telefono,
+    });
 
     if (!result.success) {
       setTelefonoErrors(result.error.flatten().fieldErrors);
+
       return;
     }
 
     try {
+      setTelefonoErrors({});
+
       setSavingUsuario(true);
+
+      const telefonoCompleto = buildTelefono();
+
       const payload = {
         nombreCompleto: form.nombreCompleto,
-        telefono: form.telefono,
+        telefono: telefonoCompleto,
         avatarUrl: form.avatar,
       };
 
@@ -206,6 +289,7 @@ export function PerfilForm() {
       });
     } catch (error) {
       console.error(error);
+
       toastService.error("Error al actualizar recuperación", {
         description: "Ocurrió un problema, intenta nuevamente.",
       });
@@ -217,20 +301,24 @@ export function PerfilForm() {
   const handleCambiarPassword = async () => {
     const result = passwordSchema.safeParse({
       passwordActual: form.passwordActual,
+
       passwordNueva: form.passwordNueva,
     });
 
     if (!result.success) {
       setPasswordErrors(result.error.flatten().fieldErrors);
+
       return;
     }
 
     try {
       setPasswordErrors({});
+
       setSavingPassword(true);
 
       await usuarioService.updateContraseña({
         passwordActual: form.passwordActual,
+
         passwordNueva: form.passwordNueva,
       });
 
@@ -239,10 +327,13 @@ export function PerfilForm() {
       });
 
       updateField("passwordActual", "");
+
       updateField("passwordNueva", "");
     } catch (error) {
       if (error.response?.data?.message === "Contraseña incorrecta.") {
-        setPasswordErrors({ passwordActual: ["Contraseña incorrecta."] });
+        setPasswordErrors({
+          passwordActual: ["Contraseña incorrecta."],
+        });
       } else {
         toastService.error("Error al actualizar contraseña", {
           description: "Ocurrió un problema, intenta nuevamente.",
@@ -287,6 +378,7 @@ export function PerfilForm() {
           errors={passwordErrors}
         />
       </div>
+
       <RecuperacionForm
         form={form}
         updateField={updateField}

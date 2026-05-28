@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   ArrowRight,
@@ -11,25 +11,25 @@ import {
   Mail,
   Tag,
   User,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { getLocalidades } from "@/services/localidadService"
-import { registerRequest } from "@/services/authService"
-import { empresaSchema, usuarioSchema } from "@/validations/authSchemas"
+} from "@/components/ui/select";
+import { getLocalidades } from "@/services/localidadService";
+import { registerRequest } from "@/services/authService";
+import { empresaSchema, usuarioSchema } from "@/validations/authSchemas";
 
-const stepLabels = ["Empresa", "Personal", "Confirmación"]
+const stepLabels = ["Empresa", "Personal", "Confirmación"];
 
 export function RegisterForm() {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     razonSocial: "",
     nombreFantasia: "",
@@ -41,12 +41,12 @@ export function RegisterForm() {
     password: "",
     confirmPassword: "",
     aceptoTerminos: false,
-  })
-  const [localidades, setLocalidades] = useState([])
-  const [localidadSearch, setLocalidadSearch] = useState("")
-  const [apiError, setApiError] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [localidades, setLocalidades] = useState([]);
+  const [localidadSearch, setLocalidadSearch] = useState("");
+  const [apiError, setApiError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const empresaData = {
     razonSocial: form.razonSocial,
@@ -54,63 +54,71 @@ export function RegisterForm() {
     cuit: form.cuit,
     localidadId: form.localidadId,
     moneda: form.moneda,
-  }
+  };
 
   const usuarioData = {
     nombre: form.nombreCompleto,
     email: form.email,
     password: form.password,
-  }
+  };
 
-  const cuitDigits = form.cuit.replace(/\D/g, "")
-  const cuitError = form.cuit.length > 0 && !/^\d{11}$/.test(cuitDigits)
-  const emailError = form.email.length > 0 && !usuarioSchema.shape.email.safeParse(form.email).success
-  const passwordError = form.password.length > 0 && form.password.length < 6
-  const confirmPasswordError = form.confirmPassword.length > 0 && form.password !== form.confirmPassword
+  const cuitDigits = form.cuit.replace(/\D/g, "");
+  const cuitError = form.cuit.length > 0 && !/^\d{11}$/.test(cuitDigits);
+  const emailError =
+    form.email.length > 0 &&
+    !usuarioSchema.shape.email.safeParse(form.email).success;
+  const passwordError = form.password.length > 0 && form.password.length < 6;
+  const confirmPasswordError =
+    form.confirmPassword.length > 0 && form.password !== form.confirmPassword;
 
-  const stepOneValid = empresaSchema.safeParse(empresaData).success
-  const stepTwoValid = usuarioSchema.safeParse(usuarioData).success && form.password === form.confirmPassword && form.aceptoTerminos
+  const stepOneValid = empresaSchema.safeParse(empresaData).success;
+  const stepTwoValid =
+    usuarioSchema.safeParse(usuarioData).success &&
+    form.password === form.confirmPassword &&
+    form.aceptoTerminos;
 
   function updateField(field, value) {
-    setForm((current) => ({ ...current, [field]: value }))
+    setForm((current) => ({ ...current, [field]: value }));
   }
 
   useEffect(() => {
     getLocalidades()
       .then((data) => setLocalidades(data))
       .catch((error) => {
-        console.error("Error cargando localidades:", error)
-      })
-  }, [])
+        console.error("Error cargando localidades:", error);
+      });
+  }, []);
   function handleNext(event) {
-    event.preventDefault()
-    setApiError("")
+    event.preventDefault();
+    setApiError("");
 
     if (!stepOneValid) {
-      setApiError("Completa todos los datos de empresa y selecciona una localidad válida.")
-      return
+      setApiError(
+        "Completa todos los datos de empresa y selecciona una localidad válida.",
+      );
+      return;
     }
 
-    setStep((current) => Math.min(3, current + 1))
+    setStep((current) => Math.min(3, current + 1));
   }
 
   function handleBack(event) {
-    event.preventDefault()
-    setApiError("")
-    setStep((current) => Math.max(1, current - 1))
+    event.preventDefault();
+    setApiError("");
+    setStep((current) => Math.max(1, current - 1));
   }
 
   async function handleSubmit(event) {
-    event.preventDefault()
-    setApiError("")
-    setSuccessMessage("")
+    event.preventDefault();
+    setApiError("");
+    setSuccessMessage("");
 
     if (!stepTwoValid) {
-      setApiError("Completa todos los datos de usuario y acepta los términos.")
-      return
+      setApiError("Completa todos los datos de usuario y acepta los términos.");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const response = await registerRequest({
@@ -122,40 +130,40 @@ export function RegisterForm() {
         nombreCompleto: form.nombreCompleto,
         email: form.email,
         password: form.password,
-      })
+      });
 
-      setSuccessMessage(response.message ?? "Registro enviado correctamente.")
-      setStep(3)
+      setSuccessMessage(response.message ?? "Registro enviado correctamente.");
+      setStep(3);
     } catch (error) {
-      const responseData = error?.response?.data
-      const backendMessage = responseData?.message
-      const errorsArray = responseData?.errors
-      let message = "Ocurrió un error al registrar."
+      const responseData = error?.response?.data;
+      const backendMessage = responseData?.message;
+      const errorsArray = responseData?.errors;
+      let message = "Ocurrió un error al registrar.";
 
       if (errorsArray?.length) {
-        message = errorsArray.join(" ")
+        message = errorsArray.join(" ");
       } else if (typeof responseData === "object" && responseData !== null) {
         const modelStateErrors = Object.values(responseData)
           .flat()
-          .filter((item) => typeof item === "string")
+          .filter((item) => typeof item === "string");
         if (modelStateErrors.length) {
-          message = modelStateErrors.join(" ")
+          message = modelStateErrors.join(" ");
         }
       }
 
       const duplicateMessage =
         backendMessage === "Ya existe un usuario con ese email." ||
-        backendMessage === "El email o CUIT ya está en uso."
+        backendMessage === "El email o CUIT ya está en uso.";
 
       if (duplicateMessage) {
-        message = "Ya existe una cuenta con ese email o CUIT."
+        message = "Ya existe una cuenta con ese email o CUIT.";
       } else if (backendMessage && typeof backendMessage === "string") {
-        message = backendMessage
+        message = backendMessage;
       }
 
-      setApiError(message)
+      setApiError(message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -199,7 +207,10 @@ export function RegisterForm() {
         </div>
       ) : null}
 
-      <form className="space-y-3" onSubmit={step === 2 ? handleSubmit : handleNext}>
+      <form
+        className="space-y-3"
+        onSubmit={step === 2 ? handleSubmit : handleNext}
+      >
         {step === 1 && (
           <div className="space-y-3">
             <label className="block text-sm font-medium text-slate-700">
@@ -209,7 +220,9 @@ export function RegisterForm() {
                   <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <Input
                     value={form.razonSocial}
-                    onChange={(event) => updateField("razonSocial", event.target.value)}
+                    onChange={(event) =>
+                      updateField("razonSocial", event.target.value)
+                    }
                     placeholder="Ej. Concesionaria Santa Fe"
                     className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                   />
@@ -225,7 +238,9 @@ export function RegisterForm() {
                     <Tag className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <Input
                       value={form.nombreFantasia}
-                      onChange={(event) => updateField("nombreFantasia", event.target.value)}
+                      onChange={(event) =>
+                        updateField("nombreFantasia", event.target.value)
+                      }
                       placeholder="Ej. Santa Fe Motors"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
@@ -240,13 +255,17 @@ export function RegisterForm() {
                     <Hash className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <Input
                       value={form.cuit}
-                      onChange={(event) => updateField("cuit", event.target.value)}
+                      onChange={(event) =>
+                        updateField("cuit", event.target.value)
+                      }
                       placeholder="20-12345678-9"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
                   </div>
                   {cuitError && (
-                    <p className="mt-1 text-sm text-rose-500">CUIT debe tener 11 dígitos.</p>
+                    <p className="mt-1 text-sm text-rose-500">
+                      CUIT debe tener 11 dígitos.
+                    </p>
                   )}
                 </div>
               </label>
@@ -259,29 +278,36 @@ export function RegisterForm() {
                     <Select
                       value={form.localidadId}
                       onValueChange={(value) => {
-                        updateField("localidadId", value)
-                        setLocalidadSearch("")
-                      }}
-                      onOpenChange={(open) => {
-                        if (!open) setLocalidadSearch("")
+                        updateField("localidadId", value);
+                        setLocalidadSearch("");
                       }}
                     >
                       <SelectTrigger className="w-full h-[44px] rounded-xl border border-slate-200 bg-white text-slate-900 pl-11 pr-4">
                         <SelectValue placeholder="Localidad" />
                       </SelectTrigger>
 
-                      <SelectContent className="bg-white border border-slate-200 text-slate-900">
+                      <SelectContent
+                        position="popper"
+                        sideOffset={4}
+                        className="w-[var(--radix-select-trigger-width)] bg-white border border-slate-200 text-slate-900"
+                      >
                         <div className="px-3 pt-3">
                           <Input
                             value={localidadSearch}
-                            onChange={(event) => setLocalidadSearch(event.target.value)}
+                            onChange={(event) =>
+                              setLocalidadSearch(event.target.value)
+                            }
+                            onKeyDown={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
                             placeholder="Buscar localidad"
                             className="mb-2 h-[44px] w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-slate-900 placeholder:text-slate-400"
                           />
                         </div>
                         {localidades
                           .filter((location) =>
-                            location.nombre.toLowerCase().includes(localidadSearch.toLowerCase())
+                            location.nombre
+                              .toLowerCase()
+                              .includes(localidadSearch.toLowerCase()),
                           )
                           .map((location) => (
                             <SelectItem key={location.id} value={location.id}>
@@ -328,7 +354,9 @@ export function RegisterForm() {
                     <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <Input
                       value={form.nombreCompleto}
-                      onChange={(event) => updateField("nombreCompleto", event.target.value)}
+                      onChange={(event) =>
+                        updateField("nombreCompleto", event.target.value)
+                      }
                       placeholder="Ej. Juan Pérez"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
@@ -343,13 +371,17 @@ export function RegisterForm() {
                     <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <Input
                       value={form.email}
-                      onChange={(event) => updateField("email", event.target.value)}
+                      onChange={(event) =>
+                        updateField("email", event.target.value)
+                      }
                       placeholder="correo@empresa.com"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
                   </div>
                   {emailError && (
-                    <p className="mt-1 text-sm text-rose-500">Email debe contener @ y .</p>
+                    <p className="mt-1 text-sm text-rose-500">
+                      Email debe contener @ y .
+                    </p>
                   )}
                 </div>
               </label>
@@ -364,13 +396,17 @@ export function RegisterForm() {
                     <Input
                       type="password"
                       value={form.password}
-                      onChange={(event) => updateField("password", event.target.value)}
+                      onChange={(event) =>
+                        updateField("password", event.target.value)
+                      }
                       placeholder="••••••••"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
                   </div>
                   {passwordError && (
-                    <p className="mt-1 text-sm text-rose-500">Contraseña mínimo 6 caracteres.</p>
+                    <p className="mt-1 text-sm text-rose-500">
+                      Contraseña mínimo 6 caracteres.
+                    </p>
                   )}
                 </div>
               </label>
@@ -383,13 +419,17 @@ export function RegisterForm() {
                     <Input
                       type="password"
                       value={form.confirmPassword}
-                      onChange={(event) => updateField("confirmPassword", event.target.value)}
+                      onChange={(event) =>
+                        updateField("confirmPassword", event.target.value)
+                      }
                       placeholder="••••••••"
                       className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
                     />
                   </div>
                   {confirmPasswordError && (
-                    <p className="mt-1 text-sm text-rose-500">Las contraseñas no coinciden.</p>
+                    <p className="mt-1 text-sm text-rose-500">
+                      Las contraseñas no coinciden.
+                    </p>
                   )}
                 </div>
               </label>
@@ -399,7 +439,9 @@ export function RegisterForm() {
               <input
                 type="checkbox"
                 checked={form.aceptoTerminos}
-                onChange={(event) => updateField("aceptoTerminos", event.target.checked)}
+                onChange={(event) =>
+                  updateField("aceptoTerminos", event.target.checked)
+                }
                 className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
               />
               Acepto términos y condiciones.
@@ -415,7 +457,9 @@ export function RegisterForm() {
             </div>
 
             <p className="text-sm leading-relaxed text-slate-600">
-              Gracias por registrarte. Ya recibimos los datos de tu empresa y tu usuario. Te avisaremos cuando el pago sea recibido o si necesitamos información adicional.
+              Gracias por registrarte. Ya recibimos los datos de tu empresa y tu
+              usuario. Te avisaremos cuando el pago sea recibido o si
+              necesitamos información adicional.
             </p>
 
             <div className="grid gap-3 sm:grid-cols-2 text-sm text-slate-600">
@@ -454,7 +498,9 @@ export function RegisterForm() {
 
             <Button
               type="submit"
-              disabled={step === 1 ? !stepOneValid : !stepTwoValid || isSubmitting}
+              disabled={
+                step === 1 ? !stepOneValid : !stepTwoValid || isSubmitting
+              }
               className="h-10 rounded-2xl px-6 font-semibold text-white cursor-pointer hover:shadow-lg transition-shadow disabled:cursor-not-allowed disabled:opacity-50"
               style={{ background: "hsl(var(--nav-bg))" }}
             >
@@ -466,10 +512,16 @@ export function RegisterForm() {
 
         {step !== 3 && (
           <p className="text-center text-sm text-slate-500">
-            ¿Ya tenés cuenta? <Link to="/" className="font-semibold text-slate-900 hover:text-slate-700 transition-colors underline-offset-4 hover:underline">Ingresar</Link>
+            ¿Ya tenés cuenta?{" "}
+            <Link
+              to="/"
+              className="font-semibold text-slate-900 hover:text-slate-700 transition-colors underline-offset-4 hover:underline"
+            >
+              Ingresar
+            </Link>
           </p>
         )}
       </form>
     </div>
-  )
+  );
 }

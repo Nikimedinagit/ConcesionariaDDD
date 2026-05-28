@@ -14,8 +14,17 @@ export const nombreCompletoSchema = z.object({
 });
 
 export const telefonoSchema = z.object({
-  telefono: z.string().min(1, "Teléfono no puede estar vacío.")
-    .refine((val) => /^\+\d{1,3}\s\d{2,4}\s\d{6,10}$/.test(val), {
-      message: "Formato inválido. Use: +54 3562 123456",
-    }),
+  codigoPais: z
+    .string()
+    .min(1, "Seleccioná un código de país."),
+
+  codigoArea: z
+    .string()
+    .min(2, "Código de área inválido.")
+    .max(4, "Máximo 4 números."),
+
+  telefono: z
+    .string()
+    .min(6, "Teléfono inválido.")
+    .max(10, "Máximo 10 números."),
 });

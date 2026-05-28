@@ -1,27 +1,21 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-
-import {
-  ArrowRight,
-  LockKeyhole,
-  Mail,
-} from "lucide-react"
-
+import { ArrowRight, LockKeyhole, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { loginRequest } from "@/services/authService"
+import { useAuth } from "@/context/AuthContext" 
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const { updateUserData } = useAuth() 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Validación manual: debe contener @ y .
   const emailError = email.length > 0 && (!email.includes("@") || !email.includes("."));
   const passwordError = password.length > 0 && password.length < 6;
-
   const loginValid = email.length > 0 && password.length >= 6 && !emailError && !passwordError;
 
   async function handleSubmit(event) {
@@ -36,11 +30,7 @@ export function LoginForm() {
     setIsSubmitting(true)
 
     try {
-      const response = await loginRequest({
-        email,
-        password
-      });
-
+      const response = await loginRequest({ email, password });
       const token = response.token;
 
       if (!token) {
@@ -49,18 +39,14 @@ export function LoginForm() {
       }
 
       localStorage.setItem("token", token);
+      
+      updateUserData(); 
+      
       navigate("/layout");
-
     } catch (err) {
       console.error(err);
-
-      const message =
-        err?.response?.data?.message ??
-        err?.message ??
-        "Error al iniciar sesión.";
-
+      const message = err?.response?.data?.message ?? err?.message ?? "Error al iniciar sesión.";
       setError(message);
-
     } finally {
       setIsSubmitting(false);
     }
@@ -90,7 +76,6 @@ export function LoginForm() {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
 
-        {/* EMAIL */}
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700">Email</label>
           <div className="relative">
@@ -106,7 +91,6 @@ export function LoginForm() {
           {emailError && <p className="text-sm font-mediu text-rose-500">El email debe contener @ y .</p>}
         </div>
 
-        {/* PASSWORD */}
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700">Contraseña</label>
           <div className="relative">
@@ -124,7 +108,7 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          disabled={!loginValid || isSubmitting}
+          disabled={isSubmitting}
           className="w-full h-[44px] rounded-2xl font-semibold text-[14px] mt-1 text-white cursor-pointer hover:shadow-lg transition-shadow disabled:cursor-not-allowed disabled:opacity-50"
           style={{ background: "hsl(var(--nav-bg))" }}
         >

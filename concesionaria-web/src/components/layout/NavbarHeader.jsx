@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +10,13 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { UserDropdown } from "@/components/auth/UserDropdown";
 
 export function NavbarHeader() {
+  const location = useLocation();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
 
-  
+  // CONTROL MENU DESKTOP
+  const [openDesktopMenu, setOpenDesktopMenu] = useState(null);
 
   const navGroups = [
     {
@@ -92,6 +95,7 @@ export function NavbarHeader() {
       }}
     >
       <div className="flex h-16 items-center justify-between px-4 md:px-8">
+        {/* LOGO */}
         <div className="flex items-center gap-4 md:gap-6">
           <Link to="/" className="flex items-center gap-2.5 group select-none">
             <div className="flex h-10 w-10 items-center justify-center transition-transform group-hover:scale-105">
@@ -101,19 +105,49 @@ export function NavbarHeader() {
                 className="h-full w-full object-contain object-left drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
               />
             </div>
+
             <span className="text-xl font-black tracking-tight text-white font-sans">
               MPM
             </span>
           </Link>
+
           <div className="hidden md:block h-6 w-px bg-white/20" />
         </div>
 
+        {/* MENU DESKTOP */}
         <div className="hidden lg:flex items-center gap-1">
           {navGroups.map((group) => (
-            <DropdownMenu key={group.title}>
-              <DropdownMenuTrigger className="flex items-center gap-1 h-10 px-3 text-sm font-medium text-white/95 rounded-md hover:bg-white/10 outline-none transition-colors">
-                {group.title} <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+            <DropdownMenu
+              key={group.title}
+              modal={false}
+              open={openDesktopMenu === group.title}
+              onOpenChange={(open) => {
+                if (open) {
+                  setOpenDesktopMenu(group.title);
+                } else if (openDesktopMenu === group.title) {
+                  setOpenDesktopMenu(null);
+                }
+              }}
+            >
+              <DropdownMenuTrigger
+                onClick={() => {
+                  setOpenDesktopMenu(group.title);
+                }}
+                className={`flex items-center gap-1 h-10 px-3 text-sm font-medium rounded-md outline-none transition-colors
+                  ${
+                    group.items.some(
+                      (item) => location.pathname === item.to
+                    )
+                      ? "bg-white/15 text-white"
+                      : "text-white/95 hover:bg-white/10"
+                  }
+                `}
+              >
+                {group.title}
+
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
               </DropdownMenuTrigger>
+
               <DropdownMenuContent
                 align="start"
                 className="w-[200px] p-2 shadow-2xl rounded-lg border-0 mt-1"
@@ -123,7 +157,14 @@ export function NavbarHeader() {
                   <DropdownMenuItem key={item.to} asChild>
                     <Link
                       to={item.to}
-                      className="flex items-center rounded-md p-2.5 text-sm font-medium text-white/90 hover:bg-white/15 outline-none cursor-pointer"
+                      onClick={() => setOpenDesktopMenu(null)}
+                      className={`flex items-center rounded-md p-2.5 text-sm font-medium outline-none cursor-pointer transition-colors
+                        ${
+                          location.pathname === item.to
+                            ? "bg-white/20 text-white"
+                            : "text-white/90 hover:bg-white/15"
+                        }
+                      `}
                     >
                       {item.name}
                     </Link>
@@ -134,6 +175,7 @@ export function NavbarHeader() {
           ))}
         </div>
 
+        {/* USER + MOBILE BUTTON */}
         <div className="flex items-center gap-2">
           <UserDropdown />
 
@@ -150,6 +192,7 @@ export function NavbarHeader() {
         </div>
       </div>
 
+      {/* MOBILE MENU */}
       {isMobileMenuOpen && (
         <div
           className="lg:hidden w-full border-t border-white/10 p-4 space-y-2"
@@ -162,13 +205,26 @@ export function NavbarHeader() {
             >
               <button
                 onClick={() =>
-                  setOpenGroup(openGroup === group.title ? null : group.title)
+                  setOpenGroup(
+                    openGroup === group.title ? null : group.title
+                  )
                 }
-                className="w-full flex items-center justify-between p-3 text-sm font-bold text-white/70 tracking-wider hover:bg-white/5 transition-colors"
+                className={`w-full flex items-center justify-between p-3 text-sm font-bold tracking-wider transition-colors rounded-md
+                  ${
+                    group.items.some(
+                      (item) => location.pathname === item.to
+                    )
+                      ? "bg-white/10 text-white"
+                      : "text-white/70 hover:bg-white/5"
+                  }
+                `}
               >
                 {group.title}
+
                 <ChevronDown
-                  className={`h-4 w-4 transition-transform ${openGroup === group.title ? "rotate-180" : ""}`}
+                  className={`h-4 w-4 transition-transform ${
+                    openGroup === group.title ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
@@ -182,7 +238,13 @@ export function NavbarHeader() {
                         setIsMobileMenuOpen(false);
                         setOpenGroup(null);
                       }}
-                      className="block p-3 text-sm text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-all"
+                      className={`block p-3 text-sm rounded-md transition-all
+                        ${
+                          location.pathname === item.to
+                            ? "bg-white/15 text-white"
+                            : "text-white/70 hover:text-white hover:bg-white/10"
+                        }
+                      `}
                     >
                       {item.name}
                     </Link>
