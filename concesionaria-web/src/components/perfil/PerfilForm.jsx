@@ -4,8 +4,6 @@ import { usePerfil } from "@/hooks/usePerfil";
 
 import { getLocalidades } from "@/services/localidadService";
 
-import { empresaService } from "@/services/empresaService";
-
 import { usuarioService } from "@/services/perfilService";
 
 import { PerfilEmpresaSection } from "./EmpresaForm";
@@ -107,7 +105,7 @@ export function PerfilForm() {
         moneda: form.moneda,
       };
 
-      await empresaService.updateEmpresa(payload);
+      await usuarioService.updateEmpresa(payload);
 
       toastService.success("¡Éxito!", {
         description: "La empresa ha sido actualizada correctamente.",

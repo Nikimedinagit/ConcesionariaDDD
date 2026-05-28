@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { empresaService } from "../services/empresaService"; // El servicio que creamos antes
+import { usuarioService } from "@/services/perfilService";
     
 export const usePerfil = () => {
   const [perfil, setPerfil] = useState(null);
@@ -10,7 +10,7 @@ export const usePerfil = () => {
     const fetchPerfil = async () => {
       try {
         setLoading(true);
-        const data = await empresaService.getPerfil();
+        const data = await usuarioService.getPerfil();
         setPerfil(data);
       } catch (err) {
         console.error("Error al obtener el perfil:", err);

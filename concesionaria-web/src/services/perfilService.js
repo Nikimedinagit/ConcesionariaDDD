@@ -2,12 +2,33 @@ import api from "@/api/axios";
 
 export const usuarioService = {
 
+  async getPerfil() {
+
+    const response = await api.get(
+      "/perfil"
+    );
+
+    return response.data;
+
+  },
+
   async updateUsuario(payload) {
 
      const response = await api.put(
     "/perfil/usuario",
     payload
   );
+
+    return response.data;
+
+  },
+
+    async updateEmpresa(data) {
+
+    const response = await api.put(
+      "/perfil/empresa",
+      data
+    );
 
     return response.data;
 

@@ -11,7 +11,7 @@ public class GetPerfilQueryHandler
 {
     private readonly UserManager<ApplicationUser> _userManager;
 
-private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserService _currentUserService;
     public GetPerfilQueryHandler(
         UserManager<ApplicationUser> userManager,
         ICurrentUserService currentUserService)
@@ -25,6 +25,8 @@ private readonly ICurrentUserService _currentUserService;
         CancellationToken cancellationToken)
     {
         var userId = _currentUserService.UserId;
+        Console.WriteLine($"USER ID: {userId}");
+
 
         if (userId == null)
             throw new Exception("Usuario no autenticado");
@@ -36,8 +38,21 @@ private readonly ICurrentUserService _currentUserService;
                 x => x.Id == userId,
                 cancellationToken);
 
+
+        Console.WriteLine($"USUARIO NULL: {usuario == null}");
+
+        Console.WriteLine($"EMPRESA NULL: {usuario?.Empresa == null}");
+
+        Console.WriteLine($"LOCALIDAD NULL: {usuario?.Empresa?.Localidad == null}");
+
+        Console.WriteLine($"TELEFONO: {usuario?.Telefono}");
+
+        Console.WriteLine($"AVATAR: {usuario?.AvatarUrl}");
+
         if (usuario == null)
             throw new Exception("Usuario no encontrado");
+
+
 
         return new PerfilDto
         {
