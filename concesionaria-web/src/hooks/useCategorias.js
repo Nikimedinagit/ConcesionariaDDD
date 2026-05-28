@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
-// Cambia el @/ por la ruta relativa desde la carpeta hooks hacia services
+import { useState, useEffect, useCallback } from 'react';
 import CategoriaGastoService from "../services/categoriaGastoService"; 
 
 export const useCategorias = (tipo = 'activas') => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refetch = useCallback(() => setRefreshTrigger(prev => prev + 1), []);
 
   useEffect(() => {
     let isMounted = true;
@@ -12,7 +14,6 @@ export const useCategorias = (tipo = 'activas') => {
 
     const fetchData = async () => {
       try {
-        // Asegúrate de que los métodos existan en el servicio
         const result = tipo === 'activas' 
           ? await CategoriaGastoService.getActivas() 
           : await CategoriaGastoService.getInactivas();
@@ -27,7 +28,7 @@ export const useCategorias = (tipo = 'activas') => {
 
     fetchData();
     return () => { isMounted = false; };
-  }, [tipo]);
+  }, [tipo, refreshTrigger]);
 
-  return { data, loading };
+  return { data, loading, refetch };
 };

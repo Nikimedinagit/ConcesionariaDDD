@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.CategoriasGastos.Commands.ActualizarCategoriaGasto;
 
 public class ActualizarCategoriaGastoCommandHandler
-    : IRequestHandler<ActualizarCategoriaGastoCommand>
+    : IRequestHandler<ActualizarCategoriaGastoCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
@@ -19,7 +19,7 @@ public class ActualizarCategoriaGastoCommandHandler
         _currentUser = currentUser;
     }
 
-    public async Task Handle(
+    public async Task<Unit> Handle(
         ActualizarCategoriaGastoCommand request,
         CancellationToken cancellationToken
     )
@@ -37,5 +37,6 @@ public class ActualizarCategoriaGastoCommandHandler
         obtenerCategoriaId.ActualizarCategoriaGasto(request.Nombre);
 
         await _context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
     }
 }

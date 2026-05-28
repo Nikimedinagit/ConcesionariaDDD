@@ -262,7 +262,7 @@ export function PerfilForm() {
   }
 
   return (
-    <div className="w-full mx-auto max-w-[1400px] py-8 space-y-8">
+    <div className="w-full mx-auto max-w-[1400px] py-5 space-y-5">
       <PerfilEmpresaSection
         form={form}
         updateField={updateField}
@@ -272,7 +272,7 @@ export function PerfilForm() {
         errors={empresaErrors}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <PerfilUsuarioSection
           form={form}
           updateField={updateField}

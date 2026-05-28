@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import DataTable from "./DataTable";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
+import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 
-const CategoriaGastoTable = ({ data, tipo, onToggle }) => {
+const CategoriaGastoTable = ({ data, tipo, onToggle, onEdit }) => {
   const columns = useMemo(
     () => [
       { accessorKey: "nombre", header: "Nombre" },
@@ -13,33 +14,37 @@ const CategoriaGastoTable = ({ data, tipo, onToggle }) => {
           <div className="flex justify-end gap-0.5">
             {tipo === "activas" && (
               <>
-                <ActionButton
-                  type="edit"
-                  // onClick={() =>
-                  //   console.log("Editar", row.original.id)
-                  // }
-                />
+                <Tooltip text="Editar">
+                  <ActionButton
+                    type="edit"
+                    onClick={() => onEdit(row.original)}
+                  />
+                </Tooltip>
 
-                <ActionButton
-                  type="desactivar"
-                  // onClick={async () => {
-                  //   await CategoriaGastoService.desactivar(
-                  //     row.original.id
-                  //   );
-                  // }}
-                />
+                <Tooltip text="Desactivar">
+                  <ActionButton
+                    type="desactivar"
+                    // onClick={async () => {
+                    //   await CategoriaGastoService.desactivar(
+                    //     row.original.id
+                    //   );
+                    // }}
+                  />
+                </Tooltip>
               </>
             )}
 
             {tipo === "inactivas" && (
-              <ActionButton
-                type="activar"
-                // onClick={async () => {
-                //   await CategoriaGastoService.activar(
-                //     row.original.id
-                //   );
-                // }}
-              />
+              <Tooltip text="Activar">
+                <ActionButton
+                  type="activar"
+                  // onClick={async () => {
+                  //   await CategoriaGastoService.activar(
+                  //     row.original.id
+                  //   );
+                  // }}
+                />
+              </Tooltip>
             )}
           </div>
         ),

@@ -25,7 +25,7 @@ export function AppInput({
           `}
         />
       </div>
-      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+      {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
     </div>
   );
 }

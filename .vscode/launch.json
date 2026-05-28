@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Launch API",
+            "type": "dotnet",
+            "request": "launch",
+            // AQUÍ ESTÁ LA CLAVE: Debes poner la ruta a tu proyecto de la API
+            "projectPath": "${workspaceFolder}/Concesionaria.Api/Concesionaria.Api.csproj"
+        }
+    ]
+}

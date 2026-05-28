@@ -4,10 +4,10 @@ using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
-public class AgregarCategoriaGastoCommandValidation
+public class AgregarCategoriaGastoCommandValidator
     : AbstractValidator<AgregarCategoriaGastoCommand>
 {
-    public AgregarCategoriaGastoCommandValidation(
+    public AgregarCategoriaGastoCommandValidator(
         ICategoriaGastoRepository repository,
         ICurrentUserService currentUser
     )
@@ -23,6 +23,6 @@ public class AgregarCategoriaGastoCommandValidation
                     return !await repository.ExistePorNombreAsync(nombre, empresaId);
                 }
             )
-            .WithMessage("Ya existe una categoría de gasto con ese nombre.");
+            .WithMessage("Ya existe esa Categoria Gasto.");
     }
 }

@@ -9,7 +9,7 @@ function App() {
         toastOptions={{
           style: {
             marginBottom: "42px",
-            marginLeft: "16px",
+            marginLeft: "0px",
           },
           gutter: 10,
         }}

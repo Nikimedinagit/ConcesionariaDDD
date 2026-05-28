@@ -11,13 +11,6 @@ using TuProyecto.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(
-        typeof(Concesionaria.Application.DependencyInjection).Assembly
-    );
-});
-
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

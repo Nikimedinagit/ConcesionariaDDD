@@ -50,15 +50,15 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
     public async Task<bool> ExistePorNombreExluyendoIdAsync(
-        string nombre,
-        Guid empresaId,
-        Guid CategoriaGastoId
-    )
+     string nombre,
+     Guid empresaId,
+     Guid categoriaGastoId)
     {
         return await _context.CategoriasGastos.AnyAsync(cg =>
-            cg.EmpresaId == empresaId
-            && cg.Nombre.ToLower() == nombre.ToLower()
-            && cg.Id != CategoriaGastoId
+            cg.Nombre.ToLower() == nombre.ToLower()
+            && cg.EmpresaId == empresaId
+            && cg.Id != categoriaGastoId
+            && !cg.Eliminado
         );
     }
 }
