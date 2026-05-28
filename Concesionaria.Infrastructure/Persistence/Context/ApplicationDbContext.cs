@@ -62,14 +62,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         }
     }
 
-    private static void SetGlobalFilter<TEntity>(ModelBuilder builder, ICurrentUserService currentUser)
-    where TEntity : class, IHasEmpresa
-{
-    builder.Entity<TEntity>()
-        .HasQueryFilter(x =>
-            !EF.Property<bool>(x, "Eliminado") &&
-            x.EmpresaId == currentUser.EmpresaId); 
-}
+    private static void SetGlobalFilter<TEntity>(
+        ModelBuilder builder,
+        ICurrentUserService currentUser)
+        where TEntity : class, IHasEmpresa
+    {
+        builder.Entity<TEntity>()
+            .HasQueryFilter(x =>
+                !EF.Property<bool>(x, "Eliminado"));
+    }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

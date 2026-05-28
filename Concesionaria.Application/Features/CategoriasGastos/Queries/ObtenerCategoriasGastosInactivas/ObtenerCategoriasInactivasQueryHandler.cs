@@ -1,4 +1,5 @@
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
+using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using MediatR;
 
@@ -8,17 +9,20 @@ public class ObtenerCategoriasGastosInactivasQueryHandler
     : IRequestHandler<ObtenerCategoriasGastosInactivasQuery, List<CategoriasGastosDto>>
 {
     private readonly ICategoriaGastoRepository _repository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public ObtenerCategoriasGastosInactivasQueryHandler(ICategoriaGastoRepository repository)
+    public ObtenerCategoriasGastosInactivasQueryHandler(ICategoriaGastoRepository repository, ICurrentUserService currentUserService)
     {
         _repository = repository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<List<CategoriasGastosDto>> Handle(
         ObtenerCategoriasGastosInactivasQuery request,
         CancellationToken cancellationToken)
     {
-        var categorias = await _repository.ObtenerInactivasAsync(request.Filtro);
+        var empresaId = _currentUserService.EmpresaId;
+        var categorias = await _repository.ObtenerInactivasAsync(empresaId, request.Filtro);
 
         return categorias
             .OrderBy(cg => cg.Nombre)

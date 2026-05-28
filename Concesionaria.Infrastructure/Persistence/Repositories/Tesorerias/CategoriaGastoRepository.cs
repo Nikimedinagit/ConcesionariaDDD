@@ -26,27 +26,35 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
     }
 
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
-    public async Task<List<CategoriaGasto>> ObtenerActivasAsync(string filtro = null)
+    public async Task<List<CategoriaGasto>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
-        var obtenerCategoriasActivas = _context.CategoriasGastos.AsQueryable();
+
+        var obtenerCategoriasActivas = _context.CategoriasGastos
+            .Where(cg => cg.EmpresaId == empresaId)
+                .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerCategoriasActivas = obtenerCategoriasActivas.Where(cg => cg.Nombre.Contains(filtro));
+            obtenerCategoriasActivas = obtenerCategoriasActivas
+                .Where(cg => cg.Nombre.Contains(filtro));
         }
 
         return await obtenerCategoriasActivas.ToListAsync();
     }
 
     // METODO PARA OBTENER INCATIVAS SEGUN FILTRO
-    public async Task<List<CategoriaGasto>> ObtenerInactivasAsync(string filtro = null)
+    public async Task<List<CategoriaGasto>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
 
-        var obtenerCategoriasInactivas = _context.CategoriasGastos.IgnoreQueryFilters().Where(x => x.Eliminado).AsQueryable();
+        var obtenerCategoriasInactivas = _context.CategoriasGastos
+            .IgnoreQueryFilters()
+                .Where(cg => cg.EmpresaId == empresaId && cg.Eliminado)
+                    .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerCategoriasInactivas = obtenerCategoriasInactivas.Where(cg => cg.Nombre.Contains(filtro));
+            obtenerCategoriasInactivas = obtenerCategoriasInactivas
+                .Where(cg => cg.Nombre.Contains(filtro));
         }
 
         return await obtenerCategoriasInactivas.ToListAsync();
