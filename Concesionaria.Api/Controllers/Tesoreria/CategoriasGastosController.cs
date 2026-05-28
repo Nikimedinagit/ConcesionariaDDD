@@ -22,21 +22,25 @@ public class CategoriasGastosController : ControllerBase
 
     // METODO OBTENER ACTIVAS
     [HttpGet("activas")]
-    public async Task<IActionResult> ObtenerActivas()
+    public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
     {
-        var resultadoCategoriasGastosActivas = await _mediator.Send(
-            new ObtenerCategoriasGastosActivasQuery()
-        );
+        var resultadoCategoriasGastosActivas = await _mediator.Send(new ObtenerCategoriasGastosActivasQuery
+        {
+            Filtro = filtro
+        });
 
         return Ok(resultadoCategoriasGastosActivas);
     }
 
     // METODO OBTENER INACTIVAS
     [HttpGet("inactivas")]
-    public async Task<IActionResult> ObtenerInactivas()
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
     {
         var resultadoCategoriasGastosInactivas = await _mediator.Send(
-            new ObtenerCategoriasGastosInactivasQuery()
+            new ObtenerCategoriasGastosInactivasQuery
+            {
+                Filtro = filtro
+            }
         );
 
         return Ok(resultadoCategoriasGastosInactivas);

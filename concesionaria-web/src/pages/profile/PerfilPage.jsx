@@ -2,7 +2,7 @@ import { PerfilForm } from "@/components/perfil/PerfilForm";
 
 export function PerfilPage() {
   return (
-    <div className="w-full">
+    <div className="w-full mt-3">
       <PerfilForm />
     </div>
   );

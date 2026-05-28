@@ -17,7 +17,7 @@ const PageHeader = ({
         bg-white
         px-4 py-4
         shadow-sm
-        mb-6 mt-2
+        mb-6 mt-3
       "
     >
       <div

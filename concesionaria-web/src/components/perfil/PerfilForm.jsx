@@ -260,7 +260,7 @@ export function PerfilForm() {
   }
 
   return (
-    <div className="w-full mx-auto max-w-[1400px] py-5 space-y-5">
+    <div className="w-full mx-auto max-w-[1400px] py-0 space-y-5">
       <PerfilEmpresaSection
         form={form}
         updateField={updateField}

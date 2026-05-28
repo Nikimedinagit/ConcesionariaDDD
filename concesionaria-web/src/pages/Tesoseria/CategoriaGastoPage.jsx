@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // 1. Agregamos useEffect
 import { Wallet } from "lucide-react";
 import { useCategorias } from "@/hooks/useCategorias";
 import CategoriaGastoService from "@/services/categoriaGastoService";
@@ -11,7 +11,18 @@ import { toastService } from "@/services/toastService";
 
 export const CategoriaGastoPage = () => {
   const [tipo, setTipo] = useState("activas");
-  const { data, loading, refetch } = useCategorias(tipo);
+  const [filtro, setFiltro] = useState("");
+  const [debouncedFiltro, setDebouncedFiltro] = useState(""); 
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedFiltro(filtro);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [filtro]);
+
+  const { data, loading, refetch } = useCategorias(tipo, debouncedFiltro);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategoria, setSelectedCategoria] = useState(null);
@@ -37,24 +48,16 @@ export const CategoriaGastoPage = () => {
     try {
       if (payload.categoriaGastoId) {
         await CategoriaGastoService.actualizar(payload.categoriaGastoId, payload);
-        toastService.success("Éxito", {
-          description: "Categoría actualizada correctamente",
-        });
+        toastService.success("Éxito", { description: "Categoría actualizada correctamente" });
       } else {
         await CategoriaGastoService.crear(payload);
-        toastService.success("Éxito", {
-          description: "Categoría creada correctamente",
-        });
+        toastService.success("Éxito", { description: "Categoría creada correctamente" });
       }
       setIsModalOpen(false);
       refetch();
     } catch (error) {
       const data = error.response?.data;
-      const mensajeError =
-        data?.errors?.[0]?.errorMessage ||
-        data?.message ||
-        "Ocurrió un error al guardar";
-
+      const mensajeError = data?.errors?.[0]?.errorMessage || data?.message || "Ocurrió un error al guardar";
       setServerError(mensajeError);
     } finally {
       setModalLoading(false);
@@ -63,20 +66,19 @@ export const CategoriaGastoPage = () => {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="min-h-screen">
+      <div>
         <PageHeader title="Categorías de Gasto" icon={Wallet}>
           <AddButton onClick={handleOpenCreate}>Nueva Categoría</AddButton>
         </PageHeader>
 
-        {loading ? (
-          <div className="h-64 flex items-center justify-center">
-            Cargando...
-          </div>
+        {loading && data.length === 0 ? (
+          <div className="h-64 flex items-center justify-center">Cargando...</div>
         ) : (
           <CategoriaGastoTable
             data={data}
             tipo={tipo}
             onToggle={setTipo}
+            onSearch={setFiltro} 
             onEdit={handleOpenEdit}
           />
         )}

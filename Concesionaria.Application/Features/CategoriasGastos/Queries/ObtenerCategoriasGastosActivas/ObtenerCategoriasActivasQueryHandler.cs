@@ -17,9 +17,10 @@ public class ObtenerCategoriasGastosActivasQueryHandler
     ObtenerCategoriasGastosActivasQuery request,
     CancellationToken cancellationToken)
 {
-    var categorias = await _repository.ObtenerActivasAsync();
+    var categorias = await _repository.ObtenerActivasAsync(request.Filtro);
 
     return categorias
+        .OrderBy(cg => cg.Nombre)
         .Select(cg => new CategoriasGastosDto
         {
             CategoriaGastoId = cg.Id,

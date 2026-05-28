@@ -1,13 +1,17 @@
 import api from "@/api/axios";
 
 const CategoriaGastoService = {
-  getActivas: async () => {
-    const response = await api.get('/CategoriasGastos/activas');
+  getActivas: async (filtro = "") => {
+    const response = await api.get('/CategoriasGastos/activas', {
+      params: { filtro } 
+    });
     return response.data;
   },
 
-  getInactivas: async () => {
-    const response = await api.get('/CategoriasGastos/inactivas');
+  getInactivas: async (filtro = "") => {
+    const response = await api.get('/CategoriasGastos/inactivas', {
+      params: { filtro } 
+    });
     return response.data;
   },
 

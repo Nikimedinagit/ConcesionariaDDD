@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import CategoriaGastoService from "../services/categoriaGastoService"; 
 
-export const useCategorias = (tipo = 'activas') => {
+export const useCategorias = (tipo = 'activas', filtro = '') => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -15,8 +15,8 @@ export const useCategorias = (tipo = 'activas') => {
     const fetchData = async () => {
       try {
         const result = tipo === 'activas' 
-          ? await CategoriaGastoService.getActivas() 
-          : await CategoriaGastoService.getInactivas();
+          ? await CategoriaGastoService.getActivas(filtro) 
+          : await CategoriaGastoService.getInactivas(filtro); 
         
         if (isMounted) setData(result);
       } catch (error) {
@@ -28,7 +28,7 @@ export const useCategorias = (tipo = 'activas') => {
 
     fetchData();
     return () => { isMounted = false; };
-  }, [tipo, refreshTrigger]);
+  }, [tipo, filtro, refreshTrigger]); 
 
   return { data, loading, refetch };
 };

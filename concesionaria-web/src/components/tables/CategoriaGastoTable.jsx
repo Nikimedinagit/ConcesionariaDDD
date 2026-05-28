@@ -3,7 +3,7 @@ import DataTable from "./DataTable";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 
-const CategoriaGastoTable = ({ data, tipo, onToggle, onEdit }) => {
+const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit }) => {
   const columns = useMemo(
     () => [
       { accessorKey: "nombre", header: "Nombre" },
@@ -50,11 +50,11 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onEdit }) => {
         ),
       },
     ],
-    [tipo], // Dependencia importante: se vuelve a renderizar si cambia el tipo
+    [tipo], 
   );
 
   return (
-    <DataTable columns={columns} data={data} tipo={tipo} onToggle={onToggle} />
+    <DataTable columns={columns} data={data} tipo={tipo} onToggle={onToggle} onSearch={onSearch} />
   );
 };
 

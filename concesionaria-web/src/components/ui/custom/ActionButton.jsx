@@ -20,8 +20,6 @@ export const ActionButton = ({
         hover:bg-sky-50
         hover:text-sky-600
       `,
-
-      label: "Editar",
     },
 
     desactivar: {
@@ -32,8 +30,6 @@ export const ActionButton = ({
         hover:bg-red-50
         hover:text-red-600
       `,
-
-      label: "Desactivar",
     },
 
     activar: {
@@ -44,8 +40,6 @@ export const ActionButton = ({
         hover:bg-emerald-50
         hover:text-emerald-600
       `,
-
-      label: "Activar",
     },
   };
 
@@ -62,7 +56,7 @@ export const ActionButton = ({
       onClick={onClick}
       title={label}
       className={`
-        h-9 w-9
+        h-7.5 w-7.5
         rounded-lg
         transition-colors
         ${styles}

@@ -2,4 +2,7 @@ using MediatR;
 
 namespace Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
 
-public record ObtenerCategoriasGastosActivasQuery : IRequest<List<CategoriasGastosDto>>;
+public record ObtenerCategoriasGastosActivasQuery : IRequest<List<CategoriasGastosDto>>
+{
+    public string Filtro { get; set; }
+}

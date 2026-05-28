@@ -17,7 +17,7 @@ import {
 import DataTableToolbar from "./DataTableToolbar";
 import DataTablePagination from "./DataTablePagination";
 
-const DataTable = ({ columns, data, tipo, onToggle }) => {
+const DataTable = ({ columns, data, tipo, onToggle, onSearch }) => {
   const table = useReactTable({
   data: data ?? [],
   columns,
@@ -30,7 +30,7 @@ const DataTable = ({ columns, data, tipo, onToggle }) => {
 
   initialState: {
     pagination: {
-      pageSize: 10,
+      pageSize: 8,
     },
   },
 });
@@ -45,7 +45,7 @@ const DataTable = ({ columns, data, tipo, onToggle }) => {
         shadow-sm
       "
     >
-      <DataTableToolbar tipo={tipo} setTipo={onToggle} />
+      <DataTableToolbar tipo={tipo} setTipo={onToggle} onSearch={onSearch} />
       <div className="overflow-x-auto">
         <Table className="min-w-[700px]">
           <TableHeader className="bg-[hsl(var(--nav-bg))/0.03]">
@@ -60,7 +60,7 @@ const DataTable = ({ columns, data, tipo, onToggle }) => {
                     <TableHead
                       key={header.id}
                       className={`
-                        h-11 px-4 text-xs sm:text-base font-bold text-slate-900 whitespace-nowrap
+                        h-10 px-4 text-xs sm:text-base font-bold text-slate-900 whitespace-nowrap
                         ${isActions ? "text-right w-[120px]" : ""}
                       `}
                     >
@@ -91,7 +91,7 @@ const DataTable = ({ columns, data, tipo, onToggle }) => {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-b border-slate-100 transition-colors hover:bg-slate-50/80"
+                  className="border-b border-slate-100 transition-colors hover:bg-[hsl(var(--nav-bg))]/20"
                 >
                   {row.getVisibleCells().map((cell) => {
                     const isActions = cell.column.id === "acciones";
@@ -126,7 +126,9 @@ const DataTable = ({ columns, data, tipo, onToggle }) => {
         </Table>
       </div>
 
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} 
+        total={data?.length}
+      />
     </div>
   );
 };

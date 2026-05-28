@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
 
-import { NavbarHeader } from "@/components/layout/NavbarHeader"
-import { Footer } from "@/components/layout/Footer"
+import { NavbarHeader } from "@/components/layout/NavbarHeader";
+import { Footer } from "@/components/layout/Footer";
 
 export function MainLayout() {
   return (
-<div className="min-h-screen flex flex-col">      
+    <div className="mb-3 flex flex-col">
       <NavbarHeader />
 
       <main className="flex-1 w-full pb-12">
@@ -16,5 +16,5 @@ export function MainLayout() {
 
       <Footer />
     </div>
-  )
+  );
 }

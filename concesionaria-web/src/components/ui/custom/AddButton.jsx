@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -6,6 +8,28 @@ const AddButton = ({
   onClick,
   className = "",
 }) => {
+
+  useEffect(() => {
+
+    const handleKeyDown = (e) => {
+
+      if (e.key === "Insert") {
+        e.preventDefault();
+
+        if (onClick) {
+          onClick();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+
+  }, [onClick]);
+
   return (
     <Button
       onClick={onClick}

@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const DataTableToolbar = ({ tipo, setTipo }) => {
+const DataTableToolbar = ({ tipo, setTipo, onSearch }) => {
   return (
     <div
       className="
@@ -12,7 +12,6 @@ const DataTableToolbar = ({ tipo, setTipo }) => {
         md:flex-row md:items-center md:justify-between
       "
     >
-      {/* Botones de Filtro */}
       <div
         className="
         flex items-center gap-2
@@ -51,7 +50,6 @@ const DataTableToolbar = ({ tipo, setTipo }) => {
         </Button>
       </div>
 
-      {/* Buscador */}
       <div className="relative w-full md:w-[280px]">
         <Search
           className="
@@ -64,12 +62,8 @@ const DataTableToolbar = ({ tipo, setTipo }) => {
 
         <Input
           placeholder="Buscar..."
-          className="
-            pl-9
-            border-slate-200
-            bg-slate-50/60
-            focus-visible:ring-[hsl(var(--nav-bg))]
-          "
+          onChange={(e) => onSearch(e.target.value)} 
+          className="pl-9 border-slate-200 bg-slate-50/60 focus-visible:ring-[hsl(var(--nav-bg))]"
         />
       </div>
     </div>

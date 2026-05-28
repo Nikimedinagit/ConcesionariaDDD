@@ -25,19 +25,31 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
         await _context.SaveChangesAsync();
     }
 
-    // METODO PARA OBTENER ACTIVAS
-    public async Task<List<CategoriaGasto>> ObtenerActivasAsync()
+    // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
+    public async Task<List<CategoriaGasto>> ObtenerActivasAsync(string filtro = null)
     {
-        return await _context.CategoriasGastos.ToListAsync();
+        var obtenerCategoriasActivas = _context.CategoriasGastos.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filtro))
+        {
+            obtenerCategoriasActivas = obtenerCategoriasActivas.Where(cg => cg.Nombre.Contains(filtro));
+        }
+
+        return await obtenerCategoriasActivas.ToListAsync();
     }
 
-    // METODO PARA OBTENER INCATIVAS
-    public async Task<List<CategoriaGasto>> ObtenerInactivasAsync()
+    // METODO PARA OBTENER INCATIVAS SEGUN FILTRO
+    public async Task<List<CategoriaGasto>> ObtenerInactivasAsync(string filtro = null)
     {
-        return await _context
-            .CategoriasGastos.IgnoreQueryFilters()
-            .Where(x => x.Eliminado)
-            .ToListAsync();
+
+        var obtenerCategoriasInactivas = _context.CategoriasGastos.IgnoreQueryFilters().Where(x => x.Eliminado).AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filtro))
+        {
+            obtenerCategoriasInactivas = obtenerCategoriasInactivas.Where(cg => cg.Nombre.Contains(filtro));
+        }
+
+        return await obtenerCategoriasInactivas.ToListAsync();
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
