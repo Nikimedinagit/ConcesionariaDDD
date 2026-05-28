@@ -27,7 +27,7 @@ public class ActivarCategoriaGastoCommandHandler
         var empresaId = _currentUser.EmpresaId;
         var res = request;
         
-        var obtenerCategoriaId = await _context.CategoriasGastos.FirstOrDefaultAsync(
+        var obtenerCategoriaId = await _context.CategoriasGastos.IgnoreQueryFilters().FirstOrDefaultAsync(
             cg => cg.Id == request.CategoriaGastoId && cg.EmpresaId == empresaId && cg.Eliminado,
             cancellationToken
         );
