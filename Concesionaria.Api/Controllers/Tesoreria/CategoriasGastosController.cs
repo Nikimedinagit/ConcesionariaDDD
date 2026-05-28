@@ -1,3 +1,4 @@
+using Application.Features.CategoriasGastos.Commands.ActivarCategoriaGasto;
 using Application.Features.CategoriasGastos.Commands.ActualizarCategoriaGasto;
 using Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
 using Application.Features.CategoriasGastos.Queries.ObtenerCategoriasGastosActivas;
@@ -57,6 +58,7 @@ public class CategoriasGastosController : ControllerBase
         );
     }
 
+    // METODO ACTUALIZAR
     [HttpPut("{id}")]
     public async Task<IActionResult> Actualizar(
         Guid id,
@@ -70,5 +72,22 @@ public class CategoriasGastosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Categoría de gasto actulizada correctamente." });
+    }
+
+    // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarCategoriaGastoCommand command
+    )
+    {
+        if (id != command.CategoriaGastoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Categoría de gasto activada correctamente." });
     }
 }

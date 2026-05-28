@@ -42,7 +42,7 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
         return await obtenerCategoriasActivas.ToListAsync();
     }
 
-    // METODO PARA OBTENER INCATIVAS SEGUN FILTRO
+    // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<CategoriaGasto>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
 
