@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { ArrowRight, LockKeyhole, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { loginRequest } from "@/services/authService"
+import { loginRequest } from "@/services/Auth/authService"
 import { useAuth } from "@/context/AuthContext" 
 
 export function LoginForm() {

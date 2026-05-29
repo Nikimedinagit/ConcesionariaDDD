@@ -3,7 +3,7 @@ import DataTable from "./DataTable";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 
-const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit }) => {
+const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit, onToggleStatus }) => {
   const columns = useMemo(
     () => [
       { accessorKey: "nombre", header: "Nombre" },
@@ -24,11 +24,7 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit }) => {
                 <Tooltip text="Desactivar">
                   <ActionButton
                     type="desactivar"
-                    // onClick={async () => {
-                    //   await CategoriaGastoService.desactivar(
-                    //     row.original.id
-                    //   );
-                    // }}
+                    onClick={() => onToggleStatus(row.original)}
                   />
                 </Tooltip>
               </>
@@ -38,11 +34,7 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit }) => {
               <Tooltip text="Activar">
                 <ActionButton
                   type="activar"
-                  // onClick={async () => {
-                  //   await CategoriaGastoService.activar(
-                  //     row.original.id
-                  //   );
-                  // }}
+                  onClick={() => onToggleStatus(row.original)}
                 />
               </Tooltip>
             )}
@@ -50,7 +42,7 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit }) => {
         ),
       },
     ],
-    [tipo], 
+    [tipo, onEdit, onToggleStatus], 
   );
 
   return (

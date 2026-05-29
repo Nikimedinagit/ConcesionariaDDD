@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { usuarioService } from "@/services/perfilService";
+import { usuarioService } from "@/services/Perfil/perfilService";
     
 export const usePerfil = () => {
   const [perfil, setPerfil] = useState(null);

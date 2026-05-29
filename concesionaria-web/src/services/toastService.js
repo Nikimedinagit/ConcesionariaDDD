@@ -1,68 +1,41 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { createElement } from "react";
 
-const baseStyle = {
-  background: "rgba(248, 250, 252, 0.92)",
-  color: "#0f172a",
-  border: "1px solid rgba(226, 232, 240, 0.8)",
-  boxShadow: "0 10px 25px -5px rgba(0,0,0,0.15)",
-  backdropFilter: "blur(10px)",
-  borderRadius: "12px",
-  padding: "12px 14px",
-  minWidth: "260px",
+const getColors = (type) => {
+  switch (type) {
+    case "success": return "#22c55e";
+    case "error": return "#ef4444";
+    case "warning": return "#f59e0b";
+    case "info": return "#3b82f6";
+    default: return "#3b82f6";
+  }
 };
-
-const colors = {
-  success: "#22c55e",
-  error: "#ef4444",
-  warning: "#f59e0b",
-  info: "#3b82f6",
-};
-
-const renderMessage = (message, description) =>
-  createElement(
-    "div",
-    { style: { display: "flex", flexDirection: "column", gap: "4px" } },
-    createElement(
-      "div",
-      {
-        style: {
-          fontWeight: 700,
-          fontSize: "16px",
-          color: "#0f172a",
-        },
-      },
-      message
-    ),
-    description &&
-      createElement(
-        "div",
-        {
-          style: {
-            fontWeight: 400,
-            fontSize: "14px",
-            color: "#475569",
-          },
-        },
-        description
-      )
-  );
 
 const show = (type, message, options = {}) => {
-  const fn = toast[type] || toast;
+  const color = getColors(type);
 
-  fn(renderMessage(message, options.description), {
-    style: baseStyle,
-    iconTheme: {
-      primary: colors[type] || "#3b82f6",
-      secondary: "#f8fafc",
+  toast(message, {
+    description: options.description,
+    style: {
+      background: "#ffffff",
+      borderRadius: "12px",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      padding: "16px",
     },
+    icon: createElement("div", { 
+      style: { 
+        width: '14px', 
+        height: '14px', 
+        borderRadius: '50%', 
+        backgroundColor: color 
+      } 
+    }),
   });
 };
 
 export const toastService = {
-  success: (message, options) => show("success", message, options),
-  error: (message, options) => show("error", message, options),
-  warning: (message, options) => show("loading", message, options),
-  info: (message, options) => show("blank", message, options),
+  success: (msg, opt) => show("success", msg, opt),
+  error: (msg, opt) => show("error", msg, opt),
+  warning: (msg, opt) => show("warning", msg, opt),
+  info: (msg, opt) => show("info", msg, opt),
 };

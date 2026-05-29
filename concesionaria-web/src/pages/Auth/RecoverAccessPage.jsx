@@ -14,7 +14,7 @@ import {
   solicitarCodigo,
   validarCodigo,
   cambiarPassword,
-} from "@/services/authService";
+} from "@/services/Auth/authService";
 
 const MIN_PASSWORD_LENGTH = 6;
 

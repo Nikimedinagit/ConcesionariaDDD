@@ -23,7 +23,22 @@ const CategoriaGastoService = {
   actualizar: async (id, payload) => {
     const response = await api.put(`/CategoriasGastos/${id}`, payload);
     return response.data;
+  },
+
+  desactivar: async (id) => {
+    const response = await api.put(`/CategoriasGastos/desactivar/${id}`, {
+      categoriaGastoId: id 
+    });
+    return response.data;
+  },
+  
+  activar: async (id) => {
+    const response = await api.put(`/CategoriasGastos/activar/${id}`, {
+      categoriaGastoId: id 
+    });
+    return response.data;
   }
+
 };
 
 export default CategoriaGastoService;

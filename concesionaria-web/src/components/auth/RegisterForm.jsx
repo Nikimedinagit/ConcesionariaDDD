@@ -22,8 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getLocalidades } from "@/services/localidadService";
-import { registerRequest } from "@/services/authService";
+import { getLocalidades } from "@/services/Ubicacion/localidadService";
+import { registerRequest } from "@/services/Auth/authService";
 import { empresaSchema, usuarioSchema } from "@/validations/authSchemas";
 
 const stepLabels = ["Empresa", "Personal", "Confirmación"];

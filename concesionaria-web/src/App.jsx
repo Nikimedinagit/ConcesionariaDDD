@@ -1,20 +1,19 @@
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <>
+      <AppRoutes />
       <Toaster
         position="bottom-left"
+        offset="16px" 
         toastOptions={{
           style: {
-            marginBottom: "42px",
-            marginLeft: "0px",
+            bottom : "42px", 
           },
-          gutter: 10,
         }}
       />
-      <AppRoutes />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import CategoriaGastoService from "../services/categoriaGastoService"; 
+import CategoriaGastoService from "../services/Tesoreria/categoriaGastoService"; 
 
 export const useCategorias = (tipo = 'activas', filtro = '') => {
   const [data, setData] = useState([]);

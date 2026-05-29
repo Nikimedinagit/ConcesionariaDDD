@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import { usePerfil } from "@/hooks/usePerfil";
 
-import { getLocalidades } from "@/services/localidadService";
+import { getLocalidades } from "@/services/Ubicacion/localidadService";
 
-import { usuarioService } from "@/services/perfilService";
+import { usuarioService } from "@/services/Perfil/perfilService";
 
 import { PerfilEmpresaSection } from "./EmpresaForm";
 
