@@ -13,6 +13,7 @@ public interface IApplicationDbContext
     DbSet<Localidad> Localidades { get; }
     DbSet<Empresa> Empresas { get; }
     DbSet<CategoriaGasto> CategoriasGastos { get; }
+    DbSet<Sucursal> Sucursales { get; }
     DbSet<Cuenta> Cuentas { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

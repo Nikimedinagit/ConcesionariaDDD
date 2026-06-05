@@ -23,6 +23,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Cuenta> Cuentas => Set<Cuenta>();
     public DbSet<CategoriaGasto> CategoriasGastos => Set<CategoriaGasto>();
+    public DbSet<Sucursal> Sucursales => Set<Sucursal>();
     public DbSet<Empresa> Empresas => Set<Empresa>();
     public DbSet<Provincia> Provincias => Set<Provincia>();
     public DbSet<Localidad> Localidades => Set<Localidad>();
