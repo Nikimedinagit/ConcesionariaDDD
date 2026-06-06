@@ -12,13 +12,60 @@ public class SucursalRepository : ISucursalRepository
         _context = context;
     }
 
-    public async Task<List<Sucursal>> ObtenerActivasAsync()
+    //TAREA PARA AGREGAR
+    public async Task AddAsync(Sucursal sucursal)
     {
-        return await _context.Sucursales.Where(s => !s.Eliminado).ToListAsync();
+        await _context.Sucursales.AddAsync(sucursal);
     }
 
-    public async Task<List<Sucursal>> ObtenerInactivasAsync()
+    //METODO PARA OBTENER LAS SUCURSALES ACTIVAS SEGUN FILTRO
+    public async Task<List<Sucursal>> ObtenerActivasAsync(Guid empresaId, string filtro)
     {
-        return await _context.Sucursales.Where(s => s.Eliminado).ToListAsync();
+        var obtenerSucurasActivas = _context
+            .Sucursales.Where(s => s.EmpresaId == empresaId)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(filtro))
+        {
+            obtenerSucurasActivas = obtenerSucurasActivas.Where(s =>
+                s.Nombre.Contains(filtro)
+                || s.Direccion.Contains(filtro)
+                || s.LocalidadId.ToString().Contains(filtro)
+            );
+        }
+
+        return await obtenerSucurasActivas.ToListAsync();
+    }
+
+    //METODO PARA OBTENER LAS SUCURSALES INACTIVAS SEGUN FILTRO
+    public async Task<List<Sucursal>> ObtenerInactivasAsync(Guid empresaId, string filtro)
+    {
+        var obtenerSucursalesInactivas = _context
+            .Sucursales.IgnoreQueryFilters()
+            .Where(s => s.EmpresaId == empresaId && s.Eliminado)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(filtro))
+        {
+            obtenerSucursalesInactivas = obtenerSucursalesInactivas.Where(s =>
+                s.Nombre.Contains(filtro)
+                || s.Direccion.Contains(filtro)
+                || s.LocalidadId.ToString().Contains(filtro)
+            );
+        }
+
+        return await obtenerSucursalesInactivas.ToListAsync();
+    }
+
+    public async Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId)
+    {
+        return await _context.Sucursales.AnyAsync(s =>
+            s.EmpresaId == empresaId && s.Nombre.ToLower() == nombre.ToLower()
+        );
+    }
+
+    public async Task<bool> LocalidadExisteAsync(Guid localidadId)
+    {
+        return await _context.Localidades.AnyAsync(s => s.Id == localidadId);
     }
 }

@@ -24,13 +24,14 @@ public static class DependencyInjection
         // Base de Datos
         // =========================
 
-        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
-        {
-            var currentUser = serviceProvider.GetRequiredService<ICurrentUserService>();
+        services.AddDbContext<ApplicationDbContext>(
+            (serviceProvider, options) =>
+            {
+                var currentUser = serviceProvider.GetRequiredService<ICurrentUserService>();
 
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"));
-        });
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            }
+        );
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>()
@@ -72,11 +73,11 @@ public static class DependencyInjection
         // Repositories
         // =========================
 
-        services.AddScoped<ICategoriaGastoRepository,
-            CategoriaGastoRepository>();
+        services.AddScoped<ICategoriaGastoRepository, CategoriaGastoRepository>();
 
-        services.AddScoped<ICuentaRepository,
-            CuentaRepository>();
+        services.AddScoped<ISucursalRepository, SucursalRepository>();
+
+        services.AddScoped<ICuentaRepository, CuentaRepository>();
 
         return services;
     }
