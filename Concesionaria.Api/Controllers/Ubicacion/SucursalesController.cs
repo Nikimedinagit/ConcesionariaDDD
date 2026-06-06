@@ -1,3 +1,4 @@
+using Application.Features.Ubicaciones.Commands.AgregarSucursal;
 using Application.Features.Ubicaciones.Queries.ObtenerSucursalesActivas;
 using Application.Features.Ubicaciones.Queries.ObtenerSucursalesInactivas;
 using Concesionaria.Application.Interfaces;
@@ -41,5 +42,13 @@ public class SucursalesController : ControllerBase
         );
 
         return Ok(resultadoSucursalesInactivas);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarSucursalCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Sucursal agregada correctamente.", sucursalId = id });
     }
 }
