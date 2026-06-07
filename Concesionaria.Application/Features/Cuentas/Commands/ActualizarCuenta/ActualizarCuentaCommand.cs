@@ -1,0 +1,8 @@
+using MediatR;
+
+namespace Application.Features.Cuentas.Commands.ActualizarCuenta;
+
+public record ActualizarCuentaCommand : IRequest<Unit>{
+    public Guid CuentaId { get; init; }
+    public string Nombre { get; init; } = string.Empty;
+}
