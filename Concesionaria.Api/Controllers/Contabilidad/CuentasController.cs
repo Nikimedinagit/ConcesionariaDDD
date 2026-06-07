@@ -1,12 +1,15 @@
 using Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
+using Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Concesionaria.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CuentasController : ControllerBase
 {
     // private readonly ObtenerCuentasActivasQuery _handler;
@@ -17,23 +20,25 @@ public class CuentasController : ControllerBase
         _mediator = mediator;
     }
 
+    //METODO OBTENER ACTIVAS
     [HttpGet("activas")]
-    public async Task<IActionResult> ObtenerActivas()
+    public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
     {
         var resultadoCuentasActivas = await _mediator.Send(
-            new ObtenerCuentasActivasQuery()
+            new ObtenerCuentasActivasQuery { Filtro = filtro }
         );
 
         return Ok(resultadoCuentasActivas);
     }
 
-    // [HttpGet("inactivas")]
-    // public async Task<IActionResult> ObtenerInactivas()
-    // {
-    //     var resultadoCuentasInactivas = await _mediator.Send(
-    //         new ObtenerCuentasInactivasQuery()
-    //     );
+    // METODO PARA OBTENER INACTIVAS
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    {
+        var resultadoCuentasInactivas = await _mediator.Send(
+            new ObtenerCuentasInactivasQuery { Filtro = filtro }
+        );
 
-    //     return Ok(resultadoCuentasInactivas);
-    // }
+        return Ok(resultadoCuentasInactivas);
+    }
 }

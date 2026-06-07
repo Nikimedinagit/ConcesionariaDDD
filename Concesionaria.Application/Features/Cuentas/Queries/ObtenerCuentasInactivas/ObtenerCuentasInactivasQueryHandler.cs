@@ -1,3 +1,4 @@
+using Concesionaria.Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
@@ -6,17 +7,21 @@ public class ObtenerCuentasInactivasQueryHandler
     : IRequestHandler<ObtenerCuentasInactivasQuery, List<CuentaDto>>
 {
     private readonly ICuentaRepository _repository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public ObtenerCuentasInactivasQueryHandler(ICuentaRepository repository)
+    public ObtenerCuentasInactivasQueryHandler(ICuentaRepository repository, ICurrentUserService currentUserService)
     {
         _repository = repository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<List<CuentaDto>> Handle(
         ObtenerCuentasInactivasQuery request,
         CancellationToken cancellationToken)
     {
-        var cuentas = await _repository.ObtenerInactivasAsync();
+        var empresaId = _currentUserService.EmpresaId;
+
+        var cuentas = await _repository.ObtenerInactivasAsync(empresaId, request.Filtro);
 
         return cuentas
             .Select(c => new CuentaDto
@@ -27,6 +32,7 @@ public class ObtenerCuentasInactivasQueryHandler
                 Tipo = c.Tipo,
                 Nivel = c.Nivel
             })
+            .OrderBy(c => c.Nivel).ThenBy(c => c.Tipo).ThenBy(c => c.Codigo)
             .ToList();
     }
 }

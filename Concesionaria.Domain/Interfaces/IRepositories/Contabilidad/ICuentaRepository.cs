@@ -2,6 +2,8 @@ using Concesionaria.Domain.Cuentas;
 
 public interface ICuentaRepository
 {
-    Task<List<Cuenta>> ObtenerActivasAsync();
-    Task<List<Cuenta>> ObtenerInactivasAsync();
+    // TAREA PARA OBTENER ACTIVAS
+    Task<List<Cuenta>> ObtenerActivasAsync(Guid empresaId, string filtro = null);
+    //TAREA PARA OBTENER INACTIVAS
+    Task<List<Cuenta>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
 }
