@@ -71,7 +71,8 @@ public class ActualizarSucursalCommandHandler : IRequestHandler<ActualizarSucurs
         {
             await _context.SaveChangesAsync(cancellationToken);
         }
-        else
+
+        if (!Actualizar)
         {
             throw new Exception("No se realizaron cambios en la sucursal.");
         }
