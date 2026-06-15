@@ -1,4 +1,5 @@
 using Concesionaria.Domain.Cuentas;
+using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,11 @@ public class CuentaRepository : ICuentaRepository
     public CuentaRepository(ApplicationDbContext context)
     {
         _context = context;
+    }
+
+    public async Task AddAsync(Cuenta cuenta)
+    {
+        await _context.Cuentas.AddAsync(cuenta);
     }
 
     public async Task<List<Cuenta>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
@@ -35,5 +41,19 @@ public class CuentaRepository : ICuentaRepository
                 c.Nombre.Contains(filtro));
         }
         return await obtenerCuentasInactivas.ToListAsync();
+    }
+
+    public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
+    {
+        return await _context.Cuentas.AnyAsync(c =>
+            c.EmpresaId == empresaId && c.Nombre.ToLower() == nombre.ToLower()
+        );
+    }
+
+    public async Task<bool> ExistePorCodigoAsync(string codigo, Guid empresaId)
+    {
+        return await _context.Cuentas.AnyAsync(c =>
+            c.EmpresaId == empresaId && c.Codigo.ToLower() == codigo.ToLower()
+        );
     }
 }

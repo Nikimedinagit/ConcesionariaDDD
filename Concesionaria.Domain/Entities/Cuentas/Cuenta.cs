@@ -17,6 +17,10 @@ public class Cuenta : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 
     public bool Eliminado { get; set; } = false;
 
+    public Guid? CuentaPadreId { get; private set; }
+    public Cuenta CuentaPadre { get; private set; }
+    public ICollection<Cuenta> CuentasHijas { get; private set; } = new List<Cuenta>();
+
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime? UpdatedAt { get; set; }
@@ -24,7 +28,7 @@ public class Cuenta : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 
     protected Cuenta() { }
 
-    private Cuenta(Guid empresaId, string codigo, string nombre, TipoCuenta tipo, int nivel)
+    private Cuenta(Guid empresaId, string codigo, string nombre, TipoCuenta tipo, int nivel, Guid? padreId)
     {
         Id = Guid.NewGuid();
 
@@ -33,13 +37,14 @@ public class Cuenta : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         Nombre = nombre.ToUpper().Trim();
         Tipo = tipo;
         Nivel = nivel;
+        CuentaPadreId = padreId;
 
         Eliminado = false;
     }
 
-    public static Cuenta Crear(Guid empresaId, string codigo, string nombre, TipoCuenta tipo, int nivel)
+    public static Cuenta Crear(Guid empresaId, string codigo, string nombre, TipoCuenta tipo, int nivel, Guid? padreId = null)
     {
-        return new Cuenta(empresaId, codigo, nombre, tipo, nivel);
+        return new Cuenta(empresaId, codigo, nombre, tipo, nivel, padreId);
     }
 
     public void ActualizarNombre(string nombre)

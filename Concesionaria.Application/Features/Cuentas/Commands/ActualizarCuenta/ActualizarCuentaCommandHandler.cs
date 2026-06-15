@@ -34,7 +34,23 @@ public class ActualizarCuentaCommandHandler
         if (obtenerCuentaId == null)
             throw new Exception("Cuenta no encontrada.");
 
-        obtenerCuentaId.ActualizarNombre(request.Nombre);
+        //ACTUALIZACIONES PARCIALES
+
+        if (request.Nombre is not null)
+            obtenerCuentaId.ActualizarNombre(request.Nombre);
+
+        if (request.Codigo is not null)
+            obtenerCuentaId.ActualizarCodigo(request.Codigo);
+
+        if (request.Tipo.HasValue)
+            obtenerCuentaId.ActualizarTipo(request.Tipo.Value);
+
+        if (request.Nivel.HasValue)
+            obtenerCuentaId.ActualizarNivel(request.Nivel.Value);
+
+        //AUDITORIA
+        obtenerCuentaId.UpdatedAt = DateTime.UtcNow;
+        obtenerCuentaId.UpdatedBy = _currentUser.UserId;
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

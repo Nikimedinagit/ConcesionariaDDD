@@ -43,6 +43,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<Cuenta>(entity =>
+        {
+            entity.HasOne(c => c.CuentaPadre)
+                .WithMany(c => c.CuentasHijas)
+                .HasForeignKey(c => c.CuentaPadreId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
         ApplyGlobalFilters(builder);
     }
 

@@ -1,3 +1,4 @@
+using Application.Features.Cuentas.Commands.AgregarCuenta;
 using Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
 using Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
 using MediatR;
@@ -40,5 +41,16 @@ public class CuentasController : ControllerBase
         );
 
         return Ok(resultadoCuentasInactivas);
+    }
+
+    // METODO PARA AGREGAR CUENTA
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarCuentaCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Cuenta agregada correctamente.", cuentaId = id }
+        );
     }
 }

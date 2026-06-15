@@ -9,4 +9,5 @@ public record AgregarCuentaCommand : IRequest<Guid>
     public string Codigo { get; init; } = string.Empty;
     public int Nivel { get; init; }
     public TipoCuenta Tipo { get; init; }
+    public Guid? CuentaPadreId { get; init; }
 }

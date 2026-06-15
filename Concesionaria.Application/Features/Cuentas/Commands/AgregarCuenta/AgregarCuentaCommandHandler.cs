@@ -26,7 +26,7 @@ public class AgregarCuentaCommandHandler
     {
         var empresaId = _currentUser.EmpresaId;
 
-        var cuenta = Cuenta.Crear(empresaId, request.Nombre, request.Codigo, request.Tipo, request.Nivel);
+        var cuenta = Cuenta.Crear(empresaId, request.Codigo, request.Nombre, request.Tipo, request.Nivel, request.CuentaPadreId);
 
         await _context.Cuentas.AddAsync(cuenta, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
