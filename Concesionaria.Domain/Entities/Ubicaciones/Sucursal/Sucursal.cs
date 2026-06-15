@@ -12,12 +12,10 @@ public class Sucursal : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
     public Localidad Localidad { get; private set; }
     public Guid LocalidadId { get; private set; }
 
-
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime? UpdatedAt { get; set; }
     public string UpdatedBy { get; set; } = string.Empty;
-
 
     public bool Eliminado { get; set; }
 
@@ -53,6 +51,14 @@ public class Sucursal : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
     {
         LocalidadId = localidadId;
     }
+
+    // public void ActualizarSucursal(string nombre, string direccion, Guid localidadId)
+    // {
+
+    //     Nombre = nombre.ToUpper().Trim();
+    //     Direccion = direccion.ToUpper().Trim();
+    //     LocalidadId = localidadId;
+    // }
 
     public void Desactivar() => Eliminado = true;
 

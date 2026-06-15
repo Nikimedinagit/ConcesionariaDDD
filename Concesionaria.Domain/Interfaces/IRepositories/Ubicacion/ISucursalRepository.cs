@@ -17,4 +17,7 @@ public interface ISucursalRepository
 
     //TAREA PARA EXISTENCIA ACTUALIZAR LOCALIDAD
     Task<bool> LocalidadExisteAsync(Guid localidadId);
+
+    //TAREA PARA ACTUALIZAR LOCALIDAD
+    Task UpdateAsync();
 }

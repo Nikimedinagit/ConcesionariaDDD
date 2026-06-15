@@ -1,3 +1,4 @@
+using Application.Features.Ubicaciones.Commands.ActualizarSucursal;
 using Application.Features.Ubicaciones.Commands.AgregarSucursal;
 using Application.Features.Ubicaciones.Queries.ObtenerSucursalesActivas;
 using Application.Features.Ubicaciones.Queries.ObtenerSucursalesInactivas;
@@ -50,5 +51,20 @@ public class SucursalesController : ControllerBase
         var id = await _mediator.Send(command);
 
         return Ok(new { mensaje = "Sucursal agregada correctamente.", sucursalId = id });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarSucursalCommand command
+    )
+    {
+        if (id != command.SucursalId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+
+        await _mediator.Send(command);
+        return Ok(new { mensaje = "Sucursal actualizada correctamente." });
     }
 }

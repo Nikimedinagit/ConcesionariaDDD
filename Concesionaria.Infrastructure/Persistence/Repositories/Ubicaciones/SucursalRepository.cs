@@ -68,4 +68,9 @@ public class SucursalRepository : ISucursalRepository
     {
         return await _context.Localidades.AnyAsync(s => s.Id == localidadId);
     }
+
+    public async Task UpdateAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }
