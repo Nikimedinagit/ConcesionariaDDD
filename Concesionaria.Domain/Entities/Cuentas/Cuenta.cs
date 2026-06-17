@@ -52,20 +52,20 @@ public class Cuenta : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         Nombre = nombre.ToUpper().Trim();
     }
 
-    public void ActualizarTipo(TipoCuenta tipo)
-    {
-        Tipo = tipo;
-    }
+    // public void ActualizarTipo(TipoCuenta tipo)
+    // {
+    //     Tipo = tipo;
+    // }
 
-    public void ActualizarNivel(int nivel)
-    {
-        Nivel = nivel;
-    }
+    // public void ActualizarNivel(int nivel)
+    // {
+    //     Nivel = nivel;
+    // }
 
-    public void ActualizarCodigo(string codigo)
-    {
-        Codigo = codigo.ToUpper().Trim();
-    }
+    // public void ActualizarCodigo(string codigo)
+    // {
+    //     Codigo = codigo.ToUpper().Trim();
+    // }
 
     public void Activar() => Eliminado = false;
 

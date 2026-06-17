@@ -39,14 +39,14 @@ public class ActualizarCuentaCommandHandler
         if (request.Nombre is not null)
             obtenerCuentaId.ActualizarNombre(request.Nombre);
 
-        if (request.Codigo is not null)
-            obtenerCuentaId.ActualizarCodigo(request.Codigo);
+        // if (request.Codigo is not null)
+        //     obtenerCuentaId.ActualizarCodigo(request.Codigo);
 
-        if (request.Tipo.HasValue)
-            obtenerCuentaId.ActualizarTipo(request.Tipo.Value);
+        // if (request.Tipo.HasValue)
+        //     obtenerCuentaId.ActualizarTipo(request.Tipo.Value);
 
-        if (request.Nivel.HasValue)
-            obtenerCuentaId.ActualizarNivel(request.Nivel.Value);
+        // if (request.Nivel.HasValue)
+        //     obtenerCuentaId.ActualizarNivel(request.Nivel.Value);
 
         //AUDITORIA
         obtenerCuentaId.UpdatedAt = DateTime.UtcNow;

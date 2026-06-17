@@ -10,4 +10,11 @@ public interface ICuentaRepository
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
     Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
     Task<bool> ExistePorCodigoAsync(string codigo, Guid empresaId);
+
+    //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
+    Task<bool> ExistePorNombreExluyendoIdAsync(
+        string nombre,
+        Guid empresaId,
+        Guid cuentaId
+    );
 }

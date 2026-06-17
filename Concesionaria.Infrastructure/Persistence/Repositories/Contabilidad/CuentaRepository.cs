@@ -19,6 +19,7 @@ public class CuentaRepository : ICuentaRepository
         await _context.Cuentas.AddAsync(cuenta);
     }
 
+    // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
     public async Task<List<Cuenta>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
         var obtenerCuentasActivas = _context.Cuentas.Where(c => c.EmpresaId == empresaId).AsQueryable();
@@ -31,6 +32,7 @@ public class CuentaRepository : ICuentaRepository
         return await obtenerCuentasActivas.ToListAsync();
     }
 
+    // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<Cuenta>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
         var obtenerCuentasInactivas = _context.Cuentas.Where(c => c.EmpresaId == empresaId && c.Eliminado).AsQueryable();
@@ -43,6 +45,7 @@ public class CuentaRepository : ICuentaRepository
         return await obtenerCuentasInactivas.ToListAsync();
     }
 
+    // METODO PARA VALIDAR EXISTENCIA POR NOMBRE PARA AGREGAR
     public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
     {
         return await _context.Cuentas.AnyAsync(c =>
@@ -50,10 +53,26 @@ public class CuentaRepository : ICuentaRepository
         );
     }
 
+    // METODO PARA VALIDAR EXISTENCIA POR CODIGO PARA AGREGAR
     public async Task<bool> ExistePorCodigoAsync(string codigo, Guid empresaId)
     {
         return await _context.Cuentas.AnyAsync(c =>
             c.EmpresaId == empresaId && c.Codigo.ToLower() == codigo.ToLower()
         );
     }
+
+    // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
+    public async Task<bool> ExistePorNombreExluyendoIdAsync(
+     string nombre,
+     Guid empresaId,
+     Guid cuentaId)
+    {
+        return await _context.Cuentas.AnyAsync(c =>
+            c.Nombre.ToLower() == nombre.ToLower()
+            && c.EmpresaId == empresaId
+            && c.Id != cuentaId
+            && !c.Eliminado
+        );
+    }
+
 }

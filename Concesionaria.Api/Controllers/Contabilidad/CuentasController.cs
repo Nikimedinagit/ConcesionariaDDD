@@ -1,3 +1,4 @@
+using Application.Features.Cuentas.Commands.ActualizarCuenta;
 using Application.Features.Cuentas.Commands.AgregarCuenta;
 using Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
 using Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
@@ -52,5 +53,21 @@ public class CuentasController : ControllerBase
         return Ok(
             new { mensaje = "Cuenta agregada correctamente.", cuentaId = id }
         );
+    }
+
+    // METODO ACTUALIZAR
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarCuentaCommand command
+    )
+    {
+        if (id != command.CuentaId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cuenta actualizada correctamente." });
     }
 }
