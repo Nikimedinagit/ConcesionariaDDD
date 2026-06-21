@@ -79,6 +79,8 @@ public static class DependencyInjection
 
         services.AddScoped<ICuentaRepository, CuentaRepository>();
 
+        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
         return services;
     }
 }

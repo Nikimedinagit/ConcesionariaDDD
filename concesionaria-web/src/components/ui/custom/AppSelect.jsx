@@ -60,20 +60,22 @@ function SelectField({
         disabled={disabled}
       >
         <SelectTrigger
-          className={`h-[40px] rounded-lg border-slate-200 ${
+          className={`h-[40px] w-full overflow-hidden rounded-lg border-slate-200 ${
             error ? "border-red-500 focus-visible:ring-red-500" : ""
           }`}
         >
-          <div className="flex items-center gap-2 truncate">
-            {Icon && <Icon className="h-4 w-4 text-slate-400" />}
-            <SelectValue placeholder={placeholder} />
+          <div className="flex min-w-0 items-center gap-2 truncate">
+            {Icon && <Icon className="h-4 w-4 shrink-0 text-slate-400" />}
+            <span className="min-w-0 truncate">
+              <SelectValue placeholder={placeholder} />
+            </span>
           </div>
         </SelectTrigger>
 
         <SelectContent
           position="popper"
           sideOffset={4}
-          className="z-[10050] w-[var(--radix-select-trigger-width)] border bg-white text-slate-900 shadow-lg"
+          className="z-[10050] max-h-[240px] w-[var(--radix-select-trigger-width)] max-w-[var(--radix-select-trigger-width)] overflow-y-auto overflow-x-hidden border bg-white text-slate-900 shadow-lg"
         >
           {searchable && (
             <div className="px-3 pt-3">
@@ -102,7 +104,9 @@ function SelectField({
 
               return (
                 <SelectItem key={itemValue} value={itemValue}>
-                  {itemLabel}
+                  <span className="block max-w-full truncate">
+                    {itemLabel}
+                  </span>
                 </SelectItem>
               );
             })

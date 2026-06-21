@@ -3,6 +3,7 @@ using Concesionaria.Domain.Identity;
 using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Ubicaciones;
 using Concesionaria.Domain.Cuentas;
+using Concesionaria.Domain.Usuarios;
 
 namespace Concesionaria.Application.Common.Interfaces;
 
@@ -15,6 +16,7 @@ public interface IApplicationDbContext
     DbSet<CategoriaGasto> CategoriasGastos { get; }
     DbSet<Sucursal> Sucursales { get; }
     DbSet<Cuenta> Cuentas { get; }
+    DbSet<Usuario> Usuarios { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const DataTableToolbar = ({ tipo, setTipo, onSearch }) => {
+const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = (value) => {
@@ -21,45 +21,47 @@ const DataTableToolbar = ({ tipo, setTipo, onSearch }) => {
         md:flex-row md:items-center md:justify-between
       "
     >
-      <div
-        className="
-        flex items-center gap-2
-        justify-center
-        md:justify-start
-      "
-      >
-        <Button
-          size="sm"
-          onClick={() => setTipo("activas")}
-          className={`
-            transition-colors
-            ${
-              tipo === "activas"
-                ? "bg-[hsl(var(--nav-bg))] text-white hover:opacity-90"
-                : "bg-transparent text-slate-600 border border-slate-200 hover:bg-slate-50"
-            }
-          `}
+      {showStatusFilter && (
+        <div
+          className="
+          flex items-center gap-2
+          justify-center
+          md:justify-start
+        "
         >
-          Activos
-        </Button>
+          <Button
+            size="sm"
+            onClick={() => setTipo("activas")}
+            className={`
+              transition-colors
+              ${
+                tipo === "activas"
+                  ? "bg-[hsl(var(--nav-bg))] text-white hover:opacity-90"
+                  : "bg-transparent text-slate-600 border border-slate-200 hover:bg-slate-50"
+              }
+            `}
+          >
+            Activos
+          </Button>
 
-        <Button
-          size="sm"
-          onClick={() => setTipo("inactivas")}
-          className={`
-            transition-colors
-            ${
-              tipo === "inactivas"
-                ? "bg-[hsl(var(--nav-bg))] text-white hover:opacity-90"
-                : "bg-transparent text-slate-600 border border-slate-200 hover:bg-slate-50"
-            }
-          `}
-        >
-          Inactivos
-        </Button>
-      </div>
+          <Button
+            size="sm"
+            onClick={() => setTipo("inactivas")}
+            className={`
+              transition-colors
+              ${
+                tipo === "inactivas"
+                  ? "bg-[hsl(var(--nav-bg))] text-white hover:opacity-90"
+                  : "bg-transparent text-slate-600 border border-slate-200 hover:bg-slate-50"
+              }
+            `}
+          >
+            Inactivos
+          </Button>
+        </div>
+      )}
 
-      <div className="relative w-full md:w-[280px]">
+      <div className="relative w-full md:ml-auto md:w-[280px]">
         <Search
           className="
             absolute left-3 top-1/2

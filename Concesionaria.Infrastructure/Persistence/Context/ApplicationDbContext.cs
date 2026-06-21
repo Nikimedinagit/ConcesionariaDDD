@@ -4,6 +4,8 @@ using Concesionaria.Domain.Cuentas;
 using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Domain.Ubicaciones;
+using Concesionaria.Domain.Usuarios;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +29,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Empresa> Empresas => Set<Empresa>();
     public DbSet<Provincia> Provincias => Set<Provincia>();
     public DbSet<Localidad> Localidades => Set<Localidad>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -35,6 +38,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         builder.Entity<Empresa>()
             .Property(e => e.MonedaPrincipal)
             .HasConversion<string>();
+
+        builder.Entity<ApplicationUser>()
+            .Property(u => u.RolId)
+            .HasMaxLength(450);
 
         builder.Entity<ApplicationUser>()
             .HasOne(u => u.Empresa)
@@ -48,6 +55,48 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             entity.HasOne(c => c.CuentaPadre)
                 .WithMany(c => c.CuentasHijas)
                 .HasForeignKey(c => c.CuentaPadreId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<Usuario>(entity =>
+        {
+            entity.ToTable("Usuarios");
+
+            entity.Property(u => u.RolId)
+                .IsRequired()
+                .HasMaxLength(450);
+
+            entity.Property(u => u.NombreCompleto)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(u => u.PasswordHash)
+                .IsRequired();
+
+            entity.Property(u => u.Estado)
+                .IsRequired()
+                .HasConversion<string>();
+
+            entity.HasIndex(u => new { u.EmpresaId, u.Email })
+                .IsUnique();
+
+            entity.HasOne(u => u.Empresa)
+                .WithMany()
+                .HasForeignKey(u => u.EmpresaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(u => u.Sucursal)
+                .WithMany()
+                .HasForeignKey(u => u.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne<IdentityRole>()
+                .WithMany()
+                .HasForeignKey(u => u.RolId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

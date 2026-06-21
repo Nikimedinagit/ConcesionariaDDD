@@ -10,7 +10,7 @@ public class ApplicationUser : IdentityUser
     public virtual Empresa Empresa { get; private set; } = null!;
     public string NombreCompleto { get; private set; } = string.Empty;
     public string Telefono { get; private set; }
-    public Guid? RolId { get; private set; }
+    public string RolId { get; private set; }
     public string AvatarUrl { get; private set; }
 
     public string CodigoRecuperacion { get; private set; }
@@ -26,7 +26,7 @@ public class ApplicationUser : IdentityUser
         NombreCompleto = nombreCompleto;
     }
 
-    public void AsignarRol(Guid rolId) => RolId = rolId;
+    public void AsignarRol(string rolId) => RolId = rolId;
     public void ActualizarNombre(string nombre) => NombreCompleto = nombre.ToUpper().Trim();
     public void ActualizarAvatar(string url) => AvatarUrl = url;
     public void ActualizarTelefono(string telefono)

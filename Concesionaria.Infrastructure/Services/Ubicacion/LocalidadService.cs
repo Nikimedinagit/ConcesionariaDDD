@@ -21,7 +21,13 @@ public class LocalidadService : ILocalidadService
     public async Task<IEnumerable<LocalidadDto>> GetAllLocalidadesAsync()
     {
         return await _context.Localidades
-            .Select(l => new LocalidadDto(l.Id, l.Nombre, l.CodigoPostal))
+            .Select(l => new LocalidadDto(
+                l.Id,
+                l.ProvinciaId,
+                l.Provincia.Nombre,
+                l.Nombre,
+                l.CodigoPostal
+            ))
             .ToListAsync();
     }
 }

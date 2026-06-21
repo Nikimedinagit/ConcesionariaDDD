@@ -4,6 +4,7 @@ import {
   SquarePen,
   Trash2,
   RotateCcw,
+  KeyRound,
 } from "lucide-react";
 
 export const ActionButton = ({
@@ -39,6 +40,16 @@ export const ActionButton = ({
         text-emerald-500
         hover:bg-emerald-50
         hover:text-emerald-600
+      `,
+    },
+
+    password: {
+      icon: KeyRound,
+
+      className: `
+        text-amber-500
+        hover:bg-amber-50
+        hover:text-amber-600
       `,
     },
   };

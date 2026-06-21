@@ -8,8 +8,11 @@ import LoginPage from "@/pages/Auth/LoginPage"
 import RegisterPage from "@/pages/Auth/RegisterPage"
 import RecoverAccessPage from "@/pages/Auth/RecoverAccessPage"
 import { PerfilPage } from "@/pages/Profile/PerfilPage";
+import { UsuarioPage } from "@/pages/Acceso/UsuarioPage";
 
 import { CategoriaGastoPage } from "@/pages/Tesoseria/CategoriaGastoPage";
+import { LocalidadPage } from "@/pages/Ubicacion/LocalidadPage";
+import { ProvinciaPage } from "@/pages/Ubicacion/ProvinciaPage";
 import { SucursalPage } from "@/pages/Ubicacion/SucursalPage";
 
 export default function AppRoutes() {
@@ -29,8 +32,11 @@ export default function AppRoutes() {
           <Route path="/layout" element={<MainLayout />}>
   
             <Route path="perfil" element={<PerfilPage />} />
+            <Route path="usuarios" element={<UsuarioPage />} />
 
             <Route path="categorias-gastos" element={<CategoriaGastoPage />} />
+            <Route path="provincias" element={<ProvinciaPage />} />
+            <Route path="localidades" element={<LocalidadPage />} />
             <Route path="sucursales" element={<SucursalPage />} />
           </Route>
         </Route>

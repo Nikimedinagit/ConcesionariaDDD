@@ -24,7 +24,7 @@ export function NavbarHeader() {
       items: [
         { to: "/empresa", name: "Empresa" },
         { to: "/roles", name: "Roles" },
-        { to: "/usuarios", name: "Usuarios" },
+        { to: "/layout/usuarios", name: "Usuarios" },
       ],
     },
     {
@@ -79,8 +79,8 @@ export function NavbarHeader() {
     {
       title: "Ubicaciones",
       items: [
-        { to: "/provincias", name: "Provincias" },
-        { to: "/localidades", name: "Localidades" },
+        { to: "/layout/provincias", name: "Provincias" },
+        { to: "/layout/localidades", name: "Localidades" },
         { to: "/layout/sucursales", name: "Sucursales" },
       ],
     },

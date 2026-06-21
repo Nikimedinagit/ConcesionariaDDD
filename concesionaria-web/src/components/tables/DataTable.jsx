@@ -17,7 +17,14 @@ import {
 import DataTableToolbar from "./DataTableToolbar";
 import DataTablePagination from "./DataTablePagination";
 
-const DataTable = ({ columns, data, tipo, onToggle, onSearch }) => {
+const DataTable = ({
+  columns,
+  data,
+  tipo,
+  onToggle,
+  onSearch,
+  showStatusFilter = true,
+}) => {
   const table = useReactTable({
   data: data ?? [],
   columns,
@@ -45,7 +52,12 @@ const DataTable = ({ columns, data, tipo, onToggle, onSearch }) => {
         shadow-sm
       "
     >
-      <DataTableToolbar tipo={tipo} setTipo={onToggle} onSearch={onSearch} />
+      <DataTableToolbar
+        tipo={tipo}
+        setTipo={onToggle}
+        onSearch={onSearch}
+        showStatusFilter={showStatusFilter}
+      />
       <div className="overflow-x-auto">
         <Table className="min-w-[700px]">
           <TableHeader className="bg-[hsl(var(--nav-bg))/0.03]">
