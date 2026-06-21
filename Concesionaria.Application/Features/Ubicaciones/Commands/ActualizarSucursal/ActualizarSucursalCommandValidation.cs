@@ -16,11 +16,15 @@ public class ActualizarSucursalCommandValidator : AbstractValidator<ActualizarSu
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
             .MustAsync(
-                async (nombre, cancellationToken) =>
+                async (command, nombre, cancellationToken) =>
                 {
                     var empresaId = currentUser.EmpresaId;
 
-                    return !await repository.ExistePorNombreLocalidadAsync(nombre, empresaId);
+                    return !await repository.ExistePorNombreLocalidadAsync(
+                        nombre,
+                        empresaId,
+                        command.SucursalId
+                    );
                 }
             )
             .WithMessage("Ya existe la sucursal.");

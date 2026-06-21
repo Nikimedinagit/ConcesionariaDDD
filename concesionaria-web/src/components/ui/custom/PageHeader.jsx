@@ -63,14 +63,14 @@ const PageHeader = ({
                 leading-none
                 tracking-tight
                 text-slate-900
-
                 sm:text-2xl
+                pb-1
               "
             >
               {title}
             </h1>
 
-            <div className="mt-2 flex items-center gap-1.5">
+            <div className="mt-3 flex items-center gap-1.5">
               <div
                 className="
                   h-1 w-10 rounded-full

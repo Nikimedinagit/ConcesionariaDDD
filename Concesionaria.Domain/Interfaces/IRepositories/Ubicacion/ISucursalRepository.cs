@@ -15,6 +15,9 @@ public interface ISucursalRepository
     //TAREA PARA EXISTENCIA AGREGAR NOMBRE
     Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId);
 
+    //TAREA PARA EXISTENCIA ACTUALIZAR NOMBRE
+    Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId, Guid sucursalId);
+
     //TAREA PARA EXISTENCIA ACTUALIZAR LOCALIDAD
     Task<bool> LocalidadExisteAsync(Guid localidadId);
 

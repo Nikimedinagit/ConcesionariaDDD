@@ -94,7 +94,7 @@ export const CategoriaGastoPage = () => {
   return (
     <TooltipProvider delayDuration={300}>
       <div>
-        <PageHeader title="Categorías de Gasto" icon={Wallet}>
+        <PageHeader title="Categorías de Gastos" icon={Wallet}>
           <AddButton onClick={handleOpenCreate}>Nueva Categoría</AddButton>
         </PageHeader>
 

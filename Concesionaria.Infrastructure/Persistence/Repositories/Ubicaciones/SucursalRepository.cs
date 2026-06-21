@@ -64,6 +64,19 @@ public class SucursalRepository : ISucursalRepository
         );
     }
 
+    public async Task<bool> ExistePorNombreLocalidadAsync(
+        string nombre,
+        Guid empresaId,
+        Guid sucursalId
+    )
+    {
+        return await _context.Sucursales.AnyAsync(s =>
+            s.EmpresaId == empresaId
+            && s.Id != sucursalId
+            && s.Nombre.ToLower() == nombre.ToLower()
+        );
+    }
+
     public async Task<bool> LocalidadExisteAsync(Guid localidadId)
     {
         return await _context.Localidades.AnyAsync(s => s.Id == localidadId);

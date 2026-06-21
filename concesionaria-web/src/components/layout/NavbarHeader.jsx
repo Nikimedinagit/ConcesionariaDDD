@@ -81,7 +81,7 @@ export function NavbarHeader() {
       items: [
         { to: "/provincias", name: "Provincias" },
         { to: "/localidades", name: "Localidades" },
-        { to: "/sucursales", name: "Sucursales" },
+        { to: "/layout/sucursales", name: "Sucursales" },
       ],
     },
   ];

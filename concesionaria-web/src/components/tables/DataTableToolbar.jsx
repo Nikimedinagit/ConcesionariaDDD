@@ -1,8 +1,17 @@
+import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const DataTableToolbar = ({ tipo, setTipo, onSearch }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (value) => {
+    const nextValue = value.toUpperCase();
+    setSearchValue(nextValue);
+    onSearch(nextValue);
+  };
+
   return (
     <div
       className="
@@ -62,7 +71,8 @@ const DataTableToolbar = ({ tipo, setTipo, onSearch }) => {
 
         <Input
           placeholder="Buscar..."
-          onChange={(e) => onSearch(e.target.value)} 
+          value={searchValue}
+          onChange={(e) => handleSearch(e.target.value)}
           className="pl-9 border-slate-200 bg-slate-50/60 focus-visible:ring-[hsl(var(--nav-bg))]"
         />
       </div>

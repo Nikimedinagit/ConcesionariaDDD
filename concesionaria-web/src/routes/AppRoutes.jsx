@@ -10,6 +10,7 @@ import RecoverAccessPage from "@/pages/Auth/RecoverAccessPage"
 import { PerfilPage } from "@/pages/Profile/PerfilPage";
 
 import { CategoriaGastoPage } from "@/pages/Tesoseria/CategoriaGastoPage";
+import { SucursalPage } from "@/pages/Ubicacion/SucursalPage";
 
 export default function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ export default function AppRoutes() {
             <Route path="perfil" element={<PerfilPage />} />
 
             <Route path="categorias-gastos" element={<CategoriaGastoPage />} />
+            <Route path="sucursales" element={<SucursalPage />} />
           </Route>
         </Route>
 

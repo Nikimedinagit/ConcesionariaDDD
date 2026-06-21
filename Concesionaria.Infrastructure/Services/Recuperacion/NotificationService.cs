@@ -30,7 +30,7 @@ public class NotificationService : INotificationService
     {
         using var client = new SmtpClient("sandbox.smtp.mailtrap.io", 2525)
         {
-            Credentials = new NetworkCredential("585b91458c188e", "6edbf2dc60e89e"),
+            Credentials = new NetworkCredential("337f06da00baa3", "938eac8304bac9"),
             EnableSsl = true
         };
         var mailMessage = new MailMessage("sistema@concesionaria.com", destino, "Código de Recuperación", mensaje);
