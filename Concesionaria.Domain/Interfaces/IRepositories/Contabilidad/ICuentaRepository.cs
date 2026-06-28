@@ -2,7 +2,10 @@ using Concesionaria.Domain.Cuentas;
 
 public interface ICuentaRepository
 {
+    //TAREA PARA AGREGAR
     Task AddAsync(Cuenta cuenta);
+    //TAREA PARA ACTUALIZAR
+    Task UpdateAsync(Cuenta cuenta);
     // TAREA PARA OBTENER ACTIVAS
     Task<List<Cuenta>> ObtenerActivasAsync(Guid empresaId, string filtro = null);
     //TAREA PARA OBTENER INACTIVAS

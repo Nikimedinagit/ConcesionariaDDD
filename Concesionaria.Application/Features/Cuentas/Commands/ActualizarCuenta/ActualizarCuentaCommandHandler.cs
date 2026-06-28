@@ -49,8 +49,8 @@ public class ActualizarCuentaCommandHandler
         //     obtenerCuentaId.ActualizarNivel(request.Nivel.Value);
 
         //AUDITORIA
-        obtenerCuentaId.UpdatedAt = DateTime.UtcNow;
-        obtenerCuentaId.UpdatedBy = _currentUser.UserId;
+        // obtenerCuentaId.UpdatedAt = DateTime.UtcNow;
+        // obtenerCuentaId.UpdatedBy = _currentUser.UserId;
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

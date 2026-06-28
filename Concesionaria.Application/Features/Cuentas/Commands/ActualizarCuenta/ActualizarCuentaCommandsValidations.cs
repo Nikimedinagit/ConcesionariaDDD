@@ -14,7 +14,7 @@ public class ActualizarCuentaCommandValidator
         ICurrentUserService currentUser
     )
     {
-        RuleFor(cg => cg.Nombre)
+        RuleFor(c => c.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
             .MustAsync(

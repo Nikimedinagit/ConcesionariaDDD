@@ -1,5 +1,7 @@
+using Application.Features.Cuentas.Commands.ActivarCuenta;
 using Application.Features.Cuentas.Commands.ActualizarCuenta;
 using Application.Features.Cuentas.Commands.AgregarCuenta;
+using Application.Features.Cuentas.Commands.DesactivarCuenta;
 using Application.Features.Cuentas.Queries.ObtenerCuentasActivas;
 using Application.Features.Cuentas.Queries.ObtenerCuentasInactivas;
 using MediatR;
@@ -69,5 +71,39 @@ public class CuentasController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Cuenta actualizada correctamente." });
+    }
+
+    // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarCuentaCommand command
+    )
+    {
+        if (id != command.CuentaId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cuenta activada correctamente." });
+    }
+
+    // MEOTODO ACTUALIZAR ESTADO A DESACTIVAR
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarCuentaCommand command
+    )
+    {
+        if (id != command.CuentaId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cuenta desactivada correctamente." });
     }
 }

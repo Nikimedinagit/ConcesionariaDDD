@@ -14,9 +14,17 @@ public class CuentaRepository : ICuentaRepository
         _context = context;
     }
 
+    //METODO PARA AGREGAR
     public async Task AddAsync(Cuenta cuenta)
     {
         await _context.Cuentas.AddAsync(cuenta);
+    }
+
+    //METODO PARA ACTUALIZAR
+    public async Task UpdateAsync(Cuenta cuenta)
+    {
+        _context.Cuentas.Update(cuenta);
+        await _context.SaveChangesAsync();
     }
 
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
@@ -35,7 +43,11 @@ public class CuentaRepository : ICuentaRepository
     // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<Cuenta>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
-        var obtenerCuentasInactivas = _context.Cuentas.Where(c => c.EmpresaId == empresaId && c.Eliminado).AsQueryable();
+        var obtenerCuentasInactivas = _context.Cuentas
+            .IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId && c.Eliminado)
+            .AsQueryable();
+
         if (!string.IsNullOrEmpty(filtro))
         {
             obtenerCuentasInactivas = obtenerCuentasInactivas.Where(c =>
