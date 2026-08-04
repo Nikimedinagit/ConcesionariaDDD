@@ -17,6 +17,7 @@ public interface IApplicationDbContext
     DbSet<Sucursal> Sucursales { get; }
     DbSet<Cuenta> Cuentas { get; }
     DbSet<Usuario> Usuarios { get; }
+    DbSet<MarcaVehiculo> MarcasVehiculos { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -30,6 +30,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Provincia> Provincias => Set<Provincia>();
     public DbSet<Localidad> Localidades => Set<Localidad>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<MarcaVehiculo> MarcasVehiculos => Set<MarcaVehiculo>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
