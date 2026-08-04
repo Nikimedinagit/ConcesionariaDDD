@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosInactivas;
+using Application.Features.Vehiculos.Commands.ActivarMarcaVehiculo;
 
 namespace Concesionaria.API.Controllers;
 
@@ -73,21 +74,21 @@ public class MarcasVehiculosController : ControllerBase
     // }
 
     // METODO ACTUALIZAR ESTADO A ACTIVAR
-    // [HttpPut("activar/{id}")]
-    // public async Task<IActionResult> Activar(
-    //     Guid id,
-    //     [FromBody] ActivarCategoriaGastoCommand command
-    // )
-    // {
-    //     if (id != command.CategoriaGastoId)
-    //     {
-    //         return BadRequest(new { mensaje = "El Id no coincide." });
-    //     }
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarMarcaVehiculoCommand command
+    )
+    {
+        if (id != command.MarcaVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
         
-    //     await _mediator.Send(command);
+        await _mediator.Send(command);
 
-    //     return Ok(new { mensaje = "Categoría de gasto activada correctamente." });
-    // }
+        return Ok(new { mensaje = "Marca de vehículo activada correctamente." });
+    }
 
     // MEOTODO ACTUALIZAR ESTADO A DESACTIVAR
     // [HttpPut("desactivar/{id}")]
