@@ -1,8 +1,8 @@
-// using MediatR;
+using MediatR;
 
-// namespace Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
+namespace Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
 
-// public record DesactivarMarcaVehiculoCommand : IRequest<Unit>{
-//     public Guid MarcaVehiculoId { get; init; }
-//     public bool Eliminado { get; init; }
-// }
+public record DesactivarMarcaVehiculoCommand : IRequest<Unit>{
+    public Guid MarcaVehiculoId { get; init; }
+    public bool Eliminado { get; init; }
+}

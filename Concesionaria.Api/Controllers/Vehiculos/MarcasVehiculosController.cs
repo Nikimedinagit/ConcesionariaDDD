@@ -7,7 +7,7 @@ using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosInactivas;
 using Application.Features.Vehiculos.Commands.ActivarMarcaVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarMarcaVehiculo;
 using Application.Features.Vehiculos.Commands.ActualizarMarcaVehiculo;
-// using Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
+using Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
 
 namespace Concesionaria.API.Controllers;
 
@@ -94,19 +94,19 @@ public class MarcasVehiculosController : ControllerBase
     }
 
     // MEOTODO ACTUALIZAR ESTADO A DESACTIVAR
-    // [HttpPut("desactivar/{id}")]
-    // public async Task<IActionResult> Desactivar(
-    //     Guid id,
-    //     [FromBody] DesactivarMarcaVehiculoCommand command
-    // )
-    // {
-    //     if (id != command.MarcaVehiculoId)
-    //     {
-    //         return BadRequest(new { mensaje = "El Id no coincide." });
-    //     }
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarMarcaVehiculoCommand command
+    )
+    {
+        if (id != command.MarcaVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
         
-    //     await _mediator.Send(command);
+        await _mediator.Send(command);
 
-    //     return Ok(new { mensaje = "Marca de vehículo desactivada correctamente." });
-    // }
+        return Ok(new { mensaje = "Marca de vehículo desactivada correctamente." });
+    }
 }
