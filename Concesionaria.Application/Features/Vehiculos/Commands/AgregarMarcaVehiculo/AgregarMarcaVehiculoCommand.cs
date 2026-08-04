@@ -1,8 +1,8 @@
-// using MediatR;
+using MediatR;
 
-// namespace Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
+namespace Application.Features.Vehiculos.Commands.AgregarMarcaVehiculo;
 
-// public record AgregarCategoriaGastoCommand : IRequest<Guid>
-// {
-//     public string Nombre { get; init; } = string.Empty;
-// }
+public record AgregarMarcaVehiculoCommand : IRequest<Guid>
+{
+    public string Nombre { get; init; } = string.Empty;
+}

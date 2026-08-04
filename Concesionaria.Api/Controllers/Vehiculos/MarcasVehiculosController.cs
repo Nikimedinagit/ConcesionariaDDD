@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosInactivas;
 using Application.Features.Vehiculos.Commands.ActivarMarcaVehiculo;
+using Application.Features.Vehiculos.Commands.AgregarMarcaVehiculo;
 
 namespace Concesionaria.API.Controllers;
 
@@ -47,15 +48,15 @@ public class MarcasVehiculosController : ControllerBase
     }
 
     // METODO AGREGAR
-    // [HttpPost]
-    // public async Task<IActionResult> Agregar([FromBody] AgregarCategoriaGastoCommand command)
-    // {
-    //     var id = await _mediator.Send(command);
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarMarcaVehiculoCommand command)
+    {
+        var id = await _mediator.Send(command);
 
-    //     return Ok(
-    //         new { mensaje = "Categoría de gasto agregada correctamente.", categoriaGastoId = id }
-    //     );
-    // }
+        return Ok(
+            new { mensaje = "Marca de vehículo agregada correctamente.", marcaVehiculoId = id }
+        );
+    }
 
     // METODO ACTUALIZAR
     // [HttpPut("{id}")]
