@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosActivas;
+using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosInactivas;
 
 namespace Concesionaria.API.Controllers;
 
@@ -31,18 +32,18 @@ public class MarcasVehiculosController : ControllerBase
     }
 
     // METODO OBTENER INACTIVAS
-    // [HttpGet("inactivas")]
-    // public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
-    // {
-    //     var resultadoCategoriasGastosInactivas = await _mediator.Send(
-    //         new ObtenerCategoriasGastosInactivasQuery
-    //         {
-    //             Filtro = filtro
-    //         }
-    //     );
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    {
+        var resultadoCategoriasGastosInactivas = await _mediator.Send(
+            new ObtenerMarcasVehiculosInactivasQuery
+            {
+                Filtro = filtro
+            }
+        );
 
-    //     return Ok(resultadoCategoriasGastosInactivas);
-    // }
+        return Ok(resultadoCategoriasGastosInactivas);
+    }
 
     // METODO AGREGAR
     // [HttpPost]
