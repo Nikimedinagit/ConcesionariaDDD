@@ -6,6 +6,8 @@ using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerMarcasVehiculosInactivas;
 using Application.Features.Vehiculos.Commands.ActivarMarcaVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarMarcaVehiculo;
+using Application.Features.Vehiculos.Commands.ActualizarMarcaVehiculo;
+// using Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
 
 namespace Concesionaria.API.Controllers;
 
@@ -59,20 +61,20 @@ public class MarcasVehiculosController : ControllerBase
     }
 
     // METODO ACTUALIZAR
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> Actualizar(
-    //     Guid id,
-    //     [FromBody] ActualizarCategoriaGastoCommand command
-    // )
-    // {
-    //     if (id != command.CategoriaGastoId)
-    //     {
-    //         return BadRequest(new { mensaje = "El Id no coincide." });
-    //     }
-    //     await _mediator.Send(command);
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarMarcaVehiculoCommand command
+    )
+    {
+        if (id != command.MarcaVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
 
-    //     return Ok(new { mensaje = "Categoría de gasto actulizada correctamente." });
-    // }
+        return Ok(new { mensaje = "Marca de vehículo actualizada correctamente." });
+    }
 
     // METODO ACTUALIZAR ESTADO A ACTIVAR
     [HttpPut("activar/{id}")]
@@ -95,16 +97,16 @@ public class MarcasVehiculosController : ControllerBase
     // [HttpPut("desactivar/{id}")]
     // public async Task<IActionResult> Desactivar(
     //     Guid id,
-    //     [FromBody] DesactivarCategoriaGastoCommand command
+    //     [FromBody] DesactivarMarcaVehiculoCommand command
     // )
     // {
-    //     if (id != command.CategoriaGastoId)
+    //     if (id != command.MarcaVehiculoId)
     //     {
     //         return BadRequest(new { mensaje = "El Id no coincide." });
     //     }
         
     //     await _mediator.Send(command);
 
-    //     return Ok(new { mensaje = "Categoría de gasto desactivada correctamente." });
+    //     return Ok(new { mensaje = "Marca de vehículo desactivada correctamente." });
     // }
 }

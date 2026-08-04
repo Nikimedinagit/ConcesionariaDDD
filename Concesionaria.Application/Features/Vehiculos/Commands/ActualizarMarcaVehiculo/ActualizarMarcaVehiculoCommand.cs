@@ -1,8 +1,8 @@
-// using MediatR;
+using MediatR;
 
-// namespace Application.Features.CategoriasGastos.Commands.ActualizarCategoriaGasto;
+namespace Application.Features.Vehiculos.Commands.ActualizarMarcaVehiculo;
 
-// public record ActualizarCategoriaGastoCommand : IRequest<Unit>{
-//     public Guid CategoriaGastoId { get; init; }
-//     public string Nombre { get; init; } = string.Empty;
-// }
+public record ActualizarMarcaVehiculoCommand : IRequest<Unit>{
+    public Guid MarcaVehiculoId { get; init; }
+    public string Nombre { get; init; } = string.Empty;
+}

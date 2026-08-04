@@ -1,42 +1,42 @@
-// using Concesionaria.Application.Common.Interfaces;
-// using MediatR;
-// using Microsoft.EntityFrameworkCore;
+using Concesionaria.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-// namespace Application.Features.CategoriasGastos.Commands.ActualizarCategoriaGasto;
+namespace Application.Features.Vehiculos.Commands.ActualizarMarcaVehiculo;
 
-// public class ActualizarCategoriaGastoCommandHandler
-//     : IRequestHandler<ActualizarCategoriaGastoCommand, Unit>
-// {
-//     private readonly IApplicationDbContext _context;
-//     private readonly ICurrentUserService _currentUser;
+public class ActualizarMarcaVehiculoCommandHandler
+    : IRequestHandler<ActualizarMarcaVehiculoCommand, Unit>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUser;
 
-//     public ActualizarCategoriaGastoCommandHandler(
-//         IApplicationDbContext context,
-//         ICurrentUserService currentUser
-//     )
-//     {
-//         _context = context;
-//         _currentUser = currentUser;
-//     }
+    public ActualizarMarcaVehiculoCommandHandler(
+        IApplicationDbContext context,
+        ICurrentUserService currentUser
+    )
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
 
-//     public async Task<Unit> Handle(
-//         ActualizarCategoriaGastoCommand request,
-//         CancellationToken cancellationToken
-//     )
-//     {
-//         var empresaId = _currentUser.EmpresaId;
+    public async Task<Unit> Handle(
+        ActualizarMarcaVehiculoCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var empresaId = _currentUser.EmpresaId;
 
-//         var obtenerCategoriaId = await _context.CategoriasGastos.FirstOrDefaultAsync(
-//             cg => cg.Id == request.CategoriaGastoId && cg.EmpresaId == empresaId && !cg.Eliminado,
-//             cancellationToken
-//         );
+        var obtenerMarcaId = await _context.MarcasVehiculos.FirstOrDefaultAsync(
+            m => m.Id == request.MarcaVehiculoId && m.EmpresaId == empresaId && !m.Eliminado,
+            cancellationToken
+        );
 
-//         if (obtenerCategoriaId == null)
-//             throw new Exception("Categoría de gasto no encontrada.");
+        if (obtenerMarcaId == null)
+            throw new Exception("Marca de vehículo no encontrada.");
 
-//         obtenerCategoriaId.ActualizarCategoriaGasto(request.Nombre);
+        obtenerMarcaId.ActualizarMarcaVehiculo(request.Nombre);
 
-//         await _context.SaveChangesAsync(cancellationToken);
-//         return Unit.Value;
-//     }
-// }
+        await _context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
+    }
+}

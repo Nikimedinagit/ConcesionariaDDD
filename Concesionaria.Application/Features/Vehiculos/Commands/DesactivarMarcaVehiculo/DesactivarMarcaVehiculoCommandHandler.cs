@@ -2,15 +2,15 @@
 // using MediatR;
 // using Microsoft.EntityFrameworkCore;
 
-// namespace Application.Features.CategoriasGastos.Commands.DesactivarCategoriaGasto;
+// namespace Application.Features.Vehiculos.Commands.DesactivarMarcaVehiculo;
 
-// public class DesactivarCategoriaGastoCommandHandler
-//     : IRequestHandler<DesactivarCategoriaGastoCommand, Unit>
+// public class DesactivarMarcaVehiculoCommandHandler
+//     : IRequestHandler<DesactivarMarcaVehiculoCommand, Unit>
 // {
 //     private readonly IApplicationDbContext _context;
 //     private readonly ICurrentUserService _currentUser;
 
-//     public DesactivarCategoriaGastoCommandHandler(
+//     public DesactivarMarcaVehiculoCommandHandler(
 //         IApplicationDbContext context,
 //         ICurrentUserService currentUser
 //     )
@@ -20,22 +20,22 @@
 //     }
 
 //     public async Task<Unit> Handle(
-//         DesactivarCategoriaGastoCommand request,
+//         DesactivarMarcaVehiculoCommand request,
 //         CancellationToken cancellationToken
 //     )
 //     {
 //         var empresaId = _currentUser.EmpresaId;
 //         var res = request;
         
-//         var obtenerCategoriaId = await _context.CategoriasGastos.IgnoreQueryFilters().FirstOrDefaultAsync(
-//             cg => cg.Id == request.CategoriaGastoId && cg.EmpresaId == empresaId && !cg.Eliminado,
+//         var obtenerMarcaId = await _context.MarcasVehiculos.IgnoreQueryFilters().FirstOrDefaultAsync(
+//             mv => mv.Id == request.MarcaVehiculoId && mv.EmpresaId == empresaId && !mv.Eliminado,
 //             cancellationToken
 //         );
 
-//         if (obtenerCategoriaId == null)
-//             throw new Exception("Categoría de gasto no encontrada.");
+//         if (obtenerMarcaId == null)
+//             throw new Exception("Marca de vehículo no encontrada.");
 
-//         obtenerCategoriaId.Desactivar();
+//         obtenerMarcaId.Desactivar();
 
 //         await _context.SaveChangesAsync(cancellationToken);
 
