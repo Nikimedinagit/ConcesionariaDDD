@@ -30,9 +30,10 @@ public class ObtenerCuentasInactivasQueryHandler
                 Codigo = c.Codigo,
                 Nombre = c.Nombre,
                 Tipo = c.Tipo,
-                Nivel = c.Nivel
+                Nivel = c.Nivel,
+                CuentaPadreId = c.CuentaPadreId
             })
-            .OrderBy(c => c.Nivel).ThenBy(c => c.Tipo).ThenBy(c => c.Codigo)
+            .OrderBy(c => c.Codigo)
             .ToList();
     }
 }

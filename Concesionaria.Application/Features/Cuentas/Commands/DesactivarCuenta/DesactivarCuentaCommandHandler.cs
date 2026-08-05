@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,20 @@ public class DesactivarCuentaCommandHandler
 
         if (obtenerCuentaId == null)
             throw new Exception("Cuenta no encontrada.");
+
+        var esCuentaBase =
+            obtenerCuentaId.Nivel == 0 &&
+            obtenerCuentaId.CuentaPadreId == null &&
+            (
+                obtenerCuentaId.Codigo == "1" && obtenerCuentaId.Nombre == "ACTIVO" && obtenerCuentaId.Tipo == TipoCuenta.ACTIVO ||
+                obtenerCuentaId.Codigo == "2" && obtenerCuentaId.Nombre == "PASIVO" && obtenerCuentaId.Tipo == TipoCuenta.PASIVO ||
+                obtenerCuentaId.Codigo == "3" && obtenerCuentaId.Nombre == "PATRIMONIO NETO" && obtenerCuentaId.Tipo == TipoCuenta.PATRIMONIO ||
+                obtenerCuentaId.Codigo == "4" && obtenerCuentaId.Nombre == "INGRESO" && obtenerCuentaId.Tipo == TipoCuenta.INGRESO ||
+                obtenerCuentaId.Codigo == "5" && obtenerCuentaId.Nombre == "EGRESO" && obtenerCuentaId.Tipo == TipoCuenta.EGRESO
+            );
+
+        if (esCuentaBase)
+            throw new Exception("Las cuentas base no se pueden desactivar.");
 
         obtenerCuentaId.Desactivar();
 

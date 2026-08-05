@@ -7,4 +7,5 @@ public class CuentaDto
     public string Nombre { get; set; }
     public TipoCuenta Tipo { get; set; }
     public int Nivel { get; set; }
+    public Guid? CuentaPadreId { get; set; }
 }

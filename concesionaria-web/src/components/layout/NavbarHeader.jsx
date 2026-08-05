@@ -30,7 +30,7 @@ export function NavbarHeader() {
     {
       title: "Contabilidad",
       items: [
-        { to: "/cuentas", name: "Cuentas" },
+        { to: "/layout/cuentas", name: "Cuentas" },
         { to: "/asientos", name: "Asientos Contables" },
         { to: "/asientos-detalle", name: "Asientos Detalle" },
       ],

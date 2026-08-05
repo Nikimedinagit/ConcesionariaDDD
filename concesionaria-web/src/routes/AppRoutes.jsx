@@ -11,6 +11,7 @@ import { PerfilPage } from "@/pages/Profile/PerfilPage";
 import { UsuarioPage } from "@/pages/Acceso/UsuarioPage";
 
 import { CategoriaGastoPage } from "@/pages/Tesoseria/CategoriaGastoPage";
+import { CuentaPage } from "@/pages/Contabilidad/CuentaPage";
 import { LocalidadPage } from "@/pages/Ubicacion/LocalidadPage";
 import { ProvinciaPage } from "@/pages/Ubicacion/ProvinciaPage";
 import { SucursalPage } from "@/pages/Ubicacion/SucursalPage";
@@ -35,6 +36,7 @@ export default function AppRoutes() {
             <Route path="usuarios" element={<UsuarioPage />} />
 
             <Route path="categorias-gastos" element={<CategoriaGastoPage />} />
+            <Route path="cuentas" element={<CuentaPage />} />
             <Route path="provincias" element={<ProvinciaPage />} />
             <Route path="localidades" element={<LocalidadPage />} />
             <Route path="sucursales" element={<SucursalPage />} />
