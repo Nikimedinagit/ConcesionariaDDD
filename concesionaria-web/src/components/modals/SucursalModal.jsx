@@ -102,7 +102,7 @@ export function SucursalModal({
           options={localidades}
           optionValue="id"
           optionLabel="nombre"
-          placeholder="Seleccione..."
+          placeholder="SELECCIONE..."
           searchPlaceholder="Buscar localidad"
           emptyText="No se encontraron localidades"
           error={localErrors.localidadId?.[0]}

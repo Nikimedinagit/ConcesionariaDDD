@@ -32,6 +32,6 @@ public class ActualizarMarcaVehiculoCommandValidator
                     return !existe;
                 }
             )
-            .WithMessage("Ya existe esa Marca de Vehículo.");
+            .WithMessage("Ya existe esa Marca.");
     }
 }

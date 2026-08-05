@@ -3,6 +3,10 @@ import { GitBranch, Info, Landmark, Layers, PencilLine, Tag } from "lucide-react
 import { ModalCustom } from "./ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
 import { AppSelect } from "@/components/ui/custom/AppSelect";
+import {
+  cuentaRaizSchema,
+  cuentaSchema,
+} from "@/validations/cuenta.validation";
 
 const tiposCuenta = [
   { value: "1", label: "ACTIVO" },
@@ -34,26 +38,20 @@ export function CuentaModal({
   const errorToShow = localError || serverError;
 
   const handleSave = () => {
-    const nombreNormalizado = nombre.trim().toUpperCase();
-    const nextTipoError =
-      isRootCreate && !tipo ? "Debe seleccionar un tipo de cuenta." : "";
-    let nextNombreError = "";
+    const schema = isRootCreate ? cuentaRaizSchema : cuentaSchema;
+    const result = schema.safeParse({ nombre, tipo });
 
-    if (!nombreNormalizado) {
-      nextNombreError = "El nombre es obligatorio.";
-    } else if (nombreNormalizado.length < 3) {
-      nextNombreError = "El nombre debe tener al menos 3 caracteres.";
-    }
-
-    setTipoError(nextTipoError);
-    setLocalError(nextNombreError);
-
-    if (nextTipoError || nextNombreError) {
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setLocalError(fieldErrors.nombre?.[0] || "");
+      setTipoError(fieldErrors.tipo?.[0] || "");
       return;
     }
 
+    setLocalError("");
+    setTipoError("");
     onSave({
-      nombre: nombreNormalizado,
+      nombre: result.data.nombre.toUpperCase(),
       tipo: Number(tipo),
     });
   };
@@ -190,7 +188,7 @@ export function CuentaModal({
           setTipoError("");
         }}
         options={tiposCuenta}
-        placeholder="Seleccione..."
+        placeholder="SELECCIONE..."
         error={tipoError}
       />
       )}
@@ -198,7 +196,7 @@ export function CuentaModal({
       <AppInput
         label="Nombre *"
         icon={Tag}
-        placeholder="Ej: BANCO NACION, CAJA CHICA..."
+        placeholder="Ej: BANCO NACIÓN"
         value={nombre}
         onChange={(e) => {
           setNombre(e.target.value.toUpperCase());

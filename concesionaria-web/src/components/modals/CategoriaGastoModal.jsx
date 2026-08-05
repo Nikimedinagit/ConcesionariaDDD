@@ -54,7 +54,7 @@ export function CategoriaGastoModal({
         <AppInput
           label="Nombre *"
           icon={Tag}
-          placeholder="Ej: Gastos de Limpieza, Papelería..."
+          placeholder="Ej: GASTOS DE LIMPIEZA"
           value={nombre}
           onChange={(e) => {
             setNombre(e.target.value.toUpperCase());

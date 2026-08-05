@@ -98,7 +98,7 @@ export const CategoriaGastoPage = () => {
           <AddButton onClick={handleOpenCreate}>Nueva Categoría</AddButton>
         </PageHeader>
 
-        {loading && data.length === 0 ? (
+        {loading && data.length === 0 && !debouncedFiltro ? (
           <div className="h-64 flex items-center justify-center">
             Cargando...
           </div>

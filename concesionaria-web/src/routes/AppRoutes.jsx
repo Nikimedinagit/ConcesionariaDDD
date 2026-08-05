@@ -15,6 +15,7 @@ import { CuentaPage } from "@/pages/Contabilidad/CuentaPage";
 import { LocalidadPage } from "@/pages/Ubicacion/LocalidadPage";
 import { ProvinciaPage } from "@/pages/Ubicacion/ProvinciaPage";
 import { SucursalPage } from "@/pages/Ubicacion/SucursalPage";
+import { MarcaPage } from "@/pages/Vehiculos/MarcaPage";
 
 export default function AppRoutes() {
   return (
@@ -40,6 +41,7 @@ export default function AppRoutes() {
             <Route path="provincias" element={<ProvinciaPage />} />
             <Route path="localidades" element={<LocalidadPage />} />
             <Route path="sucursales" element={<SucursalPage />} />
+            <Route path="marcas" element={<MarcaPage />} />
           </Route>
         </Route>
 

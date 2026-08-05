@@ -62,7 +62,7 @@ export function NavbarHeader() {
       title: "Vehículos",
       items: [
         { to: "/vehiculos", name: "Vehículos" },
-        { to: "/marcas", name: "Marcas" },
+        { to: "/layout/marcas", name: "Marcas" },
         { to: "/modelos", name: "Modelos" },
         { to: "/tipos", name: "Tipos de Vehículos" },
         { to: "/gastos-v", name: "Gastos de Vehículos" },

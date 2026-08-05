@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AppInput } from "@/components/ui/custom/AppInput";
 
 const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) => {
   const [searchValue, setSearchValue] = useState("");
@@ -61,23 +61,13 @@ const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) 
         </div>
       )}
 
-      <div className="relative w-full md:ml-auto md:w-[280px]">
-        <Search
-          className="
-            absolute left-3 top-1/2
-            h-4 w-4
-            -translate-y-1/2
-            text-slate-400
-          "
-        />
-
-        <Input
-          placeholder="Buscar..."
-          value={searchValue}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-9 border-slate-200 bg-slate-50/60 focus-visible:ring-[hsl(var(--nav-bg))]"
-        />
-      </div>
+      <AppInput
+        icon={Search}
+        placeholder="Buscar..."
+        value={searchValue}
+        onChange={(event) => handleSearch(event.target.value)}
+        className="w-full [&_input]:h-8 md:ml-auto md:w-[280px]"
+      />
     </div>
   );
 };

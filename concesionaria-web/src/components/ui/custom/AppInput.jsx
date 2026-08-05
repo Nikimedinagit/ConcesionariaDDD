@@ -12,7 +12,7 @@ export function AppInput({
       {label && <label className="text-sm font-semibold text-slate-700">{label}</label>}
       <div className="relative">
         {Icon && (
-          <Icon className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+          <Icon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         )}
         <Input
           {...props}

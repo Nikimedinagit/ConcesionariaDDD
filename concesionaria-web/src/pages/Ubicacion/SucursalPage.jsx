@@ -111,7 +111,7 @@ export const SucursalPage = () => {
           <AddButton onClick={handleOpenCreate}>Nueva Sucursal</AddButton>
         </PageHeader>
 
-        {loading && data.length === 0 ? (
+        {loading && data.length === 0 && !debouncedFiltro ? (
           <div className="flex h-64 items-center justify-center">
             Cargando...
           </div>

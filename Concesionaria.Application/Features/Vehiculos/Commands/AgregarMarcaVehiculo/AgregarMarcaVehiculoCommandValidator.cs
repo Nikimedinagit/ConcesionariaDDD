@@ -23,6 +23,6 @@ public class AgregarMarcaVehiculoCommandValidator
                     return !await repository.ExistePorNombreAsync(nombre, empresaId);
                 }
             )
-            .WithMessage("Ya existe esa Marca de Vehículo.");
+            .WithMessage("Ya existe esa Marca.");
     }
 }
