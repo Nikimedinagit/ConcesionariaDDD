@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Landmark, Layers, Tag } from "lucide-react";
+import { GitBranch, Info, Landmark, Layers, PencilLine, Tag } from "lucide-react";
 import { ModalCustom } from "./ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
 import { AppSelect } from "@/components/ui/custom/AppSelect";
@@ -12,6 +12,9 @@ const tiposCuenta = [
   { value: "5", label: "EGRESO" },
 ];
 
+const getTipoCuentaLabel = (tipo) =>
+  tiposCuenta.find((item) => item.value === String(tipo))?.label ?? tipo;
+
 export function CuentaModal({
   isOpen,
   onClose,
@@ -22,7 +25,8 @@ export function CuentaModal({
   serverError = "",
 }) {
   const [nombre, setNombre] = useState(cuenta ? cuenta.nombre : "");
-  const [tipo, setTipo] = useState(cuenta ? String(cuenta.tipo) : "1");
+  const [tipo, setTipo] = useState(cuenta ? String(cuenta.tipo) : "");
+  const [tipoError, setTipoError] = useState("");
   const [localError, setLocalError] = useState("");
 
   const isEdit = Boolean(cuenta);
@@ -31,18 +35,23 @@ export function CuentaModal({
 
   const handleSave = () => {
     const nombreNormalizado = nombre.trim().toUpperCase();
+    const nextTipoError =
+      isRootCreate && !tipo ? "Debe seleccionar un tipo de cuenta." : "";
+    let nextNombreError = "";
 
     if (!nombreNormalizado) {
-      setLocalError("El nombre es obligatorio.");
+      nextNombreError = "El nombre es obligatorio.";
+    } else if (nombreNormalizado.length < 3) {
+      nextNombreError = "El nombre debe tener al menos 3 caracteres.";
+    }
+
+    setTipoError(nextTipoError);
+    setLocalError(nextNombreError);
+
+    if (nextTipoError || nextNombreError) {
       return;
     }
 
-    if (nombreNormalizado.length < 3) {
-      setLocalError("El nombre debe tener al menos 3 caracteres.");
-      return;
-    }
-
-    setLocalError("");
     onSave({
       nombre: nombreNormalizado,
       tipo: Number(tipo),
@@ -61,54 +70,129 @@ export function CuentaModal({
       maxWidth="max-w-xl"
     >
       {isRootCreate && (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Nueva cuenta nivel 0
-          </p>
-          <p className="mt-1 text-sm text-slate-700">
-            El código se asigna automáticamente al guardar.
-          </p>
+        <div className="overflow-hidden rounded-xl border border-[hsl(var(--nav-bg)/0.18)] bg-[hsl(var(--nav-bg)/0.05)]">
+          <div className="flex items-center gap-3 px-3 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--nav-bg)/0.11)] text-[hsl(var(--nav-bg))]">
+              <Landmark className="h-4 w-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[hsl(var(--nav-bg))]">
+                Cuenta principal
+              </p>
+              <p className="mt-0.5 text-sm font-semibold text-slate-800">
+                Se creará en el nivel raíz del plan de cuentas
+              </p>
+            </div>
+
+            <div className="shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-center shadow-sm">
+              <p className="text-[10px] font-semibold uppercase text-slate-500">
+                Nivel
+              </p>
+              <p className="text-base font-bold leading-tight text-slate-800">
+                0
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 border-t border-[hsl(var(--nav-bg)/0.12)] bg-white/55 px-3 py-1.5 text-xs font-medium text-slate-600">
+            <Info className="h-3.5 w-3.5 shrink-0 text-[hsl(var(--nav-bg))]" />
+            El código se asignará automáticamente al guardar.
+          </div>
         </div>
       )}
 
       {cuentaPadre && (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Cuenta padre
-          </p>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-800">
-            <span className="font-bold">{cuentaPadre.codigo}</span>
-            <span>{cuentaPadre.nombre}</span>
-            <span className="rounded-md bg-white px-2 py-0.5 text-xs font-semibold text-slate-500">
-              Nivel {cuentaPadre.nivel}
+        <div className="overflow-hidden rounded-xl border border-[hsl(var(--nav-bg)/0.18)] bg-[hsl(var(--nav-bg)/0.05)]">
+          <div className="flex items-center gap-3 px-3 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--nav-bg)/0.11)] text-[hsl(var(--nav-bg))]">
+              <GitBranch className="h-4 w-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[hsl(var(--nav-bg))]">
+                Cuenta padre
+              </p>
+              <div className="mt-1 flex min-w-0 items-center gap-2">
+                <span className="rounded-md border border-[hsl(var(--nav-bg)/0.16)] bg-white px-2 py-0.5 text-xs font-bold text-[hsl(var(--nav-bg))]">
+                  {cuentaPadre.codigo}
+                </span>
+                <span className="truncate text-sm font-bold text-slate-800">
+                  {cuentaPadre.nombre}
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-center shadow-sm">
+              <p className="text-[10px] font-semibold uppercase text-slate-500">
+                Nivel padre
+              </p>
+              <p className="text-base font-bold leading-tight text-slate-800">
+                {cuentaPadre.nivel}
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t border-[hsl(var(--nav-bg)/0.12)] bg-white/55 px-3 py-1.5 text-xs font-medium text-slate-600">
+            La nueva cuenta se creará en el nivel{" "}
+            <span className="font-bold text-[hsl(var(--nav-bg))]">
+              {Number(cuentaPadre.nivel) + 1}
             </span>
           </div>
         </div>
       )}
 
       {cuenta && (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Cuenta
-          </p>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-800">
-            <span className="font-bold">{cuenta.codigo}</span>
-            <span className="rounded-md bg-white px-2 py-0.5 text-xs font-semibold text-slate-500">
-              {cuenta.tipo}
-            </span>
+        <div className="overflow-hidden rounded-xl border border-[hsl(var(--nav-bg)/0.18)] bg-[hsl(var(--nav-bg)/0.05)]">
+          <div className="flex items-center gap-3 px-3 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--nav-bg)/0.11)] text-[hsl(var(--nav-bg))]">
+              <PencilLine className="h-4 w-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[hsl(var(--nav-bg))]">
+                Cuenta a editar
+              </p>
+              <div className="mt-1 flex min-w-0 items-center gap-2">
+                <span className="rounded-md border border-[hsl(var(--nav-bg)/0.16)] bg-white px-2 py-0.5 text-xs font-bold text-[hsl(var(--nav-bg))]">
+                  {cuenta.codigo}
+                </span>
+                <span className="truncate text-sm font-bold text-slate-800">
+                  {getTipoCuentaLabel(cuenta.tipo)}
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-center shadow-sm">
+              <p className="text-[10px] font-semibold uppercase text-slate-500">
+                Nivel
+              </p>
+              <p className="text-base font-bold leading-tight text-slate-800">
+                {cuenta.nivel}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 border-t border-[hsl(var(--nav-bg)/0.12)] bg-white/55 px-3 py-1.5 text-xs font-medium text-slate-600">
+            <Info className="h-3.5 w-3.5 shrink-0 text-[hsl(var(--nav-bg))]" />
+            Solo se modificará el nombre de la cuenta.
           </div>
         </div>
       )}
 
       {isRootCreate && (
         <AppSelect
-          label="Tipo *"
-          icon={Layers}
-          value={tipo}
-          onValueChange={setTipo}
-          options={tiposCuenta}
-          placeholder="Seleccione un tipo"
-        />
+        label="Tipo *"
+        icon={Layers}
+        value={tipo}
+        onValueChange={(value) => {
+          setTipo(value);
+          setTipoError("");
+        }}
+        options={tiposCuenta}
+        placeholder="Seleccione..."
+        error={tipoError}
+      />
       )}
 
       <AppInput

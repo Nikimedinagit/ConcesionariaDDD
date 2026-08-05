@@ -3,7 +3,7 @@
 
 :root {
   /* Fondo general gris clarito corporativo para las vistas */
-  --background: 210 20% 98%;
+  --background: 214 20% 92%;
   --foreground: 222 47% 11%;
 
   --card: 0 0% 100%;
@@ -58,12 +58,10 @@ body {
   min-height: 100vh;
 }
 
-/* ANULDA BORDER A LO DROOP */
-[data-radix-popper-content-wrapper],
-.border,
-[data-side] {
-  border: none !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+/* Sombra exclusiva para los contenidos flotantes de Radix (dropdowns/popovers). */
+[data-radix-popper-content-wrapper] > [data-side] {
+  border: 1px solid rgb(203 213 225) !important;
+  box-shadow: 0 14px 30px -12px rgba(15, 23, 42, 0.28) !important;
 }
 
 

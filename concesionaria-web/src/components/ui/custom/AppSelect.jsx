@@ -51,7 +51,7 @@ function SelectField({
   return (
     <div className={`space-y-1.5 ${className}`}>
       {label && (
-        <label className="text-sm font-medium text-slate-700">{label}</label>
+        <label className="text-sm font-semibold text-slate-700">{label}</label>
       )}
 
       <Select
@@ -60,8 +60,8 @@ function SelectField({
         disabled={disabled}
       >
         <SelectTrigger
-          className={`h-[40px] w-full overflow-hidden rounded-lg border-slate-200 ${
-            error ? "border-red-500 focus-visible:ring-red-500" : ""
+          className={`h-[40px] w-full overflow-hidden rounded-lg border-slate-300 bg-white shadow-sm hover:border-slate-400 focus-visible:border-[hsl(var(--nav-bg))] focus-visible:ring-2 focus-visible:ring-[hsl(var(--nav-bg)/0.14)] ${
+            error ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/20" : ""
           }`}
         >
           <div className="flex min-w-0 items-center gap-2 truncate">
@@ -83,7 +83,7 @@ function SelectField({
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setSearch(e.target.value.toUpperCase())}
                   onKeyDown={(e) => e.stopPropagation()}
                   onPointerDown={(e) => e.stopPropagation()}
                   placeholder={searchPlaceholder}

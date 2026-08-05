@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
 import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
   ChevronDown,
   ChevronRight,
   CirclePlus,
@@ -9,6 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 import DataTableToolbar from "./DataTableToolbar";
+import DataTablePagination from "./DataTablePagination";
 import {
   Table,
   TableBody,
@@ -22,7 +28,11 @@ import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 
 const getChildren = (cuentas, cuentaId) =>
   cuentas
-    .filter((cuenta) => cuenta.cuentaPadreId === cuentaId)
+    .filter(
+      (cuenta) =>
+        cuenta.cuentaPadreId != null &&
+        String(cuenta.cuentaPadreId) === String(cuentaId),
+    )
     .sort((a, b) => a.codigo.localeCompare(b.codigo));
 
 const tiposCuenta = {
@@ -73,13 +83,24 @@ const hasVisibleDescendant = (cuentas, cuentaId, tipo, search) => {
 };
 
 const buildVisibleRows = ({ cuentas, expandedIds, tipo, search }) => {
+  if (tipo === "inactivas") {
+    return cuentas
+      .filter(
+        (cuenta) =>
+          !search ||
+          cuenta.nombre.includes(search) ||
+          cuenta.codigo.includes(search) ||
+          getTipoLabel(cuenta.tipo).includes(search),
+      )
+      .sort((a, b) => a.codigo.localeCompare(b.codigo));
+  }
+
   const rows = [];
   const roots = cuentas
     .filter((cuenta) => cuenta.cuentaPadreId === null)
     .sort((a, b) => a.codigo.localeCompare(b.codigo));
 
   const visit = (cuenta) => {
-    const isActiveMatch = tipo === "activas" ? !cuenta.eliminado : cuenta.eliminado;
     const matchesSearch =
       !search ||
       cuenta.nombre.includes(search) ||
@@ -87,11 +108,11 @@ const buildVisibleRows = ({ cuentas, expandedIds, tipo, search }) => {
       getTipoLabel(cuenta.tipo).includes(search);
     const keepByChild = hasVisibleDescendant(cuentas, cuenta.cuentaId, tipo, search);
 
-    if (isActiveMatch && (matchesSearch || keepByChild)) {
+    if (matchesSearch || keepByChild) {
       rows.push(cuenta);
     }
 
-    if (expandedIds.has(cuenta.cuentaId) || search || tipo === "inactivas") {
+    if (expandedIds.has(cuenta.cuentaId) || search) {
       getChildren(cuentas, cuenta.cuentaId).forEach(visit);
     }
   };
@@ -117,6 +138,23 @@ const CuentaTable = ({
     [data, expandedIds, tipo, searchValue],
   );
 
+  const paginationColumns = useMemo(
+    () => [{ accessorKey: "cuentaId" }],
+    [],
+  );
+
+  const table = useReactTable({
+    data: visibleRows,
+    columns: paginationColumns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 8,
+      },
+    },
+  });
+
   const handleSearch = (value) => {
     setSearchValue(value);
     onSearch(value);
@@ -135,12 +173,12 @@ const CuentaTable = ({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200/70 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.07)]">
       <DataTableToolbar tipo={tipo} setTipo={onToggle} onSearch={handleSearch} />
 
       <div className="overflow-x-auto">
         <Table className="min-w-[780px]">
-          <TableHeader className="bg-[hsl(var(--nav-bg))/0.03]">
+          <TableHeader className="bg-[hsl(var(--nav-bg)/0.08)]">
             <TableRow className="border-b border-slate-200/80 hover:bg-transparent">
               <TableHead className="h-10 px-4 text-xs font-bold text-slate-900 sm:text-base">
                 <div className="flex items-center gap-2">
@@ -167,40 +205,55 @@ const CuentaTable = ({
           </TableHeader>
 
           <TableBody>
-            {visibleRows.length ? (
-              visibleRows.map((cuenta) => {
-                const childrenCount = getChildren(data, cuenta.cuentaId).length;
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => {
+                const cuenta = row.original;
+                const childrenCount =
+                  tipo === "activas"
+                    ? getChildren(data, cuenta.cuentaId).length
+                    : 0;
                 const isExpanded = expandedIds.has(cuenta.cuentaId) || searchValue;
                 const protectedBase = isCuentaBase(cuenta);
 
                 return (
                   <TableRow
                     key={cuenta.cuentaId}
-                    onClick={() => toggleExpanded(cuenta.cuentaId)}
-                    className="border-b border-slate-100 transition-colors hover:bg-[hsl(var(--nav-bg))]/10"
+                    onClick={() => {
+                      if (tipo === "activas") {
+                        toggleExpanded(cuenta.cuentaId);
+                      }
+                    }}
+                    className="border-b border-slate-200/80 bg-white even:bg-slate-50/70 transition-colors hover:bg-[hsl(var(--nav-bg))]/[0.07]"
                   >
-                    <TableCell className="px-4 py-1.5 text-sm text-slate-900">
+                    <TableCell className="px-4 py-0.5 text-sm text-slate-900">
                       <div
                         className="flex items-center gap-2"
-                        style={{ paddingLeft: `${cuenta.nivel * 22}px` }}
+                        style={{
+                          paddingLeft:
+                            tipo === "activas" ? `${cuenta.nivel * 22}px` : 0,
+                        }}
                       >
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            toggleExpanded(cuenta.cuentaId);
-                          }}
-                          className="h-7 w-7 text-slate-500"
-                          disabled={childrenCount === 0}
-                        >
-                          {childrenCount > 0 && isExpanded ? (
-                            <ChevronDown className="h-4 w-4" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4" />
-                          )}
-                        </Button>
+                        {tipo === "activas" && childrenCount > 0 ? (
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleExpanded(cuenta.cuentaId);
+                            }}
+                            className="h-7 w-7 rounded-md bg-[hsl(var(--nav-bg)/0.08)] text-[hsl(var(--nav-bg))] hover:bg-[hsl(var(--nav-bg)/0.14)] hover:text-[hsl(var(--nav-bg))]"
+                            aria-label={isExpanded ? "Contraer subcuentas" : "Expandir subcuentas"}
+                          >
+                            {isExpanded ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                          </Button>
+                        ) : tipo === "activas" ? (
+                          <span className="h-7 w-7 shrink-0" aria-hidden="true" />
+                        ) : null}
 
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
@@ -219,7 +272,7 @@ const CuentaTable = ({
                       </div>
                     </TableCell>
 
-                    <TableCell className="px-4 py-1.5 text-sm text-slate-700">
+                    <TableCell className="px-4 py-0.5 text-sm text-slate-700">
                       <span
                         className={`inline-flex min-w-[96px] items-center justify-center rounded-md border px-2 py-0.5 text-xs font-bold ${tipoBadgeClassName[cuenta.tipo] ?? "border-slate-200 bg-slate-50 text-slate-700"}`}
                       >
@@ -227,11 +280,11 @@ const CuentaTable = ({
                       </span>
                     </TableCell>
 
-                    <TableCell className="px-4 py-1.5 text-sm text-slate-700">
+                    <TableCell className="px-4 py-0.5 text-sm text-slate-700">
                       {cuenta.nivel}
                     </TableCell>
 
-                    <TableCell className="px-4 py-1.5 text-right">
+                    <TableCell className="px-4 py-0.5 text-right">
                       <div className="flex justify-end gap-0.5">
                         {tipo === "activas" && (
                           <>
@@ -321,6 +374,8 @@ const CuentaTable = ({
           </TableBody>
         </Table>
       </div>
+
+      <DataTablePagination table={table} total={visibleRows.length} />
     </div>
   );
 };

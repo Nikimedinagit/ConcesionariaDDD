@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -66,10 +66,10 @@ export function ModalCustom({
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className={`relative w-full ${maxWidth} overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl`}
+            className={`relative w-full ${maxWidth} overflow-hidden rounded-xl border border-slate-300 bg-white shadow-[0_22px_55px_-18px_rgba(15,23,42,0.35)]`}
           >
 
-            <div className="flex items-center justify-between border-b border-slate-100 p-3 sm:px-4">
+            <div className="flex items-center justify-between border-b border-slate-200 bg-[hsl(var(--nav-bg)/0.06)] p-3 sm:px-4">
 
               <div className="flex items-center gap-3">
 
@@ -99,7 +99,7 @@ export function ModalCustom({
 
             </div>
 
-            <div className="max-h-[70vh] overflow-y-auto p-3 sm:p-4">
+            <div className="max-h-[70vh] overflow-y-auto bg-slate-100/70 p-3 sm:p-4">
 
               <div className="grid gap-5">
                 {children}
@@ -107,7 +107,7 @@ export function ModalCustom({
 
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/50 p-3 sm:px-4">
+            <div className="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 p-3 sm:px-4">
 
               <Button
                 variant="outline"

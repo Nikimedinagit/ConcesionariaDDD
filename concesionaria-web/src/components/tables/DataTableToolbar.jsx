@@ -16,7 +16,7 @@ const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) 
     <div
       className="
         flex flex-col gap-4
-        border-b border-slate-100
+        border-b border-slate-200 bg-slate-50/60
         px-4 py-4
         md:flex-row md:items-center md:justify-between
       "

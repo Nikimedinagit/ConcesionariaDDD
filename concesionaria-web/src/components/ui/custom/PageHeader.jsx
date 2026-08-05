@@ -11,90 +11,51 @@ const PageHeader = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="
-        relative overflow-hidden
-        rounded-xl
+        mb-4 mt-2
+        flex min-h-11 items-center justify-between gap-3
+        rounded-lg
         border border-slate-200/70
         bg-white
-        px-4 py-4
+        px-3 py-2 sm:px-4
         shadow-sm
-        mb-6 mt-3
       "
     >
       <div
         className="
-          absolute -right-10 -top-10
-          h-32 w-32
-          rounded-full
-          bg-[hsl(var(--nav-bg))]
-          opacity-[0.03]
-        "
-      />
-
-      <div
-        className="
-          relative
-          flex flex-col gap-4
-          lg:flex-row lg:items-center lg:justify-between
+          flex min-w-0 flex-1 items-center justify-between gap-3
+          max-sm:flex-wrap
         "
       >
-        <div className="flex items-center gap-3 min-w-0">
-          
+        <div className="flex min-w-0 items-center gap-2.5">
           {Icon && (
             <div
               className="
-                flex h-10 w-10 shrink-0
+                flex h-7 w-7 shrink-0
                 items-center justify-center
-                rounded-xl
+                rounded-lg
                 bg-[hsl(var(--nav-bg))]
                 text-white
-                shadow-sm
               "
             >
-              <Icon size={18} strokeWidth={2.2} />
+              <Icon size={14} strokeWidth={2.1} />
             </div>
           )}
 
-          <div className="min-w-0">
-            <h1
-              className="
-                truncate
-                text-[22px]
-                font-bold
-                leading-none
-                tracking-tight
-                text-slate-900
-                sm:text-2xl
-                pb-1
-              "
-            >
-              {title}
-            </h1>
-
-            <div className="mt-3 flex items-center gap-1.5">
-              <div
-                className="
-                  h-1 w-10 rounded-full
-                  bg-[hsl(var(--nav-bg))]
-                "
-              />
-
-              <div
-                className="
-                  h-1 w-4 rounded-full
-                  bg-[hsl(var(--nav-bg))]
-                  opacity-35
-                "
-              />
-            </div>
-          </div>
+          <h1
+            className="
+              truncate text-lg font-semibold leading-tight
+              tracking-tight text-slate-900 sm:text-xl
+            "
+          >
+            {title}
+          </h1>
         </div>
 
         {children && (
           <div
             className="
-              flex w-full flex-wrap items-center gap-2
-
-              sm:w-auto
+              ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2
+              max-sm:basis-full
             "
           >
             {children}

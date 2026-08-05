@@ -47,9 +47,9 @@ const DataTable = ({
       className="
         overflow-hidden
         rounded-xl
-        border border-slate-200/70
+        border border-slate-300/80
         bg-white
-        shadow-sm
+        shadow-[0_4px_16px_rgba(15,23,42,0.07)]
       "
     >
       <DataTableToolbar
@@ -60,7 +60,7 @@ const DataTable = ({
       />
       <div className="overflow-x-auto">
         <Table className="min-w-[700px]">
-          <TableHeader className="bg-[hsl(var(--nav-bg))/0.03]">
+          <TableHeader className="bg-[hsl(var(--nav-bg)/0.08)]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
@@ -103,7 +103,7 @@ const DataTable = ({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-b border-slate-100 transition-colors hover:bg-[hsl(var(--nav-bg))]/20"
+                  className="border-b border-slate-200/80 bg-white even:bg-slate-50/70 transition-colors hover:bg-[hsl(var(--nav-bg))]/[0.07]"
                 >
                   {row.getVisibleCells().map((cell) => {
                     const isActions = cell.column.id === "acciones";
