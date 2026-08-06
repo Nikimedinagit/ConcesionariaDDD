@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Concesionaria.Domain.Cuentas.Enums;
 
 namespace Concesionaria.API.Controllers;
 
@@ -26,10 +27,18 @@ public class CuentasController : ControllerBase
 
     //METODO OBTENER ACTIVAS
     [HttpGet("activas")]
-    public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerActivas(
+        [FromQuery] string filtro,
+        [FromQuery] TipoCuenta? tipo,
+        [FromQuery] int? nivel)
     {
         var resultadoCuentasActivas = await _mediator.Send(
-            new ObtenerCuentasActivasQuery { Filtro = filtro }
+            new ObtenerCuentasActivasQuery
+            {
+                Filtro = filtro,
+                Tipo = tipo,
+                Nivel = nivel
+            }
         );
 
         return Ok(resultadoCuentasActivas);
@@ -37,10 +46,18 @@ public class CuentasController : ControllerBase
 
     // METODO PARA OBTENER INACTIVAS
     [HttpGet("inactivas")]
-    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerInactivas(
+        [FromQuery] string filtro,
+        [FromQuery] TipoCuenta? tipo,
+        [FromQuery] int? nivel)
     {
         var resultadoCuentasInactivas = await _mediator.Send(
-            new ObtenerCuentasInactivasQuery { Filtro = filtro }
+            new ObtenerCuentasInactivasQuery
+            {
+                Filtro = filtro,
+                Tipo = tipo,
+                Nivel = nivel
+            }
         );
 
         return Ok(resultadoCuentasInactivas);

@@ -2,6 +2,7 @@ using Concesionaria.Domain.Cuentas;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Concesionaria.Domain.Cuentas.Enums;
 
 namespace Infrastructure.Persistence.Repositories;
 
@@ -28,7 +29,11 @@ public class CuentaRepository : ICuentaRepository
     }
 
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
-    public async Task<List<Cuenta>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
+    public async Task<List<Cuenta>> ObtenerActivasAsync(
+        Guid empresaId,
+        string filtro = null,
+        TipoCuenta? tipo = null,
+        int? nivel = null)
     {
         var obtenerCuentasActivas = _context.Cuentas.Where(c => c.EmpresaId == empresaId).AsQueryable();
         if (!string.IsNullOrEmpty(filtro))
@@ -37,11 +42,22 @@ public class CuentaRepository : ICuentaRepository
                 c.Codigo.Contains(filtro) ||
                 c.Nombre.Contains(filtro));
         }
+
+        if (tipo.HasValue)
+            obtenerCuentasActivas = obtenerCuentasActivas.Where(c => c.Tipo == tipo.Value);
+
+        if (nivel.HasValue)
+            obtenerCuentasActivas = obtenerCuentasActivas.Where(c => c.Nivel == nivel.Value);
+
         return await obtenerCuentasActivas.ToListAsync();
     }
 
     // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
-    public async Task<List<Cuenta>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
+    public async Task<List<Cuenta>> ObtenerInactivasAsync(
+        Guid empresaId,
+        string filtro = null,
+        TipoCuenta? tipo = null,
+        int? nivel = null)
     {
         var obtenerCuentasInactivas = _context.Cuentas
             .IgnoreQueryFilters()
@@ -54,6 +70,13 @@ public class CuentaRepository : ICuentaRepository
                 c.Codigo.Contains(filtro) ||
                 c.Nombre.Contains(filtro));
         }
+
+        if (tipo.HasValue)
+            obtenerCuentasInactivas = obtenerCuentasInactivas.Where(c => c.Tipo == tipo.Value);
+
+        if (nivel.HasValue)
+            obtenerCuentasInactivas = obtenerCuentasInactivas.Where(c => c.Nivel == nivel.Value);
+
         return await obtenerCuentasInactivas.ToListAsync();
     }
 

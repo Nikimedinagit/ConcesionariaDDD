@@ -3,7 +3,13 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppInput } from "@/components/ui/custom/AppInput";
 
-const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) => {
+const DataTableToolbar = ({
+  tipo,
+  setTipo,
+  onSearch,
+  showStatusFilter = true,
+  actions,
+}) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = (value) => {
@@ -68,6 +74,8 @@ const DataTableToolbar = ({ tipo, setTipo, onSearch, showStatusFilter = true }) 
         onChange={(event) => handleSearch(event.target.value)}
         className="w-full [&_input]:h-8 md:ml-auto md:w-[280px]"
       />
+
+      {actions}
     </div>
   );
 };

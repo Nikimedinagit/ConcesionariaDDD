@@ -31,7 +31,11 @@ public class ObtenerCuentasActivasQueryHandler
 
         await AsegurarCuentasBaseAsync(empresaId, cancellationToken);
 
-        var cuentas = await _repository.ObtenerActivasAsync(empresaId, request.Filtro);
+        var cuentas = await _repository.ObtenerActivasAsync(
+            empresaId,
+            request.Filtro,
+            request.Tipo,
+            request.Nivel);
 
         return cuentas
             .Select(c => new CuentaDto

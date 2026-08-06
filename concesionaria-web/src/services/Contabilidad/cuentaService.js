@@ -1,16 +1,24 @@
 import api from "@/api/axios";
 
 const CuentaService = {
-  getActivas: async () => {
+  getActivas: async (filtro = "", tipo = "todos", nivel = "todos") => {
     const response = await api.get("/Cuentas/activas", {
-      params: { filtro: "" },
+      params: {
+        filtro,
+        tipo: tipo === "todos" ? undefined : Number(tipo),
+        nivel: nivel === "todos" ? undefined : Number(nivel),
+      },
     });
     return response.data;
   },
 
-  getInactivas: async () => {
+  getInactivas: async (filtro = "", tipo = "todos", nivel = "todos") => {
     const response = await api.get("/Cuentas/inactivas", {
-      params: { filtro: "" },
+      params: {
+        filtro,
+        tipo: tipo === "todos" ? undefined : Number(tipo),
+        nivel: nivel === "todos" ? undefined : Number(nivel),
+      },
     });
     return response.data;
   },

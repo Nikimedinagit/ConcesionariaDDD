@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import CuentaService from "@/services/Contabilidad/cuentaService";
 
-export const useCuentas = (tipo = "activas") => {
+export const useCuentas = (
+  tipo = "activas",
+  filtro = "",
+  tipoCuenta = "todos",
+  nivel = "todos",
+) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -17,8 +22,8 @@ export const useCuentas = (tipo = "activas") => {
       try {
         const result =
           tipo === "activas"
-            ? await CuentaService.getActivas()
-            : await CuentaService.getInactivas();
+            ? await CuentaService.getActivas(filtro, tipoCuenta, nivel)
+            : await CuentaService.getInactivas(filtro, tipoCuenta, nivel);
 
         if (isMounted) setData(result);
       } catch (error) {
@@ -33,7 +38,7 @@ export const useCuentas = (tipo = "activas") => {
     return () => {
       isMounted = false;
     };
-  }, [tipo, refreshTrigger]);
+  }, [tipo, filtro, tipoCuenta, nivel, refreshTrigger]);
 
   return { data, loading, refetch };
 };

@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
+import CuentaFiltros, {
+  CuentaFiltrosButton,
+} from "@/components/filtros/CuentaFiltros";
 
 const getChildren = (cuentas, cuentaId) =>
   cuentas
@@ -82,15 +85,31 @@ const hasVisibleDescendant = (cuentas, cuentaId, tipo, search) => {
   });
 };
 
-const buildVisibleRows = ({ cuentas, expandedIds, tipo, search }) => {
-  if (tipo === "inactivas") {
+const buildVisibleRows = ({
+  cuentas,
+  expandedIds,
+  tipo,
+  search,
+  tipoCuenta,
+  nivel,
+}) => {
+  const matchesAdvancedFilters = (cuenta) =>
+    (tipoCuenta === "todos" || String(cuenta.tipo) === tipoCuenta) &&
+    (nivel === "todos" || String(cuenta.nivel) === nivel);
+
+  if (
+    tipo === "inactivas" ||
+    tipoCuenta !== "todos" ||
+    nivel !== "todos"
+  ) {
     return cuentas
       .filter(
         (cuenta) =>
-          !search ||
-          cuenta.nombre.includes(search) ||
-          cuenta.codigo.includes(search) ||
-          getTipoLabel(cuenta.tipo).includes(search),
+          matchesAdvancedFilters(cuenta) &&
+          (!search ||
+            cuenta.nombre.includes(search) ||
+            cuenta.codigo.includes(search) ||
+            getTipoLabel(cuenta.tipo).includes(search)),
       )
       .sort((a, b) => a.codigo.localeCompare(b.codigo));
   }
@@ -108,11 +127,16 @@ const buildVisibleRows = ({ cuentas, expandedIds, tipo, search }) => {
       getTipoLabel(cuenta.tipo).includes(search);
     const keepByChild = hasVisibleDescendant(cuentas, cuenta.cuentaId, tipo, search);
 
-    if (matchesSearch || keepByChild) {
+    if ((matchesSearch || keepByChild) && matchesAdvancedFilters(cuenta)) {
       rows.push(cuenta);
     }
 
-    if (expandedIds.has(cuenta.cuentaId) || search) {
+    if (
+      expandedIds.has(cuenta.cuentaId) ||
+      search ||
+      tipoCuenta !== "todos" ||
+      nivel !== "todos"
+    ) {
       getChildren(cuentas, cuenta.cuentaId).forEach(visit);
     }
   };
@@ -126,16 +150,36 @@ const CuentaTable = ({
   tipo,
   onToggle,
   onSearch,
+  tipoCuenta,
+  nivel,
+  onTipoCuentaChange,
+  onNivelChange,
   onAddChild,
   onEdit,
   onToggleStatus,
 }) => {
   const [expandedIds, setExpandedIds] = useState(new Set());
   const [searchValue, setSearchValue] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFiltersCount =
+    Number(tipoCuenta !== "todos") + Number(nivel !== "todos");
+
+  const niveles = useMemo(
+    () => [...new Set(data.map((cuenta) => cuenta.nivel))].sort((a, b) => a - b),
+    [data],
+  );
 
   const visibleRows = useMemo(
-    () => buildVisibleRows({ cuentas: data, expandedIds, tipo, search: searchValue }),
-    [data, expandedIds, tipo, searchValue],
+    () =>
+      buildVisibleRows({
+        cuentas: data,
+        expandedIds,
+        tipo,
+        search: searchValue,
+        tipoCuenta,
+        nivel,
+      }),
+    [data, expandedIds, tipo, searchValue, tipoCuenta, nivel],
   );
 
   const paginationColumns = useMemo(
@@ -173,8 +217,33 @@ const CuentaTable = ({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.07)]">
-      <DataTableToolbar tipo={tipo} setTipo={onToggle} onSearch={handleSearch} />
+    <div className="rounded-xl border border-slate-300/80 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.07)]">
+      <DataTableToolbar
+        tipo={tipo}
+        setTipo={onToggle}
+        onSearch={handleSearch}
+        actions={
+          <CuentaFiltrosButton
+            isOpen={filtersOpen}
+            activeCount={activeFiltersCount}
+            onToggle={() => setFiltersOpen((current) => !current)}
+          />
+        }
+      />
+
+      {filtersOpen && (
+        <CuentaFiltros
+          tipoCuenta={tipoCuenta}
+          nivel={nivel}
+          niveles={niveles}
+          onTipoCuentaChange={onTipoCuentaChange}
+          onNivelChange={onNivelChange}
+          onClear={() => {
+            onTipoCuentaChange("todos");
+            onNivelChange("todos");
+          }}
+        />
+      )}
 
       <div className="overflow-x-auto">
         <Table className="min-w-[780px]">

@@ -21,7 +21,11 @@ public class ObtenerCuentasInactivasQueryHandler
     {
         var empresaId = _currentUserService.EmpresaId;
 
-        var cuentas = await _repository.ObtenerInactivasAsync(empresaId, request.Filtro);
+        var cuentas = await _repository.ObtenerInactivasAsync(
+            empresaId,
+            request.Filtro,
+            request.Tipo,
+            request.Nivel);
 
         return cuentas
             .Select(c => new CuentaDto

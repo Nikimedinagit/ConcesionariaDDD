@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Landmark } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
@@ -30,13 +30,29 @@ const generateRootCode = (cuentas) => {
 
 export const CuentaPage = () => {
   const [tipo, setTipo] = useState("activas");
-  const [, setFiltro] = useState("");
-  const { data: cuentas, loading, refetch } = useCuentas(tipo);
+  const [filtro, setFiltro] = useState("");
+  const [debouncedFiltro, setDebouncedFiltro] = useState("");
+  const [tipoCuenta, setTipoCuenta] = useState("todos");
+  const [nivel, setNivel] = useState("todos");
+  const { data: cuentas, loading, refetch } = useCuentas(
+    tipo,
+    debouncedFiltro,
+    tipoCuenta,
+    nivel,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCuenta, setSelectedCuenta] = useState(null);
   const [selectedPadre, setSelectedPadre] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedFiltro(filtro);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [filtro]);
 
   const handleOpenRootCreate = () => {
     setServerError("");
@@ -142,7 +158,11 @@ export const CuentaPage = () => {
           <AddButton onClick={handleOpenRootCreate}>Nueva Cuenta</AddButton>
         </PageHeader>
 
-        {loading && cuentas.length === 0 ? (
+        {loading &&
+        cuentas.length === 0 &&
+        !debouncedFiltro &&
+        tipoCuenta === "todos" &&
+        nivel === "todos" ? (
           <div className="flex h-64 items-center justify-center">
             Cargando...
           </div>
@@ -152,6 +172,10 @@ export const CuentaPage = () => {
             tipo={tipo}
             onToggle={setTipo}
             onSearch={setFiltro}
+            tipoCuenta={tipoCuenta}
+            nivel={nivel}
+            onTipoCuentaChange={setTipoCuenta}
+            onNivelChange={setNivel}
             onAddChild={handleOpenChildCreate}
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
