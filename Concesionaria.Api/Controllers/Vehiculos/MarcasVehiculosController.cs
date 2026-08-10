@@ -27,26 +27,26 @@ public class MarcasVehiculosController : ControllerBase
     [HttpGet("activas")]
     public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
     {
-        var resultadoCategoriasGastosActivas = await _mediator.Send(new ObtenerMarcasVehiculosActivasQuery
+        var resultadoMarcasActivas = await _mediator.Send(new ObtenerMarcasVehiculosActivasQuery
         {
             Filtro = filtro
         });
 
-        return Ok(resultadoCategoriasGastosActivas);
+        return Ok(resultadoMarcasActivas);
     }
 
     // METODO OBTENER INACTIVAS
     [HttpGet("inactivas")]
     public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
     {
-        var resultadoCategoriasGastosInactivas = await _mediator.Send(
+        var resultadoMarcasInactivas = await _mediator.Send(
             new ObtenerMarcasVehiculosInactivasQuery
             {
                 Filtro = filtro
             }
         );
 
-        return Ok(resultadoCategoriasGastosInactivas);
+        return Ok(resultadoMarcasInactivas);
     }
 
     // METODO AGREGAR
