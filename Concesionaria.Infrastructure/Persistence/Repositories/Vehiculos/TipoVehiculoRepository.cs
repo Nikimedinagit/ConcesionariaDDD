@@ -29,35 +29,35 @@ public class TipoVehiculoRepository : ITipoVehiculoRepository
     public async Task<List<TipoVehiculo>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
 
-        var obtenerCategoriasActivas = _context.TiposVehiculos
+        var obtenerTiposActivas = _context.TiposVehiculos
             .Where(tv => tv.EmpresaId == empresaId)
                 .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerCategoriasActivas = obtenerCategoriasActivas
+            obtenerTiposActivas = obtenerTiposActivas
                 .Where(tv => tv.Nombre.Contains(filtro));
         }
 
-        return await obtenerCategoriasActivas.ToListAsync();
+        return await obtenerTiposActivas.ToListAsync();
     }
 
     // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<TipoVehiculo>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
 
-        var obtenerCategoriasInactivas = _context.TiposVehiculos
+        var obtenerTiposInactivas = _context.TiposVehiculos
             .IgnoreQueryFilters()
                 .Where(tv => tv.EmpresaId == empresaId && tv.Eliminado)
                     .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerCategoriasInactivas = obtenerCategoriasInactivas
+            obtenerTiposInactivas = obtenerTiposInactivas
                 .Where(tv => tv.Nombre.Contains(filtro));
         }
 
-        return await obtenerCategoriasInactivas.ToListAsync();
+        return await obtenerTiposInactivas.ToListAsync();
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
