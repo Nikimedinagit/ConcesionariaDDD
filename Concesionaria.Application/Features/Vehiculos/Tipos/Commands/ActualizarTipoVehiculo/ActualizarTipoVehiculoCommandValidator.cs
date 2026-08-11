@@ -32,6 +32,6 @@ public class ActualizarTipoVehiculoCommandValidator
                     return !existe;
                 }
             )
-            .WithMessage("Ya existe el tipo de vehículo.");
+            .WithMessage("Ya existe ese Tipo de Vehículo.");
     }
 }
