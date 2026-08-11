@@ -1,3 +1,4 @@
+using Application.Features.Vehiculos.Commands.ActivarTipoVehiculo;
 using Application.Features.Vehiculos.Commands.ActualizarTipoVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarTipoVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerTiposVehiculosActivas;
@@ -68,5 +69,22 @@ public class TiposVehiculosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Tipo de vehículo actualizado correctamente." });
+    }
+
+      // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarTipoVehiculoCommand command
+    )
+    {
+        if (id != command.TipoVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Tipo de vehículo activado correctamente." });
     }
 }
