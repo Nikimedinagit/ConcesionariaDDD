@@ -1,6 +1,7 @@
 using Application.Features.Vehiculos.Commands.ActivarTipoVehiculo;
 using Application.Features.Vehiculos.Commands.ActualizarTipoVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarTipoVehiculo;
+using Application.Features.Vehiculos.Commands.DesactivarTipoVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerTiposVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerTiposVehiculosInactivas;
 using MediatR;
@@ -86,5 +87,22 @@ public class TiposVehiculosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Tipo de vehículo activado correctamente." });
+    }
+
+        // MEOTODO ACTUALIZAR ESTADO A DESACTIVAR
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarTipoVehiculoCommand command
+    )
+    {
+        if (id != command.TipoVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Tipo de vehículo desactivado correctamente." });
     }
 }
