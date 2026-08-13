@@ -24,24 +24,27 @@ public class ModeloVehiculo : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAudit
     public string UpdatedBy { get; set; } = string.Empty;
 
     protected ModeloVehiculo() { }
-
-    private ModeloVehiculo(string nombre, Guid empresaId)
+    private ModeloVehiculo(string nombre, Guid empresaId, Guid marcaVehiculoId, Guid tipoVehiculoId)
     {
         Id = Guid.NewGuid();
 
         Nombre = nombre.ToUpper().Trim();
         EmpresaId = empresaId;
+        MarcaVehiculoId = marcaVehiculoId;
+        TipoVehiculoId = tipoVehiculoId;
         Eliminado = false;
     }
 
-    public static ModeloVehiculo Crear(string nombre, Guid empresaId)
+    public static ModeloVehiculo Crear(string nombre, Guid empresaId, Guid marcaVehiculoId, Guid tipoVehiculoId)
     {
-        return new ModeloVehiculo(nombre, empresaId);
+        return new ModeloVehiculo(nombre, empresaId, marcaVehiculoId, tipoVehiculoId);
     }
 
-    public void ActualizarModeloVehiculo(string nombre)
+    public void ActualizarModeloVehiculo(string nombre, Guid marcaVehiculoId, Guid tipoVehiculoId)
     {
         Nombre = nombre.ToUpper().Trim();
+        MarcaVehiculoId = marcaVehiculoId;
+        TipoVehiculoId = tipoVehiculoId;
     }
 
     public void Desactivar() => Eliminado = true;
