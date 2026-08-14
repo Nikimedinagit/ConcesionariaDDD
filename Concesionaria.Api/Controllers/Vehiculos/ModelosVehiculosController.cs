@@ -1,4 +1,5 @@
 using Application.Features.Vehiculos.Queries.ObtenerModelosVehiculosActivas;
+using Application.Features.Vehiculos.Queries.ObtenerModelosVehiculosInactivas;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -28,5 +29,17 @@ public class ModelosVehiculosController : ControllerBase
         });
 
         return Ok(resultadoModelosActivas);
+    }
+
+    // METODO OBTENER INACTIVAS
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    {
+        var resultadoModelosInactivas = await _mediator.Send(new ObtenerModelosVehiculosInactivasQuery
+        {
+            Filtro = filtro
+        });
+
+        return Ok(resultadoModelosInactivas);
     }
 }
