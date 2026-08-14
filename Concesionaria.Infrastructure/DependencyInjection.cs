@@ -80,12 +80,14 @@ public static class DependencyInjection
         services.AddScoped<ICuentaRepository, CuentaRepository>();
 
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-        
+
         services.AddScoped<IMarcaVehiculoRepository, MarcaVehiculoRepository>();
-        
+
         services.AddScoped<ITipoVehiculoRepository, TipoVehiculoRepository>();
-        
+
         services.AddScoped<IModeloVehiculoRepository, ModeloVehiculoRepository>();
+        
+        services.AddScoped<IProveedorRepository, ProveedorRepository>();
 
         return services;
     }
