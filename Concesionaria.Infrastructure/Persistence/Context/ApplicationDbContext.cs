@@ -33,6 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<MarcaVehiculo> MarcasVehiculos => Set<MarcaVehiculo>();
     public DbSet<TipoVehiculo> TiposVehiculos => Set<TipoVehiculo>();
     public DbSet<ModeloVehiculo> ModelosVehiculos => Set<ModeloVehiculo>();
+    public DbSet<Proveedor> Proveedores => Set<Proveedor>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -103,23 +104,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-            builder.Entity<ModeloVehiculo>()
-            .HasOne(m => m.MarcaVehiculo)
-            .WithMany()
-            .HasForeignKey(m => m.MarcaVehiculoId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<ModeloVehiculo>()
+        .HasOne(m => m.MarcaVehiculo)
+        .WithMany()
+        .HasForeignKey(m => m.MarcaVehiculoId)
+        .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<ModeloVehiculo>()
-            .HasOne(m => m.TipoVehiculo)
-            .WithMany()
-            .HasForeignKey(m => m.TipoVehiculoId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<ModeloVehiculo>()
+        .HasOne(m => m.TipoVehiculo)
+        .WithMany()
+        .HasForeignKey(m => m.TipoVehiculoId)
+        .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<ModeloVehiculo>()
-            .HasOne(m => m.Empresa)
-            .WithMany()
-            .HasForeignKey(m => m.EmpresaId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<ModeloVehiculo>()
+        .HasOne(m => m.Empresa)
+        .WithMany()
+        .HasForeignKey(m => m.EmpresaId)
+        .OnDelete(DeleteBehavior.NoAction);
 
         ApplyGlobalFilters(builder);
     }
