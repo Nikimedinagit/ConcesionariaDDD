@@ -65,12 +65,22 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
-    {
-        return await _context.ModelosVehiculos.AnyAsync(mv =>
-            mv.EmpresaId == empresaId && mv.Nombre.ToLower() == nombre.ToLower()
-        );
-    }
+ public async Task<NombreModeloEstado> ExistePorNombreAsync(string nombre, Guid empresaId)
+{
+    var normalized = nombre.Trim();
+
+    var entidad = await _context.ModelosVehiculos
+        .IgnoreQueryFilters()
+        .Where(m => m.EmpresaId == empresaId && m.Nombre == normalized)
+        .Select(m => new
+        {
+            m.Eliminado
+        })
+        .FirstOrDefaultAsync();
+
+    if (entidad == null) return NombreModeloEstado.NoExiste;
+    return entidad.Eliminado ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
+}
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
     public async Task<bool> ExistePorNombreExluyendoIdAsync(
