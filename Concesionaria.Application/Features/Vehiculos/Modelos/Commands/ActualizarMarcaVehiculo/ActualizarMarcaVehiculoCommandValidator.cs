@@ -1,12 +1,13 @@
-namespace Application.Features.Vehiculos.Commands.AgregarModeloVehiculo;
+namespace Application.Features.Vehiculos.Commands.ActualizarModeloVehiculo;
 
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
-public class AgregarModeloVehiculoCommandValidator : AbstractValidator<AgregarModeloVehiculoCommand>
+public class ActualizarModeloVehiculoCommandValidator
+    : AbstractValidator<ActualizarModeloVehiculoCommand>
 {
-    public AgregarModeloVehiculoCommandValidator(
+    public ActualizarModeloVehiculoCommandValidator(
         IModeloVehiculoRepository repository,
         ICurrentUserService currentUser
     )
@@ -18,19 +19,14 @@ public class AgregarModeloVehiculoCommandValidator : AbstractValidator<AgregarMo
                 async (nombre, context, ct) =>
                 {
                     var empresaId = currentUser.EmpresaId;
-                    var estado = await repository.ExistePorNombreAsync(
-                        nombre.Trim(),
-                        empresaId,
-                        context.InstanceToValidate.TipoVehiculoId,
-                        context.InstanceToValidate.MarcaVehiculoId
-                    );
+                    var estado = await repository.ExistePorNombreTipoMarcaExluyendoIdAsync(nombre.Trim(), empresaId, context.InstanceToValidate.ModeloVehiculoId, context.InstanceToValidate.TipoVehiculoId, context.InstanceToValidate.MarcaVehiculoId);
 
                     if (estado == NombreModeloEstado.Activo)
                         context.AddFailure("Ya existe un modelo activo con ese nombre, marca y tipo.");
 
                     if (estado == NombreModeloEstado.Desactivado)
                         context.AddFailure(
-                            "Ya se encuentra un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo."
+                            "Ya existe un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo"
                         );
                 }
             );

@@ -20,15 +20,12 @@ public class ActualizarCategoriaGastoCommandValidator
             .MustAsync(
                 async (command, nombre, cancellationToken) =>
                 {
-                    Console.WriteLine(command.CategoriaGastoId);
 
                     var existe = await repository.ExistePorNombreExluyendoIdAsync(
                         nombre,
                         currentUser.EmpresaId,
                         command.CategoriaGastoId
                     );
-
-                    Console.WriteLine(existe);
 
                     return !existe;
                 }
