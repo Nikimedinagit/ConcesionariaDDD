@@ -1,6 +1,7 @@
 using Application.Features.Vehiculos.Commands.ActivarModeloVehiculo;
 using Application.Features.Vehiculos.Commands.ActualizarModeloVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarModeloVehiculo;
+using Application.Features.Vehiculos.Commands.DesactivarModeloVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerModelosVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerModelosVehiculosInactivas;
 using MediatR;
@@ -88,5 +89,22 @@ public class ModelosVehiculosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Modelo de vehículo activado correctamente." });
+    }
+
+      // MEOTODO ACTUALIZAR ESTADO A DESACTIVAR
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarModeloVehiculoCommand command
+    )
+    {
+        if (id != command.ModeloVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Modelo de vehículo desactivado correctamente." });
     }
 }
