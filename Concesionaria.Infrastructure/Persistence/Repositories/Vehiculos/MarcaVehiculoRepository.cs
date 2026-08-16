@@ -81,4 +81,13 @@ public class MarcaVehiculoRepository : IMarcaVehiculoRepository
             && !mv.Eliminado
         );
     }
+
+    public async Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid marcaVehiculoId)
+    {
+        return await _context.ModelosVehiculos.AnyAsync(mv =>
+            mv.EmpresaId == empresaId
+            && mv.MarcaVehiculoId == marcaVehiculoId
+            && !mv.Eliminado
+        );
+    }
 }
