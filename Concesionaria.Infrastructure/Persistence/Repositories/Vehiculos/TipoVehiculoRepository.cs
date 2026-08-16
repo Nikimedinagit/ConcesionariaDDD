@@ -81,4 +81,14 @@ public class TipoVehiculoRepository : ITipoVehiculoRepository
             && !tv.Eliminado
         );
     }
+
+      // METODO PARA VALIDAR RELACION CON MODELOS
+    public async Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid tipoVehiculoId)
+    {
+        return await _context.ModelosVehiculos.AnyAsync(mv =>
+            mv.EmpresaId == empresaId
+            && mv.TipoVehiculoId == tipoVehiculoId
+            && !mv.Eliminado
+        );
+    }
 }

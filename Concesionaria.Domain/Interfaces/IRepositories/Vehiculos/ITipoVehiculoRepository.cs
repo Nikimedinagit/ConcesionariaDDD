@@ -10,6 +10,8 @@ public interface ITipoVehiculoRepository
     Task<List<TipoVehiculo>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
     Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
+    //TAREA PARA CONTROL DE RELACION CON MODELOS
+    Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid tipoVehiculoId);
 
     //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
     Task<bool> ExistePorNombreExluyendoIdAsync(

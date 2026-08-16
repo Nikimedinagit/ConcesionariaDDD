@@ -82,6 +82,7 @@ public class MarcaVehiculoRepository : IMarcaVehiculoRepository
         );
     }
 
+    // METODO PARA VALIDAR RELACION CON MODELOS
     public async Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid marcaVehiculoId)
     {
         return await _context.ModelosVehiculos.AnyAsync(mv =>
