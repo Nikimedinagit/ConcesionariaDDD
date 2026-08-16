@@ -1,3 +1,4 @@
+using Application.Features.Vehiculos.Commands.ActivarModeloVehiculo;
 using Application.Features.Vehiculos.Commands.ActualizarModeloVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarModeloVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerModelosVehiculosActivas;
@@ -70,5 +71,22 @@ public class ModelosVehiculosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Modelo de vehículo actualizado correctamente." });
+    }
+
+     // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarModeloVehiculoCommand command
+    )
+    {
+        if (id != command.ModeloVehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Modelo de vehículo activado correctamente." });
     }
 }
