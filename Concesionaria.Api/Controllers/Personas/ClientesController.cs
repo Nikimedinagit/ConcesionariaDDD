@@ -1,3 +1,4 @@
+using Application.Features.Personas.Commands.ActualizarCliente;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesActivas;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesInactivas;
 using MediatR;
@@ -54,4 +55,19 @@ public class ClientesController : ControllerBase
         );
     }
 
+  // METODO ACTUALIZAR
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarClienteCommand command
+    )
+    {
+        if (id != command.ClienteId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cliente actualizado correctamente." });
+    }
 }

@@ -22,8 +22,14 @@ namespace Concesionaria.Domain.Interfaces.IRepositories
         Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId);
 
         // TAREA PARA EXISTENCIA ACTUALIZAR
-        Task<bool> ExistePorDniExcluyendoIdAsync(
+        Task<ClienteEstado> ExistePorDniExcluyendoIdAsync(
             string dni,
+            Guid empresaId,
+            Guid clienteId
+        );
+    
+        Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+            string email,
             Guid empresaId,
             Guid clienteId
         );

@@ -88,14 +88,37 @@ public class ClienteRepository : IClienteRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<bool> ExistePorDniExcluyendoIdAsync(
+    public async Task<ClienteEstado> ExistePorDniExcluyendoIdAsync(
         string dni,
         Guid empresaId,
         Guid clienteId
     )
     {
-        return await _context.Clientes.AnyAsync(c =>
-            c.Dni == dni && c.EmpresaId == empresaId && c.Id != clienteId && !c.Eliminado
-        );
+    bool? estado = await _context.Clientes
+        .Where(c => c.EmpresaId == empresaId && c.Dni == dni && c.Id != clienteId)
+        .Select(c => (bool?)c.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+    }
+
+    public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+        string email,
+        Guid empresaId,
+        Guid clienteId
+    )
+    {
+    bool? estado = await _context.Clientes
+        .Where(c => c.EmpresaId == empresaId && c.Email.ToLower() == email.Trim() && c.Id != clienteId)
+        .Select(c => (bool?)c.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
     }
 }
