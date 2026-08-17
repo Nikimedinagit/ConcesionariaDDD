@@ -1,4 +1,5 @@
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesActivas;
+using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesInactivas;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,18 @@ public class ClientesController : ControllerBase
     public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
     {
         var resultadoClientesActivas = await _mediator.Send(new ObtenerClientesActivasQuery
+        {
+            Filtro = filtro
+        });
+
+        return Ok(resultadoClientesActivas);
+    }
+
+    // METODO OBTENER INACTIVAS
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    {
+        var resultadoClientesActivas = await _mediator.Send(new ObtenerClientesInactivasQuery
         {
             Filtro = filtro
         });
