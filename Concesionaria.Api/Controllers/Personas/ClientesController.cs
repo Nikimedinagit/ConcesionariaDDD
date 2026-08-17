@@ -1,3 +1,4 @@
+using Application.Features.Personas.Commands.ActivarCliente;
 using Application.Features.Personas.Commands.ActualizarCliente;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesActivas;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesInactivas;
@@ -69,5 +70,22 @@ public class ClientesController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Cliente actualizado correctamente." });
+    }
+
+       // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarClienteCommand command
+    )
+    {
+        if (id != command.ClienteId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cliente activado correctamente." });
     }
 }

@@ -2,15 +2,15 @@ using Concesionaria.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Vehiculos.Commands.ActivarModeloVehiculo;
+namespace Application.Features.Personas.Commands.ActivarCliente;
 
-public class ActivarModeloVehiculoCommandHandler
-    : IRequestHandler<ActivarModeloVehiculoCommand, Unit>
+public class ActivarClienteCommandHandler
+    : IRequestHandler<ActivarClienteCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
 
-    public ActivarModeloVehiculoCommandHandler(
+    public ActivarClienteCommandHandler(
         IApplicationDbContext context,
         ICurrentUserService currentUser
     )
@@ -20,19 +20,19 @@ public class ActivarModeloVehiculoCommandHandler
     }
 
     public async Task<Unit> Handle(
-        ActivarModeloVehiculoCommand request,
+        ActivarClienteCommand request,
         CancellationToken cancellationToken
     )
     {
         var empresaId = _currentUser.EmpresaId;
         
-        var obtenerModeloId = await _context.ModelosVehiculos.IgnoreQueryFilters().FirstOrDefaultAsync(
-            m => m.Id == request.ModeloVehiculoId && m.EmpresaId == empresaId && m.Eliminado,
+        var obtenerModeloId = await _context.Clientes.IgnoreQueryFilters().FirstOrDefaultAsync(
+            m => m.Id == request.ClienteId && m.EmpresaId == empresaId && m.Eliminado,
             cancellationToken
         );
 
         if (obtenerModeloId == null)
-            throw new Exception("Modelo de vehículo no encontrado.");
+            throw new Exception("Cliente no encontrado.");
 
         obtenerModeloId.Activar();
 
