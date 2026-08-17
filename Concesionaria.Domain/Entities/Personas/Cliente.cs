@@ -27,7 +27,7 @@ public class Cliente : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 
     protected Cliente() { }
 
-    public Cliente(string nombre, string dni, string telefono, string email, string domicilio, Guid empresaId, Guid localidadId)
+    public Cliente(string nombre, string dni, string telefono, string email, string domicilio, Guid localidadId, Guid empresaId)
     {
         Id = Guid.NewGuid();
         NombreCompleto = nombre.ToUpper().Trim();
@@ -35,14 +35,14 @@ public class Cliente : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         Telefono = telefono;
         Email = email;
         Domicilio = domicilio;
-        EmpresaId = empresaId;
         LocalidadId = localidadId;
+        EmpresaId = empresaId;
         Eliminado = false;
     }
 
-    public static Cliente Crear(string nombre, string dni, string telefono, string email, string domicilio, Guid empresaId, Guid localidadId)
+    public static Cliente Crear(string nombre, string dni, string telefono, string email, string domicilio, Guid localidadId, Guid empresaId)
     {
-        return new Cliente(nombre, dni, telefono, email, domicilio, empresaId, localidadId);
+        return new Cliente(nombre, dni, telefono, email, domicilio, localidadId, empresaId);
     }
 
     public void ActualizarCliente(string nombre, string dni, string telefono, string email, string domicilio, Guid localidadId)

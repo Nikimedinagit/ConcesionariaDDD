@@ -28,15 +28,15 @@ public class ClienteRepository : IClienteRepository
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
     public async Task<List<Cliente>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
-
-        var obtenerClientesActivos = _context.Clientes
-            .Where(c => c.EmpresaId == empresaId)
-                .AsQueryable();
+        var obtenerClientesActivos = _context
+            .Clientes.Where(c => c.EmpresaId == empresaId)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerClientesActivos = obtenerClientesActivos
-                .Where(c => c.NombreCompleto.Contains(filtro));
+            obtenerClientesActivos = obtenerClientesActivos.Where(c =>
+                c.NombreCompleto.Contains(filtro)
+            );
         }
 
         return await obtenerClientesActivos.ToListAsync();
@@ -45,42 +45,57 @@ public class ClienteRepository : IClienteRepository
     // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<Cliente>> ObtenerInactivasAsync(Guid empresaId, string filtro = null)
     {
-
-        var obtenerClientesInactivos = _context.Clientes
-            .IgnoreQueryFilters()
-                .Where(c => c.EmpresaId == empresaId && c.Eliminado)
-                    .AsQueryable();
+        var obtenerClientesInactivos = _context
+            .Clientes.IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId && c.Eliminado)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerClientesInactivos = obtenerClientesInactivos
-                .Where(c => c.NombreCompleto.Contains(filtro));
+            obtenerClientesInactivos = obtenerClientesInactivos.Where(c =>
+                c.NombreCompleto.Contains(filtro)
+            );
         }
 
         return await obtenerClientesInactivos.ToListAsync();
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<bool> ExistePorDniAsync(string dni, Guid empresaId)
+    public async Task<ClienteEstado> ExistePorDniAsync(string dni, Guid empresaId)
     {
-        return await _context.Clientes.AnyAsync(c =>
-            c.EmpresaId == empresaId && c.Dni == dni
-        );
+         bool? estado = await _context.Clientes
+        .Where(c => c.EmpresaId == empresaId && c.Dni == dni)
+        .Select(c => (bool?)c.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+    }
+
+    public async Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId)
+    {
+        bool? estado = await _context.Clientes
+        .Where(c => c.EmpresaId == empresaId && c.Email.ToLower() == email.ToLower().Trim())
+        .Select(c => (bool?)c.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
     public async Task<bool> ExistePorDniExcluyendoIdAsync(
-     string dni,
-     Guid empresaId,
-     Guid clienteId)
+        string dni,
+        Guid empresaId,
+        Guid clienteId
+    )
     {
         return await _context.Clientes.AnyAsync(c =>
-            c.Dni == dni
-            && c.EmpresaId == empresaId
-            && c.Id != clienteId
-            && !c.Eliminado
+            c.Dni == dni && c.EmpresaId == empresaId && c.Id != clienteId && !c.Eliminado
         );
     }
-
-    
 }

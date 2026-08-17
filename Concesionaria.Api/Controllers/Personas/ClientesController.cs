@@ -42,4 +42,16 @@ public class ClientesController : ControllerBase
 
         return Ok(resultadoClientesActivas);
     }
+
+        // METODO AGREGAR
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarClienteCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Cliente registrado correctamente.", clienteId = id }
+        );
+    }
+
 }

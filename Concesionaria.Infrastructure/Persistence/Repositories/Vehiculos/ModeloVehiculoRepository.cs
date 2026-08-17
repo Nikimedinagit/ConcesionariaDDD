@@ -74,7 +74,7 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     {
         var normalized = nombre.Trim();
 
-        var entidad = await _context
+        bool? entidad = await _context
             .ModelosVehiculos.IgnoreQueryFilters()
             .Where(m =>
                 m.EmpresaId == empresaId
@@ -82,12 +82,12 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
                 && m.TipoVehiculoId == tipoVehiculoId
                 && m.MarcaVehiculoId == marcaVehiculoId
             )
-            .Select(m => new { m.Eliminado })
+            .Select(m => (bool?)m.Eliminado)
             .FirstOrDefaultAsync();
 
         if (entidad == null)
             return NombreModeloEstado.NoExiste;
-        return entidad.Eliminado ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
+        return entidad.Value ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
@@ -99,7 +99,7 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
         Guid marcaVehiculoId
     )
     {
-        var entidad = await _context
+        bool? entidad = await _context
             .ModelosVehiculos.IgnoreQueryFilters()
             .Where(mv =>
                 mv.Nombre.ToLower() == nombre.ToLower()
@@ -108,11 +108,11 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
                 && mv.TipoVehiculoId == tipoVehiculoId
                 && mv.MarcaVehiculoId == marcaVehiculoId
             )
-            .Select(mv => new { mv.Eliminado })
+            .Select(mv => (bool?)mv.Eliminado)
             .FirstOrDefaultAsync();
 
         if (entidad == null)
             return NombreModeloEstado.NoExiste;
-        return entidad.Eliminado ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
+        return entidad.Value ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
     }
 }
