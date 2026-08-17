@@ -2,15 +2,15 @@ using Concesionaria.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Personas.Commands.ActivarCliente;
+namespace Application.Features.Personas.Commands.DesactivarCliente;
 
-public class ActivarClienteCommandHandler
-    : IRequestHandler<ActivarClienteCommand, Unit>
+public class DesactivarClienteCommandHandler
+    : IRequestHandler<DesactivarClienteCommand, Unit>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
 
-    public ActivarClienteCommandHandler(
+    public DesactivarClienteCommandHandler(
         IApplicationDbContext context,
         ICurrentUserService currentUser
     )
@@ -20,21 +20,21 @@ public class ActivarClienteCommandHandler
     }
 
     public async Task<Unit> Handle(
-        ActivarClienteCommand request,
+        DesactivarClienteCommand request,
         CancellationToken cancellationToken
     )
     {
         var empresaId = _currentUser.EmpresaId;
         
         var obtenerClienteId = await _context.Clientes.IgnoreQueryFilters().FirstOrDefaultAsync(
-            m => m.Id == request.ClienteId && m.EmpresaId == empresaId && m.Eliminado,
+            mv => mv.Id == request.ClienteId && mv.EmpresaId == empresaId && !mv.Eliminado,
             cancellationToken
         );
 
         if (obtenerClienteId == null)
             throw new Exception("Cliente no encontrado.");
 
-        obtenerClienteId.Activar();
+        obtenerClienteId.Desactivar();
 
         await _context.SaveChangesAsync(cancellationToken);
 

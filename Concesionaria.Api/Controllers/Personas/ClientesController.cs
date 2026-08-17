@@ -1,5 +1,6 @@
 using Application.Features.Personas.Commands.ActivarCliente;
 using Application.Features.Personas.Commands.ActualizarCliente;
+using Application.Features.Personas.Commands.DesactivarCliente;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesActivas;
 using Concesionaria.Application.Features.Personas.Clientes.Queries.ObtenerClientesInactivas;
 using MediatR;
@@ -87,5 +88,22 @@ public class ClientesController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Cliente activado correctamente." });
+    }
+   
+       // METODO ACTUALIZAR ESTADO A DESACTIVAR
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarClienteCommand command
+    )
+    {
+        if (id != command.ClienteId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Cliente desactivado correctamente." });
     }
 }
