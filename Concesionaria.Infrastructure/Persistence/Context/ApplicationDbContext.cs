@@ -34,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<TipoVehiculo> TiposVehiculos => Set<TipoVehiculo>();
     public DbSet<ModeloVehiculo> ModelosVehiculos => Set<ModeloVehiculo>();
     public DbSet<Proveedor> Proveedores => Set<Proveedor>();
+    public DbSet<Cliente> Clientes => Set<Cliente>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -121,6 +122,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         .WithMany()
         .HasForeignKey(m => m.EmpresaId)
         .OnDelete(DeleteBehavior.NoAction);
+   
+        builder.Entity<Cliente>(entity =>
+        {
+            
+        entity.HasOne(m => m.Localidad)
+        .WithMany()
+        .HasForeignKey(m => m.LocalidadId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        entity.HasOne(m => m.Empresa)
+        .WithMany()
+        .HasForeignKey(m => m.EmpresaId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        });
 
         ApplyGlobalFilters(builder);
     }
