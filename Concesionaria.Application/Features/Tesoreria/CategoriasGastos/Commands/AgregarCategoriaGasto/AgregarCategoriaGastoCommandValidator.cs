@@ -15,14 +15,17 @@ public class AgregarCategoriaGastoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorNombreAsync(nombre.Trim(), currentUser.EmpresaId);
 
-                    return !await repository.ExistePorNombreAsync(nombre, empresaId);
+                    if (estado == NombreCategoriaGastoEstado.Activo)
+                        context.AddFailure("Ya existe una categoría de gasto activa con ese nombre.");
+
+                    if (estado == NombreCategoriaGastoEstado.Desactivado)
+                        context.AddFailure("Ya existe una categoría de gasto inactiva con ese nombre. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Categoria Gasto.");
+            );
     }
 }

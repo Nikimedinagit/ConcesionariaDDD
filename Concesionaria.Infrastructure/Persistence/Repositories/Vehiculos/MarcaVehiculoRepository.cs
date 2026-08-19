@@ -61,25 +61,40 @@ public class MarcaVehiculoRepository : IMarcaVehiculoRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
+    public async Task<NombreEntidadVehiculoEstado> ExistePorNombreAsync(string nombre, Guid empresaId)
     {
-        return await _context.MarcasVehiculos.AnyAsync(mv =>
-            mv.EmpresaId == empresaId && mv.Nombre.ToLower() == nombre.ToLower()
-        );
+        var eliminado = await _context.MarcasVehiculos
+            .IgnoreQueryFilters()
+            .Where(mv => mv.EmpresaId == empresaId && mv.Nombre.ToLower() == nombre.Trim().ToLower())
+            .Select(mv => (bool?)mv.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreEntidadVehiculoEstado.NoExiste,
+            true => NombreEntidadVehiculoEstado.Desactivado,
+            _ => NombreEntidadVehiculoEstado.Activo,
+        };
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<bool> ExistePorNombreExluyendoIdAsync(
+    public async Task<NombreEntidadVehiculoEstado> ExistePorNombreExluyendoIdAsync(
      string nombre,
      Guid empresaId,
      Guid marcaVehiculoId)
     {
-        return await _context.MarcasVehiculos.AnyAsync(mv =>
-            mv.Nombre.ToLower() == nombre.ToLower()
-            && mv.EmpresaId == empresaId
-            && mv.Id != marcaVehiculoId
-            && !mv.Eliminado
-        );
+        var eliminado = await _context.MarcasVehiculos
+            .IgnoreQueryFilters()
+            .Where(mv => mv.Nombre.ToLower() == nombre.Trim().ToLower() && mv.EmpresaId == empresaId && mv.Id != marcaVehiculoId)
+            .Select(mv => (bool?)mv.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreEntidadVehiculoEstado.NoExiste,
+            true => NombreEntidadVehiculoEstado.Desactivado,
+            _ => NombreEntidadVehiculoEstado.Activo,
+        };
     }
 
     // METODO PARA VALIDAR RELACION CON MODELOS

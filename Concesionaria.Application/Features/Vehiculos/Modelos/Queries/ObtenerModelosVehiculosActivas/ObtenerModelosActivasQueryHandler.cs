@@ -22,7 +22,11 @@ public class ObtenerModelosVehiculosActivasQueryHandler
     {
         var empresaId = _currentUserService.EmpresaId;
 
-        var modelos = await _repository.ObtenerActivasAsync(empresaId, request.Filtro);
+        var modelos = await _repository.ObtenerActivasAsync(
+            empresaId,
+            request.Filtro,
+            request.MarcaVehiculoId,
+            request.TipoVehiculoId);
 
         return modelos
             .OrderBy(m => m.Nombre)

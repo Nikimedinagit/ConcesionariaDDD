@@ -7,10 +7,18 @@ public interface IModeloVehiculoRepository
     Task UpdateAsync();
 
     // TAREA PARA OBTENER ACTIVAS
-    Task<List<ModeloVehiculo>> ObtenerActivasAsync(Guid empresaId, string filtro = null);
+    Task<List<ModeloVehiculo>> ObtenerActivasAsync(
+        Guid empresaId,
+        string filtro = null,
+        Guid? marcaVehiculoId = null,
+        Guid? tipoVehiculoId = null);
 
     //TAREA PARA OBTENER INACTIVAS
-    Task<List<ModeloVehiculo>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
+    Task<List<ModeloVehiculo>> ObtenerInactivasAsync(
+        Guid empresaId,
+        string filtro = null,
+        Guid? marcaVehiculoId = null,
+        Guid? tipoVehiculoId = null);
 
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
     Task<NombreModeloEstado> ExistePorNombreAsync(

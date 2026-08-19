@@ -15,14 +15,17 @@ public class AgregarMarcaVehiculoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorNombreAsync(nombre.Trim(), currentUser.EmpresaId);
 
-                    return !await repository.ExistePorNombreAsync(nombre, empresaId);
+                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                        context.AddFailure("Ya existe una marca activa con ese nombre.");
+
+                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                        context.AddFailure("Ya existe una marca inactiva con ese nombre. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Marca.");
+            );
     }
 }

@@ -81,33 +81,77 @@ public class CuentaRepository : ICuentaRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA POR NOMBRE PARA AGREGAR
-    public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
+    public async Task<EstadoCuenta> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo)
     {
-        return await _context.Cuentas.AnyAsync(c =>
-            c.EmpresaId == empresaId && c.Nombre.ToLower() == nombre.ToLower()
-        );
+        var eliminado = await _context.Cuentas
+            .IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId
+                && c.Tipo == tipo
+                && c.Nombre.ToLower() == nombre.Trim().ToLower())
+            .Select(c => (bool?)c.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => EstadoCuenta.NoExiste,
+            true => EstadoCuenta.Desactivado,
+            _ => EstadoCuenta.Activo,
+        };
     }
 
     // METODO PARA VALIDAR EXISTENCIA POR CODIGO PARA AGREGAR
-    public async Task<bool> ExistePorCodigoAsync(string codigo, Guid empresaId)
+    public async Task<EstadoCuenta> ExistePorCodigoAsync(string codigo, Guid empresaId)
     {
-        return await _context.Cuentas.AnyAsync(c =>
-            c.EmpresaId == empresaId && c.Codigo.ToLower() == codigo.ToLower()
-        );
+        var eliminado = await _context.Cuentas
+            .IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId && c.Codigo.ToLower() == codigo.Trim().ToLower())
+            .Select(c => (bool?)c.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => EstadoCuenta.NoExiste,
+            true => EstadoCuenta.Desactivado,
+            _ => EstadoCuenta.Activo,
+        };
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<bool> ExistePorNombreExluyendoIdAsync(
+    public async Task<EstadoCuenta> ExistePorNombreExluyendoIdAsync(
      string nombre,
      Guid empresaId,
      Guid cuentaId)
     {
+        var tipo = await _context.Cuentas
+            .IgnoreQueryFilters()
+            .Where(c => c.Id == cuentaId && c.EmpresaId == empresaId)
+            .Select(c => (TipoCuenta?)c.Tipo)
+            .FirstOrDefaultAsync();
+
+        if (!tipo.HasValue)
+            return EstadoCuenta.NoExiste;
+
+        var eliminado = await _context.Cuentas
+            .IgnoreQueryFilters()
+            .Where(c => c.Nombre.ToLower() == nombre.Trim().ToLower()
+                && c.EmpresaId == empresaId
+                && c.Tipo == tipo.Value
+                && c.Id != cuentaId)
+            .Select(c => (bool?)c.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => EstadoCuenta.NoExiste,
+            true => EstadoCuenta.Desactivado,
+            _ => EstadoCuenta.Activo,
+        };
+    }
+
+    public async Task<bool> TieneCuentasHijasActivasAsync(Guid empresaId, Guid cuentaId)
+    {
         return await _context.Cuentas.AnyAsync(c =>
-            c.Nombre.ToLower() == nombre.ToLower()
-            && c.EmpresaId == empresaId
-            && c.Id != cuentaId
-            && !c.Eliminado
-        );
+            c.EmpresaId == empresaId && c.CuentaPadreId == cuentaId);
     }
 
 }

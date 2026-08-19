@@ -90,11 +90,12 @@ export const TipoVehiculoPage = () => {
     } catch (error) {
       const dataError = error.response?.data;
       const mensajeError =
+        dataError?.errors?.[0]?.errorMessage ||
         dataError?.message ||
         dataError?.mensaje ||
         "No se pudo cambiar el estado del tipo de vehículo";
 
-      toastService.error("Error", { description: mensajeError });
+      toastService.error("No se puede desactivar", { description: mensajeError });
     }
   };
 

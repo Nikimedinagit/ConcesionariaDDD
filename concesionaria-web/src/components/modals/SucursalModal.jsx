@@ -79,7 +79,7 @@ export function SucursalModal({
           placeholder="Ej: CASA CENTRAL"
           value={form.nombre}
           onChange={(e) => updateField("nombre", e.target.value.toUpperCase())}
-          error={localErrors.nombre?.[0]}
+          error={localErrors.nombre?.[0] || serverError}
           autoFocus
         />
 
@@ -109,11 +109,6 @@ export function SucursalModal({
           className="md:col-span-2"
         />
 
-        {serverError && (
-          <p className="md:col-span-2 text-sm font-medium text-red-500">
-            {serverError}
-          </p>
-        )}
       </div>
     </ModalCustom>
   );

@@ -15,15 +15,22 @@ public class AgregarSucursalCommandValidator : AbstractValidator<AgregarSucursal
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorNombreLocalidadAsync(
+                        nombre.Trim(),
+                        currentUser.EmpresaId,
+                        context.InstanceToValidate.LocalidadId
+                    );
 
-                    return !await repository.ExistePorNombreLocalidadAsync(nombre, empresaId);
+                    if (estado == NombreSucursalEstado.Activo)
+                        context.AddFailure("Ya existe una sucursal activa con ese nombre y localidad.");
+
+                    if (estado == NombreSucursalEstado.Desactivado)
+                        context.AddFailure("Ya existe una sucursal inactiva con ese nombre y localidad. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe la sucursal.");
+            );
 
         RuleFor(cg => cg.LocalidadId)
             .NotEmpty()

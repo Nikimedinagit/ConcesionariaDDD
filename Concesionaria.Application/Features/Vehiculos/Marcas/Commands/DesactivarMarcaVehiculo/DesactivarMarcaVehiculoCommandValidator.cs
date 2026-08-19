@@ -18,18 +18,14 @@ public class DesactivarMarcaVehiculoCommandValidator
             .MustAsync(
                 async (command, eliminado, cancellationToken) =>
                 {
-                    Console.WriteLine(command.MarcaVehiculoId);
-
                     var existe = await repository.TieneModelosActivosAsync(
                         currentUser.EmpresaId,
                         command.MarcaVehiculoId
                     );
 
-                    Console.WriteLine(existe);
-
                     return !existe;
                 }
             )
-            .WithMessage("La marca seleccionada no se puede desactivar porque tiene modelos asociados.");
+            .WithMessage("No se puede desactivar la marca porque tiene modelos activos asociados. Primero desactive o reasigne esos modelos.");
     }
 }

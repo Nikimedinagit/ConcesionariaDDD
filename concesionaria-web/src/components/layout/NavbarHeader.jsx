@@ -62,10 +62,10 @@ export function NavbarHeader() {
       title: "Vehículos",
       items: [
         { to: "/vehiculos", name: "Vehículos" },
-        { to: "/layout/marcas", name: "Marcas" },
-        { to: "/modelos", name: "Modelos" },
-        { to: "/layout/tipos-vehiculos", name: "Tipos de Vehículos" },
         { to: "/gastos-v", name: "Gastos de Vehículos" },
+        { to: "/layout/modelos", name: "Modelos" },
+        { to: "/layout/tipos-vehiculos", name: "Tipos de Vehículos" },
+        { to: "/layout/marcas", name: "Marcas" },
       ],
     },
     {
@@ -79,9 +79,9 @@ export function NavbarHeader() {
     {
       title: "Ubicaciones",
       items: [
-        { to: "/layout/provincias", name: "Provincias" },
-        { to: "/layout/localidades", name: "Localidades" },
         { to: "/layout/sucursales", name: "Sucursales" },
+        { to: "/layout/localidades", name: "Localidades" },
+        { to: "/layout/provincias", name: "Provincias" },
       ],
     },
   ];

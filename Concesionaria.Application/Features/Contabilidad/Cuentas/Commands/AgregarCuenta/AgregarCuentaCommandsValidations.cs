@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -13,27 +14,36 @@ public class AgregarCuentaCommandValidation : AbstractValidator<AgregarCuentaCom
         RuleFor(c => c.Codigo)
             .NotEmpty()
             .WithMessage("El código es obligatorio.")
-            .MustAsync(
-                async (codigo, cancellationToken) =>
+            .CustomAsync(
+                async (codigo, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorCodigoAsync(codigo.Trim(), currentUser.EmpresaId);
 
-                    return !await repository.ExistePorCodigoAsync(codigo, empresaId);
+                    if (estado == EstadoCuenta.Activo)
+                        context.AddFailure("Ya existe una cuenta activa con ese código.");
+
+                    if (estado == EstadoCuenta.Desactivado)
+                        context.AddFailure("Ya existe una cuenta inactiva con ese código. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Cuenta.");
+            );
             
         RuleFor(c => c.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorNombreAsync(
+                        nombre.Trim(),
+                        currentUser.EmpresaId,
+                        context.InstanceToValidate.Tipo);
 
-                    return !await repository.ExistePorNombreAsync(nombre, empresaId);
+                    if (estado == EstadoCuenta.Activo)
+                        context.AddFailure("Ya existe una cuenta activa con ese nombre y tipo.");
+
+                    if (estado == EstadoCuenta.Desactivado)
+                        context.AddFailure("Ya existe una cuenta inactiva con ese nombre y tipo. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Cuenta.");
+            );
     }
 }

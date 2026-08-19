@@ -18,10 +18,10 @@ namespace Concesionaria.Domain.Interfaces.IRepositories
         Task<List<CategoriaGasto>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
 
         // TAREA PARA EXTIENCIA AGREGAR
-        Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
+        Task<NombreCategoriaGastoEstado> ExistePorNombreAsync(string nombre, Guid empresaId);
 
         // TAREA PARA EXISTENCIA ACTUALIZAR
-        Task<bool> ExistePorNombreExluyendoIdAsync(
+        Task<NombreCategoriaGastoEstado> ExistePorNombreExluyendoIdAsync(
             string nombre,
             Guid empresaId,
             Guid CategoriaGastoId

@@ -30,7 +30,7 @@ public class AgregarModeloVehiculoCommandValidator : AbstractValidator<AgregarMo
 
                     if (estado == NombreModeloEstado.Desactivado)
                         context.AddFailure(
-                            "Ya se encuentra un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo."
+                            "Ya existe un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo."
                         );
                 }
             );

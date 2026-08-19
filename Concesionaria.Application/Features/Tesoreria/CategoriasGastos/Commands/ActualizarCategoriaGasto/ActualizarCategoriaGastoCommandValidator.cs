@@ -17,19 +17,21 @@ public class ActualizarCategoriaGastoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (command, nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-
-                    var existe = await repository.ExistePorNombreExluyendoIdAsync(
-                        nombre,
+                    var estado = await repository.ExistePorNombreExluyendoIdAsync(
+                        nombre.Trim(),
                         currentUser.EmpresaId,
-                        command.CategoriaGastoId
+                        context.InstanceToValidate.CategoriaGastoId
                     );
 
-                    return !existe;
+                    if (estado == NombreCategoriaGastoEstado.Activo)
+                        context.AddFailure("Ya existe una categoría de gasto activa con ese nombre.");
+
+                    if (estado == NombreCategoriaGastoEstado.Desactivado)
+                        context.AddFailure("Ya existe una categoría de gasto inactiva con ese nombre. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Categoria Gasto.");
+            );
     }
 }

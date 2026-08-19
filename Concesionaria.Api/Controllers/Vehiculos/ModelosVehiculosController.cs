@@ -25,11 +25,16 @@ public class ModelosVehiculosController : ControllerBase
 
     // METODO OBTENER ACTIVAS
     [HttpGet("activas")]
-    public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerActivas(
+        [FromQuery] string filtro,
+        [FromQuery] Guid? marcaVehiculoId,
+        [FromQuery] Guid? tipoVehiculoId)
     {
         var resultadoModelosActivas = await _mediator.Send(new ObtenerModelosVehiculosActivasQuery
         {
-            Filtro = filtro
+            Filtro = filtro,
+            MarcaVehiculoId = marcaVehiculoId,
+            TipoVehiculoId = tipoVehiculoId
         });
 
         return Ok(resultadoModelosActivas);
@@ -37,11 +42,16 @@ public class ModelosVehiculosController : ControllerBase
 
     // METODO OBTENER INACTIVAS
     [HttpGet("inactivas")]
-    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerInactivas(
+        [FromQuery] string filtro,
+        [FromQuery] Guid? marcaVehiculoId,
+        [FromQuery] Guid? tipoVehiculoId)
     {
         var resultadoModelosInactivas = await _mediator.Send(new ObtenerModelosVehiculosInactivasQuery
         {
-            Filtro = filtro
+            Filtro = filtro,
+            MarcaVehiculoId = marcaVehiculoId,
+            TipoVehiculoId = tipoVehiculoId
         });
 
         return Ok(resultadoModelosInactivas);

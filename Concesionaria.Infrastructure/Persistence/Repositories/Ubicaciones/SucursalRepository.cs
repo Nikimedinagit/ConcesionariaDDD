@@ -57,24 +57,54 @@ public class SucursalRepository : ISucursalRepository
         return await obtenerSucursalesInactivas.ToListAsync();
     }
 
-    public async Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId)
-    {
-        return await _context.Sucursales.AnyAsync(s =>
-            s.EmpresaId == empresaId && s.Nombre.ToLower() == nombre.ToLower()
-        );
-    }
-
-    public async Task<bool> ExistePorNombreLocalidadAsync(
+    public async Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
         string nombre,
         Guid empresaId,
+        Guid localidadId
+    )
+    {
+        var eliminado = await _context.Sucursales
+            .IgnoreQueryFilters()
+            .Where(s =>
+                s.EmpresaId == empresaId
+                && s.LocalidadId == localidadId
+                && s.Nombre.ToLower() == nombre.Trim().ToLower()
+            )
+            .Select(s => (bool?)s.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreSucursalEstado.NoExiste,
+            true => NombreSucursalEstado.Desactivado,
+            _ => NombreSucursalEstado.Activo,
+        };
+    }
+
+    public async Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+        string nombre,
+        Guid empresaId,
+        Guid localidadId,
         Guid sucursalId
     )
     {
-        return await _context.Sucursales.AnyAsync(s =>
-            s.EmpresaId == empresaId
-            && s.Id != sucursalId
-            && s.Nombre.ToLower() == nombre.ToLower()
-        );
+        var eliminado = await _context.Sucursales
+            .IgnoreQueryFilters()
+            .Where(s =>
+                s.EmpresaId == empresaId
+                && s.LocalidadId == localidadId
+                && s.Id != sucursalId
+                && s.Nombre.ToLower() == nombre.Trim().ToLower()
+            )
+            .Select(s => (bool?)s.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreSucursalEstado.NoExiste,
+            true => NombreSucursalEstado.Desactivado,
+            _ => NombreSucursalEstado.Activo,
+        };
     }
 
     public async Task<bool> LocalidadExisteAsync(Guid localidadId)

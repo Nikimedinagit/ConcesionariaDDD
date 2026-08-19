@@ -15,14 +15,17 @@ public class AgregarTipoVehiculoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    var empresaId = currentUser.EmpresaId;
+                    var estado = await repository.ExistePorNombreAsync(nombre.Trim(), currentUser.EmpresaId);
 
-                    return !await repository.ExistePorNombreAsync(nombre, empresaId);
+                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                        context.AddFailure("Ya existe un tipo de vehículo activo con ese nombre.");
+
+                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                        context.AddFailure("Ya existe un tipo de vehículo inactivo con ese nombre. Puede reactivarlo.");
                 }
-            )
-            .WithMessage("Ya existe ese Tipo de Vehículo.");
+            );
     }
 }

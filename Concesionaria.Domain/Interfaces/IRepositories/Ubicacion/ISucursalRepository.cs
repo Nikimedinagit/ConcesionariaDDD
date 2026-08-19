@@ -13,10 +13,19 @@ public interface ISucursalRepository
     Task AddAsync(Sucursal sucursal);
 
     //TAREA PARA EXISTENCIA AGREGAR NOMBRE
-    Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId);
+    Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+        string nombre,
+        Guid empresaId,
+        Guid localidadId
+    );
 
     //TAREA PARA EXISTENCIA ACTUALIZAR NOMBRE
-    Task<bool> ExistePorNombreLocalidadAsync(string nombre, Guid empresaId, Guid sucursalId);
+    Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+        string nombre,
+        Guid empresaId,
+        Guid localidadId,
+        Guid sucursalId
+    );
 
     //TAREA PARA EXISTENCIA ACTUALIZAR LOCALIDAD
     Task<bool> LocalidadExisteAsync(Guid localidadId);

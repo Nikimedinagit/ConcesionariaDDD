@@ -40,6 +40,7 @@ export const CuentaPage = () => {
     tipoCuenta,
     nivel,
   );
+  const { data: cuentasDisponibles, refetch: refetchCuentasDisponibles } = useCuentas(tipo);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCuenta, setSelectedCuenta] = useState(null);
   const [selectedPadre, setSelectedPadre] = useState(null);
@@ -111,6 +112,7 @@ export const CuentaPage = () => {
 
       setIsModalOpen(false);
       refetch();
+      refetchCuentasDisponibles();
     } catch (error) {
       const data = error.response?.data;
       const mensajeError =
@@ -139,6 +141,7 @@ export const CuentaPage = () => {
       }
 
       refetch();
+      refetchCuentasDisponibles();
     } catch (error) {
       const mensajeError =
         error.response?.data?.message ||
@@ -169,6 +172,7 @@ export const CuentaPage = () => {
         ) : (
           <CuentaTable
             data={cuentas}
+            cuentasDisponibles={cuentasDisponibles}
             tipo={tipo}
             onToggle={setTipo}
             onSearch={setFiltro}

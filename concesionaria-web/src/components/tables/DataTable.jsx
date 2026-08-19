@@ -24,6 +24,8 @@ const DataTable = ({
   onToggle,
   onSearch,
   showStatusFilter = true,
+  toolbarActions,
+  filters,
 }) => {
   const table = useReactTable({
   data: data ?? [],
@@ -57,7 +59,9 @@ const DataTable = ({
         setTipo={onToggle}
         onSearch={onSearch}
         showStatusFilter={showStatusFilter}
+        actions={toolbarActions}
       />
+      {filters}
       <div className="overflow-x-auto">
         <Table className="min-w-[700px]">
           <TableHeader className="bg-[hsl(var(--nav-bg)/0.08)]">

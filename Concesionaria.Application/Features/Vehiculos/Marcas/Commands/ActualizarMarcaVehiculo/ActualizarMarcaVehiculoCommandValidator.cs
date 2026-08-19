@@ -16,22 +16,21 @@ public class ActualizarMarcaVehiculoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (command, nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    Console.WriteLine(command.MarcaVehiculoId);
-
-                    var existe = await repository.ExistePorNombreExluyendoIdAsync(
-                        nombre,
+                    var estado = await repository.ExistePorNombreExluyendoIdAsync(
+                        nombre.Trim(),
                         currentUser.EmpresaId,
-                        command.MarcaVehiculoId
+                        context.InstanceToValidate.MarcaVehiculoId
                     );
 
-                    Console.WriteLine(existe);
+                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                        context.AddFailure("Ya existe una marca activa con ese nombre.");
 
-                    return !existe;
+                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                        context.AddFailure("Ya existe una marca inactiva con ese nombre. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Marca.");
+            );
     }
 }

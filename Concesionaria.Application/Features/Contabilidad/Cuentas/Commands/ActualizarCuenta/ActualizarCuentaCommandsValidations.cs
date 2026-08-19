@@ -1,6 +1,5 @@
-using System.ComponentModel.Design;
-using Application.Features.Cuentas.Commands.AgregarCuenta;
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -17,22 +16,21 @@ public class ActualizarCuentaCommandValidator
         RuleFor(c => c.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (command, nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    Console.WriteLine(command.CuentaId);
-
-                    var existe = await repository.ExistePorNombreExluyendoIdAsync(
-                        nombre,
+                    var estado = await repository.ExistePorNombreExluyendoIdAsync(
+                        nombre.Trim(),
                         currentUser.EmpresaId,
-                        command.CuentaId
+                        context.InstanceToValidate.CuentaId
                     );
 
-                    Console.WriteLine(existe);
+                    if (estado == EstadoCuenta.Activo)
+                        context.AddFailure("Ya existe una cuenta activa con ese nombre y tipo.");
 
-                    return !existe;
+                    if (estado == EstadoCuenta.Desactivado)
+                        context.AddFailure("Ya existe una cuenta inactiva con ese nombre y tipo. Puede reactivarla.");
                 }
-            )
-            .WithMessage("Ya existe esa Cuenta.");
+            );
     }
 }

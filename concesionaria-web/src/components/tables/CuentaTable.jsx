@@ -147,6 +147,7 @@ const buildVisibleRows = ({
 
 const CuentaTable = ({
   data,
+  cuentasDisponibles,
   tipo,
   onToggle,
   onSearch,
@@ -165,8 +166,8 @@ const CuentaTable = ({
     Number(tipoCuenta !== "todos") + Number(nivel !== "todos");
 
   const niveles = useMemo(
-    () => [...new Set(data.map((cuenta) => cuenta.nivel))].sort((a, b) => a - b),
-    [data],
+    () => [...new Set(cuentasDisponibles.map((cuenta) => cuenta.nivel))].sort((a, b) => a - b),
+    [cuentasDisponibles],
   );
 
   const visibleRows = useMemo(

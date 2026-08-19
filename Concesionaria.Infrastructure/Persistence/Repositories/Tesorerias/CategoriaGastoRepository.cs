@@ -61,25 +61,40 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId)
+    public async Task<NombreCategoriaGastoEstado> ExistePorNombreAsync(string nombre, Guid empresaId)
     {
-        return await _context.CategoriasGastos.AnyAsync(cg =>
-            cg.EmpresaId == empresaId && cg.Nombre.ToLower() == nombre.ToLower()
-        );
+        var eliminado = await _context.CategoriasGastos
+            .IgnoreQueryFilters()
+            .Where(cg => cg.EmpresaId == empresaId && cg.Nombre.ToLower() == nombre.Trim().ToLower())
+            .Select(cg => (bool?)cg.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreCategoriaGastoEstado.NoExiste,
+            true => NombreCategoriaGastoEstado.Desactivado,
+            _ => NombreCategoriaGastoEstado.Activo,
+        };
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<bool> ExistePorNombreExluyendoIdAsync(
+    public async Task<NombreCategoriaGastoEstado> ExistePorNombreExluyendoIdAsync(
      string nombre,
      Guid empresaId,
      Guid categoriaGastoId)
     {
-        return await _context.CategoriasGastos.AnyAsync(cg =>
-            cg.Nombre.ToLower() == nombre.ToLower()
-            && cg.EmpresaId == empresaId
-            && cg.Id != categoriaGastoId
-            && !cg.Eliminado
-        );
+        var eliminado = await _context.CategoriasGastos
+            .IgnoreQueryFilters()
+            .Where(cg => cg.Nombre.ToLower() == nombre.Trim().ToLower() && cg.EmpresaId == empresaId && cg.Id != categoriaGastoId)
+            .Select(cg => (bool?)cg.Eliminado)
+            .FirstOrDefaultAsync();
+
+        return eliminado switch
+        {
+            null => NombreCategoriaGastoEstado.NoExiste,
+            true => NombreCategoriaGastoEstado.Desactivado,
+            _ => NombreCategoriaGastoEstado.Activo,
+        };
     }
 
     

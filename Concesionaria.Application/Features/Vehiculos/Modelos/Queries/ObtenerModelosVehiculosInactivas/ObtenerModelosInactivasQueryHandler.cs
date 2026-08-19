@@ -25,7 +25,11 @@ public class ObtenerModelosVehiculosInactivasQueryHandler
     )
     {
         var empresaId = _currentUserService.EmpresaId;
-        var modelos = await _repository.ObtenerInactivasAsync(empresaId, request.Filtro);
+        var modelos = await _repository.ObtenerInactivasAsync(
+            empresaId,
+            request.Filtro,
+            request.MarcaVehiculoId,
+            request.TipoVehiculoId);
 
         return modelos
             .OrderBy(m => m.Nombre)

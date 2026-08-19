@@ -26,7 +26,7 @@ public class ActualizarModeloVehiculoCommandValidator
 
                     if (estado == NombreModeloEstado.Desactivado)
                         context.AddFailure(
-                            "Ya existe un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo"
+                            "Ya existe un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo."
                         );
                 }
             );

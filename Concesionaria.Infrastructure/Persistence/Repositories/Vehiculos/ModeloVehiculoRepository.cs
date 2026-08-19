@@ -28,7 +28,9 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
     public async Task<List<ModeloVehiculo>> ObtenerActivasAsync(
         Guid empresaId,
-        string filtro = null
+        string filtro = null,
+        Guid? marcaVehiculoId = null,
+        Guid? tipoVehiculoId = null
     )
     {
         var obtenerModelosActivas = _context
@@ -40,13 +42,21 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
             obtenerModelosActivas = obtenerModelosActivas.Where(mv => mv.Nombre.Contains(filtro));
         }
 
+        if (marcaVehiculoId.HasValue)
+            obtenerModelosActivas = obtenerModelosActivas.Where(mv => mv.MarcaVehiculoId == marcaVehiculoId.Value);
+
+        if (tipoVehiculoId.HasValue)
+            obtenerModelosActivas = obtenerModelosActivas.Where(mv => mv.TipoVehiculoId == tipoVehiculoId.Value);
+
         return await obtenerModelosActivas.ToListAsync();
     }
 
     // METODO PARA OBTENER INACTIVAS SEGUN FILTRO
     public async Task<List<ModeloVehiculo>> ObtenerInactivasAsync(
         Guid empresaId,
-        string filtro = null
+        string filtro = null,
+        Guid? marcaVehiculoId = null,
+        Guid? tipoVehiculoId = null
     )
     {
         var obtenerModelosInactivas = _context
@@ -60,6 +70,12 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
                 mv.Nombre.Contains(filtro)
             );
         }
+
+        if (marcaVehiculoId.HasValue)
+            obtenerModelosInactivas = obtenerModelosInactivas.Where(mv => mv.MarcaVehiculoId == marcaVehiculoId.Value);
+
+        if (tipoVehiculoId.HasValue)
+            obtenerModelosInactivas = obtenerModelosInactivas.Where(mv => mv.TipoVehiculoId == tipoVehiculoId.Value);
 
         return await obtenerModelosInactivas.ToListAsync();
     }

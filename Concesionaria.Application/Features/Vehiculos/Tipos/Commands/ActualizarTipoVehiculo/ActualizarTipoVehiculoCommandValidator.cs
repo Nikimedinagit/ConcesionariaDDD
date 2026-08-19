@@ -16,22 +16,21 @@ public class ActualizarTipoVehiculoCommandValidator
         RuleFor(cg => cg.Nombre)
             .NotEmpty()
             .WithMessage("El nombre es obligatorio.")
-            .MustAsync(
-                async (command, nombre, cancellationToken) =>
+            .CustomAsync(
+                async (nombre, context, cancellationToken) =>
                 {
-                    Console.WriteLine(command.TipoVehiculoId);
-
-                    var existe = await repository.ExistePorNombreExluyendoIdAsync(
-                        nombre,
+                    var estado = await repository.ExistePorNombreExluyendoIdAsync(
+                        nombre.Trim(),
                         currentUser.EmpresaId,
-                        command.TipoVehiculoId
+                        context.InstanceToValidate.TipoVehiculoId
                     );
 
-                    Console.WriteLine(existe);
+                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                        context.AddFailure("Ya existe un tipo de vehículo activo con ese nombre.");
 
-                    return !existe;
+                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                        context.AddFailure("Ya existe un tipo de vehículo inactivo con ese nombre. Puede reactivarlo.");
                 }
-            )
-            .WithMessage("Ya existe ese Tipo de Vehículo.");
+            );
     }
 }

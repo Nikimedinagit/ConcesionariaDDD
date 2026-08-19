@@ -20,13 +20,15 @@ public interface ICuentaRepository
         TipoCuenta? tipo = null,
         int? nivel = null);
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
-    Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
-    Task<bool> ExistePorCodigoAsync(string codigo, Guid empresaId);
+    Task<EstadoCuenta> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo);
+    Task<EstadoCuenta> ExistePorCodigoAsync(string codigo, Guid empresaId);
 
     //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
-    Task<bool> ExistePorNombreExluyendoIdAsync(
+    Task<EstadoCuenta> ExistePorNombreExluyendoIdAsync(
         string nombre,
         Guid empresaId,
         Guid cuentaId
     );
+
+    Task<bool> TieneCuentasHijasActivasAsync(Guid empresaId, Guid cuentaId);
 }

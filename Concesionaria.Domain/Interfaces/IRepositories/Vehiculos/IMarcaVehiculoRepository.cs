@@ -9,11 +9,11 @@ public interface IMarcaVehiculoRepository
     //TAREA PARA OBTENER INACTIVAS
     Task<List<MarcaVehiculo>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
-    Task<bool> ExistePorNombreAsync(string nombre, Guid empresaId);
+    Task<NombreEntidadVehiculoEstado> ExistePorNombreAsync(string nombre, Guid empresaId);
     //TAREA PARA CONTROL DE RELACION CON MODELOS
     Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid marcaVehiculoId);
     //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
-    Task<bool> ExistePorNombreExluyendoIdAsync(
+    Task<NombreEntidadVehiculoEstado> ExistePorNombreExluyendoIdAsync(
         string nombre,
         Guid empresaId,
         Guid marcaVehiculoId
