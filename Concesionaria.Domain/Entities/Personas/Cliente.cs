@@ -33,7 +33,7 @@ public class Cliente : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         NombreCompleto = nombre.ToUpper().Trim();
         Dni = dni;
         Telefono = telefono;
-        Email = email;
+        Email = email.ToLower().Trim();
         Domicilio = domicilio;
         LocalidadId = localidadId;
         EmpresaId = empresaId;
@@ -50,7 +50,7 @@ public class Cliente : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         NombreCompleto = nombre.ToUpper().Trim();
         Dni = dni.ToUpper().Trim();
         Telefono = telefono.ToUpper().Trim();
-        Email = email.ToUpper().Trim();
+        Email = email.ToLower().Trim();
         Domicilio = domicilio.ToUpper().Trim();
         LocalidadId = localidadId;
     }

@@ -18,6 +18,7 @@ import { SucursalPage } from "@/pages/Ubicacion/SucursalPage";
 import { MarcaPage } from "@/pages/Vehiculos/MarcaPage";
 import { TipoVehiculoPage } from "@/pages/Vehiculos/TipoVehiculoPage";
 import { ModeloVehiculoPage } from "@/pages/Vehiculos/ModeloVehiculoPage";
+import { ClientePage } from "@/pages/Personas/ClientePage";
 
 export default function AppRoutes() {
   return (
@@ -46,6 +47,7 @@ export default function AppRoutes() {
             <Route path="marcas" element={<MarcaPage />} />
             <Route path="modelos" element={<ModeloVehiculoPage />} />
             <Route path="tipos-vehiculos" element={<TipoVehiculoPage />} />
+            <Route path="clientes" element={<ClientePage />} />
           </Route>
         </Route>
 

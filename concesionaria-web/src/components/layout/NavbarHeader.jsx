@@ -71,7 +71,7 @@ export function NavbarHeader() {
     {
       title: "Personas",
       items: [
-        { to: "/clientes", name: "Clientes" },
+        { to: "/layout/clientes", name: "Clientes" },
         { to: "/proveedores", name: "Proveedores" },
         { to: "/vendedores", name: "Vendedores" },
       ],
