@@ -37,11 +37,11 @@ public class ClienteRepository : IClienteRepository
             var filtroNormalizado = filtro.Trim().ToLower();
             obtenerClientesActivos = obtenerClientesActivos.Where(c =>
                 c.NombreCompleto.ToLower().Contains(filtroNormalizado)
-                || c.Dni.ToLower().Contains(filtroNormalizado)
-                || c.Telefono.ToLower().Contains(filtroNormalizado)
-                || c.Email.ToLower().Contains(filtroNormalizado)
-                || c.Domicilio.ToLower().Contains(filtroNormalizado)
-                || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
+                // || c.Dni.ToLower().Contains(filtroNormalizado)
+                // || c.Telefono.ToLower().Contains(filtroNormalizado)
+                // || c.Email.ToLower().Contains(filtroNormalizado)
+                // || c.Domicilio.ToLower().Contains(filtroNormalizado)
+                // || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 
@@ -61,11 +61,11 @@ public class ClienteRepository : IClienteRepository
             var filtroNormalizado = filtro.Trim().ToLower();
             obtenerClientesInactivos = obtenerClientesInactivos.Where(c =>
                 c.NombreCompleto.ToLower().Contains(filtroNormalizado)
-                || c.Dni.ToLower().Contains(filtroNormalizado)
-                || c.Telefono.ToLower().Contains(filtroNormalizado)
-                || c.Email.ToLower().Contains(filtroNormalizado)
-                || c.Domicilio.ToLower().Contains(filtroNormalizado)
-                || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
+                // || c.Dni.ToLower().Contains(filtroNormalizado)
+                // || c.Telefono.ToLower().Contains(filtroNormalizado)
+                // || c.Email.ToLower().Contains(filtroNormalizado)
+                // || c.Domicilio.ToLower().Contains(filtroNormalizado)
+                // || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 

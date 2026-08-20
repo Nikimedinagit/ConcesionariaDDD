@@ -1,4 +1,5 @@
 using Concesionaria.Application.Features.Personas.Proveedor.Queries.ObtenerProveedorActivas;
+using Concesionaria.Application.Features.Personas.Proveedor.Queries.ObtenerProveedorInactivas;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -28,5 +29,16 @@ public class ProveedoresController : ControllerBase
         });
 
         return Ok(resultadoProveedoresActivas);
+    }
+    // METODO OBTENER INACTIVAS
+    [HttpGet("inactivas")]
+    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    {
+        var resultadoProveedoresInactivas = await _mediator.Send(new ObtenerProveedorInactivasQuery
+        {
+            Filtro = filtro
+        });
+
+        return Ok(resultadoProveedoresInactivas);
     }
 }
