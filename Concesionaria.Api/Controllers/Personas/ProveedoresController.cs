@@ -1,3 +1,4 @@
+using Application.Features.Personas.Commands.ActivarProveedor;
 using Concesionaria.Application.Features.Personas.Proveedor.Queries.ObtenerProveedorActivas;
 using Concesionaria.Application.Features.Personas.Proveedor.Queries.ObtenerProveedorInactivas;
 using MediatR;
@@ -67,5 +68,22 @@ public class ProveedoresController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Proveedor actualizado correctamente." });
+    }
+
+           // METODO ACTUALIZAR ESTADO A ACTIVAR
+    [HttpPut("activar/{id}")]
+    public async Task<IActionResult> Activar(
+        Guid id,
+        [FromBody] ActivarProveedorCommand command
+    )
+    {
+        if (id != command.ProveedorId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Proveedor activado correctamente." });
     }
 }
