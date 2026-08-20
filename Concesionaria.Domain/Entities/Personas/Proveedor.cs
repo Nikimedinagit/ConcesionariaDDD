@@ -1,6 +1,7 @@
 using Concesionaria.Domain.Common;
 using Concesionaria.Domain.Common.Interfaces;
 using Concesionaria.Domain.Empresas;
+using Concesionaria.Domain.Ubicaciones;
 
 public class Proveedor : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 {
@@ -12,6 +13,9 @@ public class Proveedor : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
     public string Servicio { get; private set; }
     public string Observacion { get; private set; }
     public bool Eliminado { get; set; }
+
+    public Guid LocalidadId {get; private set; }
+    public Localidad Localidad {get; private set; }
 
     public Guid EmpresaId { get; private set; }
     public Empresa Empresa { get; private set; }
@@ -25,7 +29,7 @@ public class Proveedor : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
 
     protected Proveedor() { }
 
-    public Proveedor(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion, Guid empresaId)
+    public Proveedor(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion,Guid localidadId, Guid empresaId)
     {
         Id = Guid.NewGuid();
         Nombre = nombre.ToUpper().Trim();
@@ -35,16 +39,17 @@ public class Proveedor : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         Domicilio = domicilio;
         Servicio = servicio;
         Observacion = observacion;
+        LocalidadId = localidadId;
         EmpresaId = empresaId;
         Eliminado = false;
     }
 
-    public static Proveedor Crear(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion, Guid empresaId)
+    public static Proveedor Crear(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion,Guid localidadId, Guid empresaId)
     {
-        return new Proveedor(nombre, cuil, telefono, email, domicilio, servicio, observacion, empresaId);
+        return new Proveedor(nombre, cuil, telefono, email, domicilio, servicio, observacion,localidadId, empresaId);
     }
 
-    public void ActualizarProveedor(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion)
+    public void ActualizarProveedor(string nombre, string cuil, string telefono, string email, string domicilio, string servicio, string observacion, Guid localidadId)
     {
         Nombre = nombre.ToUpper().Trim();
         Cuil = cuil.ToUpper().Trim();
@@ -53,6 +58,7 @@ public class Proveedor : BaseEntity<Guid>, ISoftDelete, IHasEmpresa, IAuditable
         Domicilio = domicilio.ToUpper().Trim();
         Servicio = servicio.ToUpper().Trim();
         Observacion = observacion.ToUpper().Trim();
+        LocalidadId = localidadId;
     }
 
     public void Desactivar() => Eliminado = true;

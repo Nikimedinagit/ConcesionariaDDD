@@ -41,4 +41,15 @@ public class ProveedoresController : ControllerBase
 
         return Ok(resultadoProveedoresInactivas);
     }
+
+    // METODO AGREGAR
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarProveedorCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Proveedor registrado correctamente.", proveedorId = id }
+        );
+    }
 }

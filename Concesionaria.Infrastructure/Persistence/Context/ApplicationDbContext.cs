@@ -138,6 +138,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
       
         });
 
+        builder.Entity<Proveedor>()
+        .HasOne(m => m.Localidad)
+        .WithMany()
+        .HasForeignKey(m => m.LocalidadId)
+        .OnDelete(DeleteBehavior.NoAction);
+
         ApplyGlobalFilters(builder);
     }
 

@@ -16,8 +16,7 @@ public class ProveedorRepository : IProveedorRepository
     public async Task<List<Proveedor>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
         var obtenerProveedoresActivas = _context
-            .Proveedores.IgnoreQueryFilters()
-            .Where(p => p.EmpresaId == empresaId)
+            .Proveedores.Where(p => p.EmpresaId == empresaId)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
@@ -47,5 +46,38 @@ public class ProveedorRepository : IProveedorRepository
         }
 
         return await obtenerProveedoresInactivas.ToListAsync();
+    }
+
+    // METODO PARA AGREGAR
+    public async Task AddAsync(Proveedor proveedor)
+    {
+        await _context.Proveedores.AddAsync(proveedor);
+    }
+
+        // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
+    public async Task<ClienteEstado> ExistePorCuilAsync(string cuil, Guid empresaId)
+    {
+         bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+        .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil)
+        .Select(p => (bool?)p.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+    }
+        // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
+    public async Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId)
+    {
+         bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+        .Where(p => p.EmpresaId == empresaId && p.Email == email)
+        .Select(p => (bool?)p.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 }
