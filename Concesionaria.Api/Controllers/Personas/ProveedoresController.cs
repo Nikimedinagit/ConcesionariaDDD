@@ -52,4 +52,20 @@ public class ProveedoresController : ControllerBase
             new { mensaje = "Proveedor registrado correctamente.", proveedorId = id }
         );
     }
+
+     // METODO ACTUALIZAR
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarProveedorCommand command
+    )
+    {
+        if (id != command.ProveedorId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Proveedor actualizado correctamente." });
+    }
 }

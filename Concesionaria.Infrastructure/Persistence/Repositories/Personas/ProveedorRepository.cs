@@ -12,6 +12,18 @@ public class ProveedorRepository : IProveedorRepository
         _context = context;
     }
 
+    // METODO PARA AGREGAR
+    public async Task AddAsync(Proveedor proveedor)
+    {
+        await _context.Proveedores.AddAsync(proveedor);
+    }
+
+    //METODO PARA ACTUALIZAR
+    public async Task UpdateAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
     public async Task<List<Proveedor>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
@@ -48,36 +60,68 @@ public class ProveedorRepository : IProveedorRepository
         return await obtenerProveedoresInactivas.ToListAsync();
     }
 
-    // METODO PARA AGREGAR
-    public async Task AddAsync(Proveedor proveedor)
-    {
-        await _context.Proveedores.AddAsync(proveedor);
-    }
-
-        // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
+    // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
     public async Task<ClienteEstado> ExistePorCuilAsync(string cuil, Guid empresaId)
     {
-         bool? estado = await _context.Proveedores.IgnoreQueryFilters()
-        .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil)
-        .Select(p => (bool?)p.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context
+            .Proveedores.IgnoreQueryFilters()
+            .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil)
+            .Select(p => (bool?)p.Eliminado)
+            .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
         return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
-        // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
+
+    // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
     public async Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId)
     {
-         bool? estado = await _context.Proveedores.IgnoreQueryFilters()
-        .Where(p => p.EmpresaId == empresaId && p.Email == email)
+        bool? estado = await _context
+            .Proveedores.IgnoreQueryFilters()
+            .Where(p => p.EmpresaId == empresaId && p.Email == email)
+            .Select(p => (bool?)p.Eliminado)
+            .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+    }
+
+    // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
+    public async Task<ClienteEstado> ExistePorCuilExcluyendoIdAsync(
+        string cuil,
+        Guid empresaId,
+        Guid clienteId
+    )
+    {
+    bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+        .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil && p.Id != clienteId)
         .Select(p => (bool?)p.Eliminado)
         .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+    }
+
+    public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+        string email,
+        Guid empresaId,
+        Guid clienteId
+    )
+    {
+    bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+        .Where(p => p.EmpresaId == empresaId && p.Email.ToLower() == email.ToLower().Trim() && p.Id != clienteId)
+        .Select(p => (bool?)p.Eliminado)
+        .FirstOrDefaultAsync();
+
+        if (estado == null)
+            return ClienteEstado.NoExiste;
+
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
     }
 }
