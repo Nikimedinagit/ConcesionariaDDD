@@ -37,11 +37,11 @@ public class ClienteRepository : IClienteRepository
             var filtroNormalizado = filtro.Trim().ToLower();
             obtenerClientesActivos = obtenerClientesActivos.Where(c =>
                 c.NombreCompleto.ToLower().Contains(filtroNormalizado)
-                // || c.Dni.ToLower().Contains(filtroNormalizado)
-                // || c.Telefono.ToLower().Contains(filtroNormalizado)
-                // || c.Email.ToLower().Contains(filtroNormalizado)
-                // || c.Domicilio.ToLower().Contains(filtroNormalizado)
-                // || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
+                || c.Dni.ToLower().Contains(filtroNormalizado)
+                || c.Telefono.ToLower().Contains(filtroNormalizado)
+                || c.Email.ToLower().Contains(filtroNormalizado)
+                || c.Domicilio.ToLower().Contains(filtroNormalizado)
+                || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 
@@ -61,11 +61,11 @@ public class ClienteRepository : IClienteRepository
             var filtroNormalizado = filtro.Trim().ToLower();
             obtenerClientesInactivos = obtenerClientesInactivos.Where(c =>
                 c.NombreCompleto.ToLower().Contains(filtroNormalizado)
-                // || c.Dni.ToLower().Contains(filtroNormalizado)
-                // || c.Telefono.ToLower().Contains(filtroNormalizado)
-                // || c.Email.ToLower().Contains(filtroNormalizado)
-                // || c.Domicilio.ToLower().Contains(filtroNormalizado)
-                // || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
+            || c.Dni.ToLower().Contains(filtroNormalizado)
+            || c.Telefono.ToLower().Contains(filtroNormalizado)
+            || c.Email.ToLower().Contains(filtroNormalizado)
+            || c.Domicilio.ToLower().Contains(filtroNormalizado)
+            || c.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 
@@ -75,10 +75,10 @@ public class ClienteRepository : IClienteRepository
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
     public async Task<ClienteEstado> ExistePorDniAsync(string dni, Guid empresaId)
     {
-         bool? estado = await _context.Clientes.IgnoreQueryFilters()
-        .Where(c => c.EmpresaId == empresaId && c.Dni == dni)
-        .Select(c => (bool?)c.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context.Clientes.IgnoreQueryFilters()
+       .Where(c => c.EmpresaId == empresaId && c.Dni == dni)
+       .Select(c => (bool?)c.Eliminado)
+       .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
@@ -106,15 +106,15 @@ public class ClienteRepository : IClienteRepository
         Guid clienteId
     )
     {
-    bool? estado = await _context.Clientes.IgnoreQueryFilters()
-        .Where(c => c.EmpresaId == empresaId && c.Dni == dni && c.Id != clienteId)
-        .Select(c => (bool?)c.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context.Clientes.IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId && c.Dni == dni && c.Id != clienteId)
+            .Select(c => (bool?)c.Eliminado)
+            .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 
     public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
@@ -123,14 +123,14 @@ public class ClienteRepository : IClienteRepository
         Guid clienteId
     )
     {
-    bool? estado = await _context.Clientes.IgnoreQueryFilters()
-        .Where(c => c.EmpresaId == empresaId && c.Email.ToLower() == email.ToLower().Trim() && c.Id != clienteId)
-        .Select(c => (bool?)c.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context.Clientes.IgnoreQueryFilters()
+            .Where(c => c.EmpresaId == empresaId && c.Email.ToLower() == email.ToLower().Trim() && c.Id != clienteId)
+            .Select(c => (bool?)c.Eliminado)
+            .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 }

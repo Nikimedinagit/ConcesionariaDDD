@@ -33,8 +33,16 @@ public class ProveedorRepository : IProveedorRepository
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
+            var filtroNormalizado = filtro.Trim().ToLower();
             obtenerProveedoresActivas = obtenerProveedoresActivas.Where(p =>
-                p.Nombre.Contains(filtro)
+                p.Nombre.ToLower().Contains(filtroNormalizado) ||
+                p.Cuil.ToLower().Contains(filtroNormalizado) ||
+                p.Telefono.ToLower().Contains(filtroNormalizado) ||
+                p.Email.ToLower().Contains(filtroNormalizado) ||
+                p.Domicilio.ToLower().Contains(filtroNormalizado) ||
+                p.Servicio.ToLower().Contains(filtroNormalizado) ||
+                p.Observacion.ToLower().Contains(filtroNormalizado) ||
+                p.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 
@@ -53,7 +61,14 @@ public class ProveedorRepository : IProveedorRepository
         {
             var filtroNormalizado = filtro.Trim().ToLower();
             obtenerProveedoresInactivas = obtenerProveedoresInactivas.Where(p =>
-                p.Nombre.Contains(filtroNormalizado)
+                p.Nombre.ToLower().Contains(filtroNormalizado) ||
+                p.Cuil.ToLower().Contains(filtroNormalizado) ||
+                p.Telefono.ToLower().Contains(filtroNormalizado) ||
+                p.Email.ToLower().Contains(filtroNormalizado) ||
+                p.Domicilio.ToLower().Contains(filtroNormalizado) ||
+                p.Servicio.ToLower().Contains(filtroNormalizado) ||
+                p.Observacion.ToLower().Contains(filtroNormalizado) ||
+                p.Localidad.Nombre.ToLower().Contains(filtroNormalizado)
             );
         }
 
@@ -97,15 +112,15 @@ public class ProveedorRepository : IProveedorRepository
         Guid clienteId
     )
     {
-    bool? estado = await _context.Proveedores.IgnoreQueryFilters()
-        .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil && p.Id != clienteId)
-        .Select(p => (bool?)p.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+            .Where(p => p.EmpresaId == empresaId && p.Cuil == cuil && p.Id != clienteId)
+            .Select(p => (bool?)p.Eliminado)
+            .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 
     public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
@@ -114,14 +129,14 @@ public class ProveedorRepository : IProveedorRepository
         Guid clienteId
     )
     {
-    bool? estado = await _context.Proveedores.IgnoreQueryFilters()
-        .Where(p => p.EmpresaId == empresaId && p.Email.ToLower() == email.ToLower().Trim() && p.Id != clienteId)
-        .Select(p => (bool?)p.Eliminado)
-        .FirstOrDefaultAsync();
+        bool? estado = await _context.Proveedores.IgnoreQueryFilters()
+            .Where(p => p.EmpresaId == empresaId && p.Email.ToLower() == email.ToLower().Trim() && p.Id != clienteId)
+            .Select(p => (bool?)p.Eliminado)
+            .FirstOrDefaultAsync();
 
         if (estado == null)
             return ClienteEstado.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo; 
+        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
     }
 }

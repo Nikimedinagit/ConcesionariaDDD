@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapPin } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
-import LocalidadTable from "@/components/tables/LocalidadTable";
+import LocalidadTable from "@/components/tables/Ubicacion/LocalidadTable";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import { toastService } from "@/services/toastService";
 
@@ -37,9 +37,7 @@ export const LocalidadPage = () => {
       <PageHeader title="Localidades" icon={MapPin} />
 
       {loading ? (
-        <div className="flex h-64 items-center justify-center">
-          Cargando...
-        </div>
+        <div className="flex h-64 items-center justify-center">Cargando...</div>
       ) : (
         <LocalidadTable data={localidadesFiltradas} onSearch={setFiltro} />
       )}

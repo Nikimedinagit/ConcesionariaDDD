@@ -72,7 +72,7 @@ export function NavbarHeader() {
       title: "Personas",
       items: [
         { to: "/layout/clientes", name: "Clientes" },
-        { to: "/proveedores", name: "Proveedores" },
+        { to: "/layout/proveedores", name: "Proveedores" },
         { to: "/vendedores", name: "Vendedores" },
       ],
     },
@@ -135,9 +135,7 @@ export function NavbarHeader() {
                 }}
                 className={`flex items-center gap-1 h-10 px-3 text-sm font-medium rounded-md outline-none transition-colors
                   ${
-                    group.items.some(
-                      (item) => location.pathname === item.to
-                    )
+                    group.items.some((item) => location.pathname === item.to)
                       ? "bg-white/15 text-white"
                       : "text-white/95 hover:bg-white/10"
                   }
@@ -205,15 +203,11 @@ export function NavbarHeader() {
             >
               <button
                 onClick={() =>
-                  setOpenGroup(
-                    openGroup === group.title ? null : group.title
-                  )
+                  setOpenGroup(openGroup === group.title ? null : group.title)
                 }
                 className={`w-full flex items-center justify-between p-3 text-sm font-bold tracking-wider transition-colors rounded-md
                   ${
-                    group.items.some(
-                      (item) => location.pathname === item.to
-                    )
+                    group.items.some((item) => location.pathname === item.to)
                       ? "bg-white/10 text-white"
                       : "text-white/70 hover:bg-white/5"
                   }

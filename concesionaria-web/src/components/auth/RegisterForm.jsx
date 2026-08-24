@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import { registerRequest } from "@/services/Auth/authService";
-import { empresaSchema, usuarioSchema } from "@/validations/authSchemas";
+import { empresaSchema, usuarioSchema } from "@/validations/Auth/authSchemas";
 
 const stepLabels = ["Empresa", "Personal", "Confirmación"];
 

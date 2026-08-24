@@ -8,4 +8,5 @@ public class ProveedorDto
     public string Domicilio { get; set; }
     public string Servicio { get; set; }
     public string Observacion { get; set; }
+    public Guid LocalidadId { get; set; }
 }

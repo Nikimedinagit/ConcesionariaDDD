@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Landmark } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import CuentaTable from "@/components/tables/CuentaTable";
-import { CuentaModal } from "@/components/modals/CuentaModal";
+import CuentaTable from "@/components/tables/Contabilidad/CuentaTable";
+import { CuentaModal } from "@/components/modals/Contabilidad/CuentaModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
 import CuentaService from "@/services/Contabilidad/cuentaService";
-import { useCuentas } from "@/hooks/useCuentas";
+import { useCuentas } from "@/hooks/Contabilidad/useCuentas";
 
 const generateChildCode = (cuentas, cuentaPadre) => {
   const childrenCount = cuentas.filter(
@@ -34,13 +34,13 @@ export const CuentaPage = () => {
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
   const [tipoCuenta, setTipoCuenta] = useState("todos");
   const [nivel, setNivel] = useState("todos");
-  const { data: cuentas, loading, refetch } = useCuentas(
-    tipo,
-    debouncedFiltro,
-    tipoCuenta,
-    nivel,
-  );
-  const { data: cuentasDisponibles, refetch: refetchCuentasDisponibles } = useCuentas(tipo);
+  const {
+    data: cuentas,
+    loading,
+    refetch,
+  } = useCuentas(tipo, debouncedFiltro, tipoCuenta, nivel);
+  const { data: cuentasDisponibles, refetch: refetchCuentasDisponibles } =
+    useCuentas(tipo);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCuenta, setSelectedCuenta] = useState(null);
   const [selectedPadre, setSelectedPadre] = useState(null);

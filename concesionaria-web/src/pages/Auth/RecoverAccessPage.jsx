@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { recuperarAccesoSchema } from "@/validations/authSchemas";
+import { recuperarAccesoSchema } from "@/validations/Auth/authSchemas";
 import {
   solicitarCodigo,
   validarCodigo,
@@ -19,7 +19,7 @@ import {
 const MIN_PASSWORD_LENGTH = 6;
 
 export default function RecoverAccessPage() {
-  const [step, setStep] = useState("REQUEST"); 
+  const [step, setStep] = useState("REQUEST");
   const [contact, setContact] = useState("");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");

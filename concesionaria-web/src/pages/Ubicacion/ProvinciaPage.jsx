@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Map } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
-import ProvinciaTable from "@/components/tables/ProvinciaTable";
+import ProvinciaTable from "@/components/tables/Ubicacion/ProvinciaTable";
 import { getProvincias } from "@/services/Ubicacion/localidadService";
 import { toastService } from "@/services/toastService";
 
@@ -34,9 +34,7 @@ export const ProvinciaPage = () => {
       <PageHeader title="Provincias" icon={Map} />
 
       {loading ? (
-        <div className="flex h-64 items-center justify-center">
-          Cargando...
-        </div>
+        <div className="flex h-64 items-center justify-center">Cargando...</div>
       ) : (
         <ProvinciaTable data={provinciasFiltradas} onSearch={setFiltro} />
       )}

@@ -1,0 +1,168 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from "react";
+import {
+  AtSign,
+  ContactRound,
+  MapPin,
+  MapPinned,
+  Phone,
+  UserRound,
+} from "lucide-react";
+import { ModalCustom } from "../ModalCustom";
+import { AppInput } from "@/components/ui/custom/AppInput";
+import { AppTextarea } from "@/components/ui/custom/AppTextarea";
+import { AppSearchSelect } from "@/components/ui/custom/AppSelect";
+import { proveedorSchema } from "@/validations/Persona/proveedor.validation";
+
+export function ProveedorModal({
+  isOpen,
+  onClose,
+  onSave,
+  proveedor = null,
+  localidades = [],
+  loading = false,
+  serverError = "",
+}) {
+  const [form, setForm] = useState({
+    nombre: "",
+    cuil: "",
+    telefono: "",
+    email: "",
+    domicilio: "",
+    servicio: "",
+    observacion: "",
+    localidadId: "",
+  });
+
+  const [localErrors, setLocalErrors] = useState({});
+
+  useEffect(() => {
+    setForm({
+      nombre: proveedor?.nombre || "",
+      cuil: proveedor?.cuil || "",
+      telefono: proveedor?.telefono || "",
+      email: proveedor?.email || "",
+      domicilio: proveedor?.domicilio || "",
+      servicio: proveedor?.servicio || "",
+      observacion: proveedor?.observacion || "",
+      localidadId: proveedor?.localidadId || "",
+    });
+    setLocalErrors({});
+  }, [proveedor, isOpen]);
+
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+    if (localErrors[field])
+      setLocalErrors((current) => ({ ...current, [field]: undefined }));
+  };
+
+  const handleSave = () => {
+    const result = proveedorSchema.safeParse(form);
+    if (!result.success) {
+      setLocalErrors(result.error.flatten().fieldErrors);
+      return;
+    }
+
+    setLocalErrors({});
+    onSave({ proveedorId: proveedor?.proveedorId, ...result.data });
+  };
+
+  return (
+    <ModalCustom
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={handleSave}
+      title={proveedor ? "Editar Proveedor" : "Nuevo Proveedor"}
+      icon={ContactRound}
+      loading={loading}
+      saveText={proveedor ? "Actualizar" : "Guardar"}
+      maxWidth="max-w-3xl"
+    >
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <AppInput
+          label="Nombre *"
+          icon={UserRound}
+          placeholder="Ej: JUAN PÉREZ"
+          value={form.nombre}
+          onChange={(event) =>
+            updateField("nombre", event.target.value.toUpperCase())
+          }
+          error={localErrors.nombre?.[0] || serverError}
+          autoFocus
+        />
+        <AppInput
+          label="CUIL *"
+          icon={ContactRound}
+          placeholder="Ej: 20123456789"
+          value={form.cuil}
+          onChange={(event) =>
+            updateField(
+              "cuil",
+              event.target.value.replace(/\D/g, "").slice(0, 11),
+            )
+          }
+          error={localErrors.cuil?.[0]}
+        />
+        <AppInput
+          label="Teléfono *"
+          icon={Phone}
+          placeholder="Ej: 11 1234-5678"
+          value={form.telefono}
+          onChange={(event) => updateField("telefono", event.target.value)}
+          error={localErrors.telefono?.[0]}
+        />
+        <AppInput
+          label="Email *"
+          icon={AtSign}
+          placeholder="Ej: proveedor@email.com"
+          value={form.email}
+          onChange={(event) => updateField("email", event.target.value)}
+          error={localErrors.email?.[0]}
+        />
+        <AppInput
+          label="Domicilio *"
+          icon={MapPinned}
+          placeholder="Ej: AV. SAN MARTÍN 123"
+          value={form.domicilio}
+          onChange={(event) =>
+            updateField("domicilio", event.target.value.toUpperCase())
+          }
+          error={localErrors.domicilio?.[0]}
+        />
+
+        <AppInput
+          label="Servicio *"
+          icon={MapPin}
+          placeholder="Ej: REPUESTOS"
+          value={form.servicio}
+          onChange={(event) =>
+            updateField("servicio", event.target.value.toUpperCase())
+          }
+          error={localErrors.servicio?.[0]}
+        />
+        <AppTextarea
+          label="Observaciones"
+          icon={MapPin}
+          placeholder="Ej: OBSERVACIONES ADICIONALES ..."
+          value={form.observacion}
+          onChange={(event) =>
+            updateField("observacion", event.target.value.toUpperCase())
+          }
+        />
+        <AppSearchSelect
+          label="Localidad *"
+          icon={MapPin}
+          value={form.localidadId}
+          onValueChange={(value) => updateField("localidadId", value)}
+          options={localidades}
+          optionValue="id"
+          optionLabel="nombre"
+          placeholder="SELECCIONE..."
+          searchPlaceholder="Buscar localidad"
+          emptyText="No se encontraron localidades"
+          error={localErrors.localidadId?.[0]}
+        />
+      </div>
+    </ModalCustom>
+  );
+}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"; // 1. Agregamos useEffect
 import { Wallet } from "lucide-react";
-import { useCategorias } from "@/hooks/useCategorias";
+import { useCategorias } from "@/hooks/Tesoreria/useCategorias";
 import CategoriaGastoService from "@/services/Tesoreria/categoriaGastoService";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import CategoriaGastoTable from "@/components/tables/CategoriaGastoTable";
-import { CategoriaGastoModal } from "@/components/modals/CategoriaGastoModal";
+import CategoriaGastoTable from "@/components/tables/Tesoreria/CategoriaGastoTable";
+import { CategoriaGastoModal } from "@/components/modals/Tesoreria/CategoriaGastoModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
 
@@ -26,7 +26,6 @@ export const CategoriaGastoPage = () => {
 
     return () => clearTimeout(handler);
   }, [filtro]);
-
 
   const handleOpenCreate = () => {
     setServerError("");
@@ -74,22 +73,25 @@ export const CategoriaGastoPage = () => {
   };
 
   const handleToggleStatus = async (categoria) => {
-  try {
-    if (tipo === "activas") {
-      await CategoriaGastoService.desactivar(categoria.categoriaGastoId);
-      toastService.success("Éxito", { description: "Categoría desactivada correctamente" });
-    } else {
-      await CategoriaGastoService.activar(categoria.categoriaGastoId);
-      toastService.success("Éxito", { description: "Categoría activada correctamente" });
+    try {
+      if (tipo === "activas") {
+        await CategoriaGastoService.desactivar(categoria.categoriaGastoId);
+        toastService.success("Éxito", {
+          description: "Categoría desactivada correctamente",
+        });
+      } else {
+        await CategoriaGastoService.activar(categoria.categoriaGastoId);
+        toastService.success("Éxito", {
+          description: "Categoría activada correctamente",
+        });
+      }
+      refetch();
+    } catch {
+      toastService.error("Error", {
+        description: "No se pudo cambiar el estado de la categoría",
+      });
     }
-    refetch(); 
-  } catch {
-    toastService.error("Error", { 
-      description: "No se pudo cambiar el estado de la categoría" 
-    });
-  }
-};
-
+  };
 
   return (
     <TooltipProvider delayDuration={300}>

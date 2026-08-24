@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Building2 } from "lucide-react";
-import { useSucursales } from "@/hooks/useSucursales";
+import { useSucursales } from "@/hooks/Ubicacion/useSucursales";
 import SucursalService from "@/services/Ubicacion/sucursalService";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import SucursalTable from "@/components/tables/SucursalTable";
-import { SucursalModal } from "@/components/modals/SucursalModal";
+import SucursalTable from "@/components/tables/Ubicacion/SucursalTable";
+import { SucursalModal } from "@/components/modals/Ubicacion/SucursalModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
 

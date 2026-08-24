@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Tags } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import { MarcaModal } from "@/components/modals/MarcaModal";
-import MarcaTable from "@/components/tables/MarcaTable";
+import { MarcaModal } from "@/components/modals/Vehiculo/MarcaModal";
+import MarcaTable from "@/components/tables/Vehiculo/MarcaTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useMarcas } from "@/hooks/useMarcas";
-import MarcaService from "@/services/Vehiculos/marcaService";
+import { useMarcas } from "@/hooks/Vehiculo/useMarcas";
+import MarcaService from "@/services/Vehiculo/marcaService";
 import { toastService } from "@/services/toastService";
 
 export const MarcaPage = () => {
@@ -95,7 +95,9 @@ export const MarcaPage = () => {
         dataError?.mensaje ||
         "No se pudo cambiar el estado de la marca";
 
-      toastService.error("No se puede desactivar", { description: mensajeError });
+      toastService.error("No se puede desactivar", {
+        description: mensajeError,
+      });
     }
   };
 

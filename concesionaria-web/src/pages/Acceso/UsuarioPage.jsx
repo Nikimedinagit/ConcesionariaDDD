@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-import { useUsuarios } from "@/hooks/useUsuarios";
+import { useUsuarios } from "@/hooks/Acceso/useUsuarios";
 import UsuarioService from "@/services/Acceso/usuarioService";
 import SucursalService from "@/services/Ubicacion/sucursalService";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import UsuarioTable from "@/components/tables/UsuarioTable";
-import { UsuarioModal } from "@/components/modals/UsuarioModal";
-import { UsuarioPasswordModal } from "@/components/modals/UsuarioPasswordModal";
+import UsuarioTable from "@/components/tables/Acceso/UsuarioTable";
+import { UsuarioModal } from "@/components/modals/Acceso/UsuarioModal";
+import { UsuarioPasswordModal } from "@/components/modals/Acceso/UsuarioPasswordModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
 
@@ -35,10 +35,7 @@ export const UsuarioPage = () => {
   }, [filtro]);
 
   useEffect(() => {
-    Promise.all([
-      UsuarioService.getRoles(),
-      SucursalService.getActivas(),
-    ])
+    Promise.all([UsuarioService.getRoles(), SucursalService.getActivas()])
       .then(([rolesData, sucursalesData]) => {
         setRoles(rolesData);
         setSucursales(sucursalesData);

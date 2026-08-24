@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { usePerfil } from "@/hooks/usePerfil";
+import { usePerfil } from "@/hooks/Perfil/usePerfil";
 
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 
@@ -25,7 +25,7 @@ import {
   nombreFantasiaSchema,
   nombreCompletoSchema,
   telefonoSchema,
-} from "@/validations/perfil.validation";
+} from "@/validations/Perfil/perfil.validation";
 
 export function PerfilForm() {
   const { updateUserData } = useAuth();

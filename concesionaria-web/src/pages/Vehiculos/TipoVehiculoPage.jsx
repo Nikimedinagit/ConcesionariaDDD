@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { CarFront } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import { TipoVehiculoModal } from "@/components/modals/TipoVehiculoModal";
-import TipoVehiculoTable from "@/components/tables/TipoVehiculoTable";
+import { TipoVehiculoModal } from "@/components/modals/Vehiculo/TipoVehiculoModal";
+import TipoVehiculoTable from "@/components/tables/Vehiculo/TipoVehiculoTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useTiposVehiculos } from "@/hooks/useTiposVehiculos";
-import TipoVehiculoService from "@/services/Vehiculos/tipoVehiculoService";
+import { useTiposVehiculos } from "@/hooks/Vehiculo/useTiposVehiculos";
+import TipoVehiculoService from "@/services/Vehiculo/tipoVehiculoService";
 import { toastService } from "@/services/toastService";
 
 export const TipoVehiculoPage = () => {
@@ -95,7 +95,9 @@ export const TipoVehiculoPage = () => {
         dataError?.mensaje ||
         "No se pudo cambiar el estado del tipo de vehículo";
 
-      toastService.error("No se puede desactivar", { description: mensajeError });
+      toastService.error("No se puede desactivar", {
+        description: mensajeError,
+      });
     }
   };
 
