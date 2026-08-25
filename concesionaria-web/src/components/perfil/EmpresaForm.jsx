@@ -2,15 +2,8 @@ import { Building2, DollarSign, Hash, MapPin, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { AppInput } from "@/components/ui/custom/AppInput";
+import { AppSelect, AppSearchSelect } from "@/components/ui/custom/AppSelect";
 
 import { Section } from "./Section";
 
@@ -54,55 +47,28 @@ export function PerfilEmpresaSection({
 
         <AppInput label="CUIT" value={form.cuit} disabled icon={Hash} />
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-slate-700">
-            Localidad
-          </label>
-
-          <Select
+        <AppSearchSelect
+          label="Localidad"
+          icon={MapPin}
             value={form.localidadId}
-            onValueChange={(v) => updateField("localidadId", v)}
-          >
-            <SelectTrigger className="h-[40px] rounded-lg border-slate-200">
-              <div className="flex items-center gap-2 truncate">
-                <MapPin className="w-4 h-4 text-slate-400" />
+          onValueChange={(v) => updateField("localidadId", v)}
+          options={localidades}
+          optionValue="id"
+          optionLabel="nombre"
+          placeholder="Seleccione..."
+          searchPlaceholder="Buscar localidad"
+          emptyText="No se encontraron localidades"
+        />
 
-                <SelectValue placeholder="Seleccione..." />
-              </div>
-            </SelectTrigger>
-
-            <SelectContent className="bg-white border shadow-lg">
-              {localidades.map((loc) => (
-                <SelectItem key={loc.id} value={loc.id}>
-                  {loc.nombre}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-slate-700">Moneda</label>
-
-          <Select
+        <AppSelect
+          label="Moneda"
+          icon={DollarSign}
             value={form.moneda}
             onValueChange={(v) => updateField("moneda", v)}
-          >
-            <SelectTrigger className="h-[40px] rounded-lg border-slate-200">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-slate-400" />
-
-                <SelectValue />
-              </div>
-            </SelectTrigger>
-
-            <SelectContent className="bg-white border">
-              <SelectItem value="ARG">ARG</SelectItem>
-              <SelectItem value="USD">USD</SelectItem>
-              <SelectItem value="BRL">BRL</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          options={[{ id: "ARG", nombre: "ARG" }, { id: "USD", nombre: "USD" }, { id: "BRL", nombre: "BRL" }]}
+          optionValue="id"
+          optionLabel="nombre"
+        />
 
         <Button
           onClick={onSave}

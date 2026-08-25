@@ -10,8 +10,10 @@ import { useMarcas } from "@/hooks/Vehiculo/useMarcas";
 import { useTiposVehiculos } from "@/hooks/Vehiculo/useTiposVehiculos";
 import ModeloVehiculoService from "@/services/Vehiculo/modeloVehiculoService";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const ModeloVehiculoPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -102,7 +104,9 @@ export const ModeloVehiculoPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Modelos" icon={CarFront}>
-          <AddButton onClick={() => openModal()}>Nuevo Modelo</AddButton>
+          {can("MODELOS_CREAR") && (
+            <AddButton onClick={() => openModal()}>Nuevo Modelo</AddButton>
+          )}
         </PageHeader>
         {loading &&
         data.length === 0 &&
@@ -127,6 +131,9 @@ export const ModeloVehiculoPage = () => {
             tipoVehiculoId={tipoVehiculoId}
             onMarcaChange={setMarcaVehiculoId}
             onTipoChange={setTipoVehiculoId}
+            canEdit={can("MODELOS_EDITAR")}
+            canActivate={can("MODELOS_ACTIVAR")}
+            canDeactivate={can("MODELOS_DESACTIVAR")}
           />
         )}
         {isModalOpen && (

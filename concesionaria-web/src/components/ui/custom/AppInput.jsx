@@ -1,12 +1,18 @@
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export function AppInput({
   label,
   icon: Icon,
   error, 
   className,
+  passwordToggle = false,
   ...props 
 }) {
+  const [visible, setVisible] = useState(false);
+  const inputType = passwordToggle && visible ? "text" : props.type;
+
   return (
     <div className={`space-y-1.5 ${className}`}>
       {label && <label className="text-sm font-semibold text-slate-700">{label}</label>}
@@ -16,8 +22,9 @@ export function AppInput({
         )}
         <Input
           {...props}
+          type={inputType}
           className={`h-[40px] w-full rounded-lg border border-slate-300 bg-white shadow-sm
-            ${Icon ? "pl-10" : "pl-4"} pr-4 
+            ${Icon ? "pl-10" : "pl-4"} ${passwordToggle ? "pr-10" : "pr-4"}
             hover:border-slate-400
             focus-visible:border-[hsl(var(--nav-bg))]
             focus-visible:ring-2 focus-visible:ring-[hsl(var(--nav-bg)/0.14)]
@@ -26,6 +33,16 @@ export function AppInput({
             
           `}
         />
+        {passwordToggle && (
+          <button
+            type="button"
+            onClick={() => setVisible((current) => !current)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 transition-colors hover:text-[hsl(var(--nav-bg))]"
+            aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        )}
       </div>
       {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
     </div>

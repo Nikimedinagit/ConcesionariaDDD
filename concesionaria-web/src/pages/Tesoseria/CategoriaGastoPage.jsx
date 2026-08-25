@@ -8,8 +8,10 @@ import CategoriaGastoTable from "@/components/tables/Tesoreria/CategoriaGastoTab
 import { CategoriaGastoModal } from "@/components/modals/Tesoreria/CategoriaGastoModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const CategoriaGastoPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -97,7 +99,9 @@ export const CategoriaGastoPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Categorías de Gastos" icon={Wallet}>
-          <AddButton onClick={handleOpenCreate}>Nueva Categoría</AddButton>
+          {can("CATEGORIAS_GASTOS_CREAR") && (
+            <AddButton onClick={handleOpenCreate}>Nueva Categoría</AddButton>
+          )}
         </PageHeader>
 
         {loading && data.length === 0 && !debouncedFiltro ? (
@@ -112,6 +116,9 @@ export const CategoriaGastoPage = () => {
             onSearch={setFiltro}
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
+            canEdit={can("CATEGORIAS_GASTOS_EDITAR")}
+            canActivate={can("CATEGORIAS_GASTOS_ACTIVAR")}
+            canDeactivate={can("CATEGORIAS_GASTOS_DESACTIVAR")}
           />
         )}
 

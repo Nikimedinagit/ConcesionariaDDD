@@ -10,7 +10,7 @@ export function PerfilUsuarioSection({ form, updateField, onSave, saving, errors
   
   return (
     <Section title="Perfil de Usuario" icon={User}>
-      <div className="space-y-1">
+      <div className="space-y-4">
         <AppInput
           label="Nombre Completo"
           value={form.nombreCompleto.toUpperCase()}

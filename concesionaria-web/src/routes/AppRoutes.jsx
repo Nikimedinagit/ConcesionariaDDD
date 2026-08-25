@@ -20,6 +20,9 @@ import { TipoVehiculoPage } from "@/pages/Vehiculos/TipoVehiculoPage";
 import { ModeloVehiculoPage } from "@/pages/Vehiculos/ModeloVehiculoPage";
 import { ClientePage } from "@/pages/Personas/ClientePage";
 import { ProveedorPage } from "@/pages/Personas/ProveedorPage";
+import { ProveedorDetallePage } from "@/pages/Personas/ProveedorDetallePage";
+import { ClienteDetallePage } from "@/pages/Personas/ClienteDetallePage";
+import { PermisosPage } from "@/pages/Acceso/PermisosPage";
 
 export default function AppRoutes() {
   return (
@@ -37,6 +40,7 @@ export default function AppRoutes() {
           <Route path="/layout" element={<MainLayout />}>
             <Route path="perfil" element={<PerfilPage />} />
             <Route path="usuarios" element={<UsuarioPage />} />
+            <Route path="permisos" element={<PermisosPage />} />
 
             <Route path="categorias-gastos" element={<CategoriaGastoPage />} />
             <Route path="cuentas" element={<CuentaPage />} />
@@ -47,7 +51,9 @@ export default function AppRoutes() {
             <Route path="modelos" element={<ModeloVehiculoPage />} />
             <Route path="tipos-vehiculos" element={<TipoVehiculoPage />} />
             <Route path="clientes" element={<ClientePage />} />
+            <Route path="clientes/:id" element={<ClienteDetallePage />} />
             <Route path="proveedores" element={<ProveedorPage />} />
+            <Route path="proveedores/:id" element={<ProveedorDetallePage />} />
           </Route>
         </Route>
       </Routes>

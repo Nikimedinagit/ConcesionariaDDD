@@ -65,7 +65,7 @@ public class ActualizarUsuarioCommandHandler
         if (!result.Succeeded)
             throw new Exception("No se pudo actualizar");
 
-        var token = _tokenService.CreateToken(usuario);
+        var token = await _tokenService.CreateToken(usuario);
 
         return token;
     }

@@ -28,7 +28,8 @@ import {
 } from "@/validations/Perfil/perfil.validation";
 
 export function PerfilForm() {
-  const { updateUserData } = useAuth();
+  const { updateUserData, user } = useAuth();
+  const isAdministrador = user?.role?.toUpperCase() === "ADMINISTRADOR";
 
   const { perfil, loading } = usePerfil();
 
@@ -352,14 +353,16 @@ export function PerfilForm() {
 
   return (
     <div className="w-full mx-auto max-w-[1400px] py-0 space-y-5">
-      <PerfilEmpresaSection
-        form={form}
-        updateField={updateField}
-        localidades={localidades}
-        onSave={handleGuardarEmpresa}
-        saving={savingEmpresa}
-        errors={empresaErrors}
-      />
+      {isAdministrador && (
+        <PerfilEmpresaSection
+          form={form}
+          updateField={updateField}
+          localidades={localidades}
+          onSave={handleGuardarEmpresa}
+          saving={savingEmpresa}
+          errors={empresaErrors}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <PerfilUsuarioSection

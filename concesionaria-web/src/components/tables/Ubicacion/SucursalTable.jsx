@@ -11,6 +11,9 @@ const SucursalTable = ({
   onEdit,
   onToggleStatus,
   localidades = [],
+  canEdit = true,
+  canActivate = true,
+  canDeactivate = true,
 }) => {
   const localidadPorId = useMemo(
     () =>
@@ -39,25 +42,25 @@ const SucursalTable = ({
         header: "Acciones",
         cell: ({ row }) => (
           <div className="flex justify-end gap-0.5">
-            {tipo === "activas" && (
+            {tipo === "activas" && (canEdit || canDeactivate) && (
               <>
-                <Tooltip text="Editar">
+                {canEdit && <Tooltip text="Editar">
                   <ActionButton
                     type="edit"
                     onClick={() => onEdit(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
 
-                <Tooltip text="Desactivar">
+                {canDeactivate && <Tooltip text="Desactivar">
                   <ActionButton
                     type="desactivar"
                     onClick={() => onToggleStatus(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
               </>
             )}
 
-            {tipo === "inactivas" && (
+            {tipo === "inactivas" && canActivate && (
               <Tooltip text="Activar">
                 <ActionButton
                   type="activar"
@@ -69,7 +72,7 @@ const SucursalTable = ({
         ),
       },
     ],
-    [tipo, onEdit, onToggleStatus, localidadPorId],
+    [tipo, onEdit, onToggleStatus, localidadPorId, canEdit, canActivate, canDeactivate],
   );
 
   return (

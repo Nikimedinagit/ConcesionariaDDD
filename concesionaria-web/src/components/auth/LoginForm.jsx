@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ArrowRight, LockKeyhole, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { AppInput } from "@/components/ui/custom/AppInput"
 import { loginRequest } from "@/services/Auth/authService"
 import { useAuth } from "@/context/AuthContext" 
 
@@ -77,32 +77,28 @@ export function LoginForm() {
       <form className="space-y-4" onSubmit={handleSubmit}>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">Email</label>
-          <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="tuemail@empresa.com"
-              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400"
-            />
-          </div>
+          <AppInput
+            label="Email"
+            icon={Mail}
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value.toLowerCase())}
+            placeholder="tuemail@empresa.com"
+            className="[&>label]:font-medium [&>label]:text-slate-700"
+          />
           {emailError && <p className="text-sm font-mediu text-rose-500">El email debe contener @ y .</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">Contraseña</label>
-          <div className="relative">
-            <LockKeyhole className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="••••••••"
-              className="h-[44px] rounded-xl border border-slate-200 bg-white pl-11 text-slate-900 placeholder:text-slate-400"
-            />
-          </div>
+          <AppInput
+            label="Contraseña"
+            icon={LockKeyhole}
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="••••••••"
+            className="[&>label]:font-medium [&>label]:text-slate-700"
+          />
           {passwordError && <p className="text-sm font-medium text-rose-500">Mínimo 6 caracteres.</p>}
         </div>
 

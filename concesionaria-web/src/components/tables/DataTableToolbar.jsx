@@ -72,6 +72,12 @@ const DataTableToolbar = ({
         placeholder="Buscar..."
         value={searchValue}
         onChange={(event) => handleSearch(event.target.value)}
+        autoComplete="new-password"
+        name="table-filter-value"
+        autoCapitalize="none"
+        spellCheck={false}
+        data-form-type="other"
+        data-lpignore="true"
         className="w-full [&_input]:h-8 md:ml-auto md:w-[280px]"
       />
 

@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IMediator _mediator;
 
     private readonly ITokenService _tokenService;
@@ -27,11 +28,13 @@ public class AuthController : ControllerBase
     public AuthController(
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
         IMediator mediator,
         ITokenService tokenService)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
         _mediator = mediator;
         _tokenService = tokenService;
     }
@@ -135,6 +138,12 @@ public class AuthController : ControllerBase
             return BadRequest(new { errors = identityResult.Errors.Select(e => e.Description) });
         }
 
+        var administrador = await _roleManager.FindByNameAsync("ADMINISTRADOR");
+        if (administrador is not null)
+        {
+            await _userManager.AddToRoleAsync(user, administrador.Name!);
+        }
+
         await _context.SaveChangesAsync();
 
         return Ok(new
@@ -169,10 +178,21 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Email o contraseña incorrectos." });
         }
 
+        var usuario = await _context.Usuarios
+            .FirstOrDefaultAsync(u =>
+                u.Email == user.Email &&
+                u.EmpresaId == user.EmpresaId);
+
+        if (usuario is not null)
+        {
+            usuario.RegistrarAcceso();
+            await _context.SaveChangesAsync();
+        }
+
         return Ok(new
         {
             email = user.Email,
-            token = _tokenService.CreateToken(user)
+            token = await _tokenService.CreateToken(user)
         });
     }
 }

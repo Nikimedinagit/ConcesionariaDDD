@@ -4,7 +4,7 @@ import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 import ModeloVehiculoFiltros, { ModeloVehiculoFiltrosButton } from "@/components/filtros/Vehiculo/ModeloVehiculoFiltros";
 
-const ModeloVehiculoTable = ({ data, modelosDisponibles, tipo, onToggle, onSearch, onEdit, onToggleStatus, marcas, tiposVehiculos, marcaVehiculoId, tipoVehiculoId, onMarcaChange, onTipoChange }) => {
+const ModeloVehiculoTable = ({ data, modelosDisponibles, tipo, onToggle, onSearch, onEdit, onToggleStatus, marcas, tiposVehiculos, marcaVehiculoId, tipoVehiculoId, onMarcaChange, onTipoChange, canEdit = true, canActivate = true, canDeactivate = true }) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const activeFiltersCount = Number(marcaVehiculoId !== "todos") + Number(tipoVehiculoId !== "todos");
   const marcasPorId = useMemo(() => new Map(marcas.map((marca) => [marca.marcaVehiculoId, marca.nombre])), [marcas]);
@@ -23,8 +23,8 @@ const ModeloVehiculoTable = ({ data, modelosDisponibles, tipo, onToggle, onSearc
     { accessorKey: "nombre", header: "Nombre" },
     { id: "marca", header: "Marca", cell: ({ row }) => marcasPorId.get(row.original.marcaVehiculoId) || "—" },
     { id: "tipoVehiculo", header: "Tipo de vehículo", cell: ({ row }) => tiposPorId.get(row.original.tipoVehiculoId) || "—" },
-    { id: "acciones", header: "Acciones", cell: ({ row }) => <div className="flex justify-end gap-0.5">{tipo === "activas" ? <><Tooltip text="Editar"><ActionButton type="edit" onClick={() => onEdit(row.original)} /></Tooltip><Tooltip text="Desactivar"><ActionButton type="desactivar" onClick={() => onToggleStatus(row.original)} /></Tooltip></> : <Tooltip text="Activar"><ActionButton type="activar" onClick={() => onToggleStatus(row.original)} /></Tooltip>}</div> },
-  ], [tipo, onEdit, onToggleStatus, marcasPorId, tiposPorId]);
+    { id: "acciones", header: "Acciones", cell: ({ row }) => <div className="flex justify-end gap-0.5">{tipo === "activas" ? <>{canEdit && <Tooltip text="Editar"><ActionButton type="edit" onClick={() => onEdit(row.original)} /></Tooltip>}{canDeactivate && <Tooltip text="Desactivar"><ActionButton type="desactivar" onClick={() => onToggleStatus(row.original)} /></Tooltip>}</> : canActivate && <Tooltip text="Activar"><ActionButton type="activar" onClick={() => onToggleStatus(row.original)} /></Tooltip>}</div> },
+  ], [tipo, onEdit, onToggleStatus, marcasPorId, tiposPorId, canEdit, canActivate, canDeactivate]);
   return (
     <DataTable
       columns={columns}

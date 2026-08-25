@@ -9,8 +9,10 @@ import SucursalTable from "@/components/tables/Ubicacion/SucursalTable";
 import { SucursalModal } from "@/components/modals/Ubicacion/SucursalModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const SucursalPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -108,7 +110,9 @@ export const SucursalPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Sucursales" icon={Building2}>
-          <AddButton onClick={handleOpenCreate}>Nueva Sucursal</AddButton>
+          {can("SUCURSALES_CREAR") && (
+            <AddButton onClick={handleOpenCreate}>Nueva Sucursal</AddButton>
+          )}
         </PageHeader>
 
         {loading && data.length === 0 && !debouncedFiltro ? (
@@ -124,6 +128,9 @@ export const SucursalPage = () => {
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
             localidades={localidades}
+            canEdit={can("SUCURSALES_EDITAR")}
+            canActivate={can("SUCURSALES_ACTIVAR")}
+            canDeactivate={can("SUCURSALES_DESACTIVAR")}
           />
         )}
 

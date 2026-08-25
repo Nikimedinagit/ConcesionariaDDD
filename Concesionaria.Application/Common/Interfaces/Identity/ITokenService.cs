@@ -2,5 +2,5 @@ using Concesionaria.Domain.Identity;
 
 public interface ITokenService
 {
-    string CreateToken(ApplicationUser user);
+    Task<string> CreateToken(ApplicationUser user);
 }

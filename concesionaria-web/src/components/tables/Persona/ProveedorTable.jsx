@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "../DataTable";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
@@ -11,7 +12,11 @@ const ProveedorTable = ({
   onEdit,
   onToggleStatus,
   localidades = [],
+  canEdit = true,
+  canActivate = true,
+  canDeactivate = true,
 }) => {
+  const navigate = useNavigate();
   const localidadPorId = useMemo(
     () =>
       new Map(localidades.map((localidad) => [localidad.id, localidad.nombre])),
@@ -20,11 +25,34 @@ const ProveedorTable = ({
 
   const columns = useMemo(
     () => [
-      { accessorKey: "nombre", header: "Nombre" },
+      {
+        accessorKey: "nombre",
+        header: "Nombre",
+        cell: ({ row }) => (
+          <button
+            type="button"
+            onClick={() =>
+              navigate(`/layout/proveedores/${row.original.proveedorId}`, {
+                state: {
+                  proveedor: row.original,
+                  localidadNombre: localidadPorId.get(row.original.localidadId),
+                  activo: tipo === "activas",
+                },
+              })
+            }
+            className="cursor-pointer font-medium text-slate-700 transition-colors hover:text-[hsl(var(--nav-bg))] hover:underline hover:underline-offset-4"
+          >
+            {row.original.nombre}
+          </button>
+        ),
+      },
       { accessorKey: "cuil", header: "CUIL" },
       { accessorKey: "telefono", header: "Teléfono" },
-      { accessorKey: "email", header: "Email" },
-      { accessorKey: "domicilio", header: "Domicilio" },
+      {
+        accessorKey: "email",
+        header: "Email",
+        cell: ({ row }) => row.original.email?.toLowerCase() || "—",
+      },
       {
         accessorKey: "localidadId",
         header: "Localidad",
@@ -37,20 +65,20 @@ const ProveedorTable = ({
           <div className="flex justify-end gap-0.5">
             {tipo === "activas" ? (
               <>
-                <Tooltip text="Editar">
+                {canEdit && <Tooltip text="Editar">
                   <ActionButton
                     type="edit"
                     onClick={() => onEdit(row.original)}
                   />
-                </Tooltip>
-                <Tooltip text="Desactivar">
+                </Tooltip>}
+                {canDeactivate && <Tooltip text="Desactivar">
                   <ActionButton
                     type="desactivar"
                     onClick={() => onToggleStatus(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
               </>
-            ) : (
+            ) : canActivate && (
               <Tooltip text="Activar">
                 <ActionButton
                   type="activar"
@@ -62,7 +90,7 @@ const ProveedorTable = ({
         ),
       },
     ],
-    [tipo, onEdit, onToggleStatus, localidadPorId],
+    [tipo, onEdit, onToggleStatus, localidadPorId, navigate, canEdit, canActivate, canDeactivate],
   );
 
   return (

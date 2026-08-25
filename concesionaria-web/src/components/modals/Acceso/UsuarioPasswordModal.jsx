@@ -14,10 +14,12 @@ export function UsuarioPasswordModal({
   serverError = "",
 }) {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
   useEffect(() => {
     setPassword("");
+    setConfirmPassword("");
     setLocalError("");
   }, [usuario, isOpen]);
 
@@ -27,6 +29,11 @@ export function UsuarioPasswordModal({
     if (!result.success) {
       const errors = result.error.flatten().fieldErrors;
       setLocalError(errors.password?.[0] || "Error en la contraseña");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setLocalError("Las contraseñas no coinciden.");
       return;
     }
 
@@ -54,12 +61,30 @@ export function UsuarioPasswordModal({
           type="password"
           placeholder="Mínimo 6 caracteres"
           value={password}
+          passwordToggle
           onChange={(e) => {
             setPassword(e.target.value);
             if (localError) setLocalError("");
           }}
           error={localError || serverError}
           autoFocus
+        />
+        <AppInput
+          label="Confirmar Contraseña *"
+          icon={KeyRound}
+          type="password"
+          placeholder="Repetí la nueva contraseña"
+          value={confirmPassword}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            if (localError) setLocalError("");
+          }}
+          passwordToggle
+          error={
+            password !== confirmPassword && confirmPassword
+              ? "Las contraseñas no coinciden."
+              : undefined
+          }
         />
       </div>
     </ModalCustom>

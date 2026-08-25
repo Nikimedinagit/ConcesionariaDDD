@@ -8,9 +8,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { UserDropdown } from "@/components/auth/UserDropdown";
+import { usePermissions } from "@/context/PermissionContext";
 
 export function NavbarHeader() {
   const location = useLocation();
+  const { can } = usePermissions();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
@@ -25,6 +27,7 @@ export function NavbarHeader() {
         { to: "/empresa", name: "Empresa" },
         { to: "/roles", name: "Roles" },
         { to: "/layout/usuarios", name: "Usuarios" },
+        { to: "/layout/permisos", name: "Permisos" },
       ],
     },
     {
@@ -86,6 +89,31 @@ export function NavbarHeader() {
     },
   ];
 
+  const permissionByPath = {
+    "/layout/usuarios": "USUARIOS_VER",
+    "/layout/permisos": "USUARIOS_EDITAR",
+    "/layout/cuentas": "CUENTAS_VER",
+    "/layout/categorias-gastos": "CATEGORIAS_GASTOS_VER",
+    "/layout/clientes": "CLIENTES_VER",
+    "/layout/proveedores": "PROVEEDORES_VER",
+    "/layout/sucursales": "SUCURSALES_VER",
+    "/layout/localidades": "LOCALIDADES_VER",
+    "/layout/provincias": "PROVINCIAS_VER",
+    "/layout/marcas": "MARCAS_VER",
+    "/layout/modelos": "MODELOS_VER",
+    "/layout/tipos-vehiculos": "TIPOS_VEHICULO_VER",
+  };
+
+  const visibleNavGroups = navGroups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => {
+        const permission = permissionByPath[item.to];
+        return !permission || can(permission);
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+
   return (
     <header
       className="sticky top-0 z-50 w-full transition-all duration-300 shadow-lg border-b border-white/5"
@@ -116,7 +144,7 @@ export function NavbarHeader() {
 
         {/* MENU DESKTOP */}
         <div className="hidden lg:flex items-center gap-1">
-          {navGroups.map((group) => (
+          {visibleNavGroups.map((group) => (
             <DropdownMenu
               key={group.title}
               modal={false}
@@ -196,7 +224,7 @@ export function NavbarHeader() {
           className="lg:hidden w-full border-t border-white/10 p-4 space-y-2"
           style={{ backgroundColor: "hsl(var(--nav-bg))" }}
         >
-          {navGroups.map((group) => (
+          {visibleNavGroups.map((group) => (
             <div
               key={group.title}
               className="border-b border-white/5 last:border-none"

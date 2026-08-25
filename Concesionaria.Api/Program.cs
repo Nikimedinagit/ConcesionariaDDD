@@ -15,6 +15,7 @@ builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.MapInboundClaims = false;
         options.RequireHttpsMetadata = false;
 
         options.SaveToken = true;
@@ -30,6 +31,8 @@ builder
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,
+
+            RoleClaimType = "role",
 
             ClockSkew = TimeSpan.Zero,
         };
@@ -86,6 +89,8 @@ app.UseCors("FrontendCors");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<PermissionMiddleware>();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

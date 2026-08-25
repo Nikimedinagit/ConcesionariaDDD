@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { toastService } from "@/services/toastService";
 import CuentaService from "@/services/Contabilidad/cuentaService";
 import { useCuentas } from "@/hooks/Contabilidad/useCuentas";
+import { usePermissions } from "@/context/PermissionContext";
 
 const generateChildCode = (cuentas, cuentaPadre) => {
   const childrenCount = cuentas.filter(
@@ -29,6 +30,7 @@ const generateRootCode = (cuentas) => {
 };
 
 export const CuentaPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -158,7 +160,7 @@ export const CuentaPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Cuentas" icon={Landmark}>
-          <AddButton onClick={handleOpenRootCreate}>Nueva Cuenta</AddButton>
+          {can("CUENTAS_CREAR") && <AddButton onClick={handleOpenRootCreate}>Nueva Cuenta</AddButton>}
         </PageHeader>
 
         {loading &&
@@ -183,6 +185,10 @@ export const CuentaPage = () => {
             onAddChild={handleOpenChildCreate}
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
+            canCreate={can("CUENTAS_CREAR")}
+            canEdit={can("CUENTAS_EDITAR")}
+            canActivate={can("CUENTAS_ACTIVAR")}
+            canDeactivate={can("CUENTAS_DESACTIVAR")}
           />
         )}
 

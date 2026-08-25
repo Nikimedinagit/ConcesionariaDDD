@@ -10,6 +10,9 @@ const MarcaTable = ({
   onSearch,
   onEdit,
   onToggleStatus,
+  canEdit = true,
+  canActivate = true,
+  canDeactivate = true,
 }) => {
   const columns = useMemo(
     () => [
@@ -19,25 +22,25 @@ const MarcaTable = ({
         header: "Acciones",
         cell: ({ row }) => (
           <div className="flex justify-end gap-0.5">
-            {tipo === "activas" && (
+            {tipo === "activas" && (canEdit || canDeactivate) && (
               <>
-                <Tooltip text="Editar">
+                {canEdit && <Tooltip text="Editar">
                   <ActionButton
                     type="edit"
                     onClick={() => onEdit(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
 
-                <Tooltip text="Desactivar">
+                {canDeactivate && <Tooltip text="Desactivar">
                   <ActionButton
                     type="desactivar"
                     onClick={() => onToggleStatus(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
               </>
             )}
 
-            {tipo === "inactivas" && (
+            {tipo === "inactivas" && canActivate && (
               <Tooltip text="Activar">
                 <ActionButton
                   type="activar"
@@ -49,7 +52,7 @@ const MarcaTable = ({
         ),
       },
     ],
-    [tipo, onEdit, onToggleStatus],
+    [tipo, onEdit, onToggleStatus, canEdit, canActivate, canDeactivate],
   );
 
   return (

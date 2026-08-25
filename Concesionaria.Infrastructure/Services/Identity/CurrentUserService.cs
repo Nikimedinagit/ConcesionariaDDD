@@ -19,6 +19,10 @@ public class CurrentUserService : ICurrentUserService
             .HttpContext?
             .User?
             .FindFirstValue(ClaimTypes.NameIdentifier)
+        ?? _httpContextAccessor
+            .HttpContext?
+            .User?
+            .FindFirstValue("nameid")
             ?? string.Empty;
 
    public Guid EmpresaId

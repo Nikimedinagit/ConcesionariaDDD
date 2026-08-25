@@ -9,8 +9,10 @@ import { useProveedor } from "@/hooks/Persona/useProveedor";
 import ProveedorService from "@/services/Persona/proveedorService";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const ProveedorPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -100,7 +102,9 @@ export const ProveedorPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Proveedores" icon={ContactRound}>
-          <AddButton onClick={() => openModal()}>Nuevo Proveedor</AddButton>
+          {can("PROVEEDORES_CREAR") && (
+            <AddButton onClick={() => openModal()}>Nuevo Proveedor</AddButton>
+          )}
         </PageHeader>
         {loading && data.length === 0 && !debouncedFiltro ? (
           <div className="flex h-64 items-center justify-center">
@@ -115,6 +119,9 @@ export const ProveedorPage = () => {
             onEdit={openModal}
             onToggleStatus={handleToggleStatus}
             localidades={localidades}
+            canEdit={can("PROVEEDORES_EDITAR")}
+            canActivate={can("PROVEEDORES_ACTIVAR")}
+            canDeactivate={can("PROVEEDORES_DESACTIVAR")}
           />
         )}
         {isModalOpen && (

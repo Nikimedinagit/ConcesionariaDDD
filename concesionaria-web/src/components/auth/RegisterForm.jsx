@@ -14,14 +14,8 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AppInput } from "@/components/ui/custom/AppInput";
+import { AppSearchSelect, AppSelect } from "@/components/ui/custom/AppSelect";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import { registerRequest } from "@/services/Auth/authService";
 import { empresaSchema, usuarioSchema } from "@/validations/Auth/authSchemas";
@@ -43,7 +37,6 @@ export function RegisterForm() {
     aceptoTerminos: false,
   });
   const [localidades, setLocalidades] = useState([]);
-  const [localidadSearch, setLocalidadSearch] = useState("");
   const [apiError, setApiError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -213,133 +206,16 @@ export function RegisterForm() {
       >
         {step === 1 && (
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-slate-700">
-              Razón Social *
-              <div className="mt-1">
-                <div className="relative h-[44px]">
-                  <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    value={form.razonSocial}
-                    onChange={(event) =>
-                      updateField("razonSocial", event.target.value)
-                    }
-                    placeholder="Ej. Concesionaria Santa Fe"
-                    className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-            </label>
+            <AppInput label="Razón Social *" icon={Building2} value={form.razonSocial} onChange={(event) => updateField("razonSocial", event.target.value)} placeholder="Ej. Concesionaria Santa Fe" />
 
             <div className="grid gap-1 sm:grid-cols-2">
-              <label className="block text-sm font-medium text-slate-700">
-                Nombre Fantasía *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <Tag className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={form.nombreFantasia}
-                      onChange={(event) =>
-                        updateField("nombreFantasia", event.target.value)
-                      }
-                      placeholder="Ej. Santa Fe Motors"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-              </label>
+              <AppInput label="Nombre Fantasía *" icon={Tag} value={form.nombreFantasia} onChange={(event) => updateField("nombreFantasia", event.target.value)} placeholder="Ej. Santa Fe Motors" />
 
-              <label className="block text-sm font-medium text-slate-700">
-                CUIT *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <Hash className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={form.cuit}
-                      onChange={(event) =>
-                        updateField("cuit", event.target.value)
-                      }
-                      placeholder="20-12345678-9"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                  {cuitError && (
-                    <p className="mt-1 text-sm text-rose-500">
-                      CUIT debe tener 11 dígitos.
-                    </p>
-                  )}
-                </div>
-              </label>
+              <AppInput label="CUIT *" icon={Hash} value={form.cuit} onChange={(event) => updateField("cuit", event.target.value)} placeholder="20-12345678-9" error={cuitError ? "CUIT debe tener 11 dígitos." : undefined} />
 
-              <label className="block text-sm font-medium text-slate-700">
-                Localidad *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Select
-                      value={form.localidadId}
-                      onValueChange={(value) => {
-                        updateField("localidadId", value);
-                        setLocalidadSearch("");
-                      }}
-                    >
-                      <SelectTrigger className="w-full h-[44px] rounded-xl border border-slate-200 bg-white text-slate-900 pl-11 pr-4">
-                        <SelectValue placeholder="Localidad" />
-                      </SelectTrigger>
+              <AppSearchSelect label="Localidad *" icon={MapPin} value={form.localidadId} onValueChange={(value) => updateField("localidadId", value)} options={localidades} optionValue="id" optionLabel="nombre" placeholder="Localidad" searchPlaceholder="Buscar localidad" />
 
-                      <SelectContent
-                        position="popper"
-                        sideOffset={4}
-                        className="w-[var(--radix-select-trigger-width)] bg-white border border-slate-200 text-slate-900"
-                      >
-                        <div className="px-3 pt-3">
-                          <Input
-                            value={localidadSearch}
-                            onChange={(event) =>
-                              setLocalidadSearch(event.target.value)
-                            }
-                            onKeyDown={(e) => e.stopPropagation()}
-                            onPointerDown={(e) => e.stopPropagation()}
-                            placeholder="Buscar localidad"
-                            className="mb-2 h-[44px] w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-slate-900 placeholder:text-slate-400"
-                          />
-                        </div>
-                        {localidades
-                          .filter((location) =>
-                            location.nombre
-                              .toLowerCase()
-                              .includes(localidadSearch.toLowerCase()),
-                          )
-                          .map((location) => (
-                            <SelectItem key={location.id} value={location.id}>
-                              {location.nombre}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </label>
-
-              <label className="block text-sm font-medium text-slate-700">
-                Moneda Principal *
-                <div className="relative mt-1">
-                  <DollarSign className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Select
-                    value={form.moneda}
-                    onValueChange={(value) => updateField("moneda", value)}
-                  >
-                    <SelectTrigger className="w-full h-[44px] rounded-xl border border-slate-200 bg-white text-slate-900 pl-11 pr-4">
-                      <SelectValue placeholder="Moneda Principal" />
-                    </SelectTrigger>
-
-                    <SelectContent className="bg-white border border-slate-200 text-slate-900">
-                      <SelectItem value="ARS">ARS</SelectItem>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="BRL">BRL</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </label>
+              <AppSelect label="Moneda Principal *" icon={DollarSign} value={form.moneda} onValueChange={(value) => updateField("moneda", value)} options={[{ value: "ARS", label: "ARS" }, { value: "USD", label: "USD" }, { value: "BRL", label: "BRL" }]} placeholder="Moneda Principal" />
             </div>
           </div>
         )}
@@ -347,92 +223,26 @@ export function RegisterForm() {
         {step === 2 && (
           <div className="space-y-4">
             <div className="grid gap-2 sm:grid-cols-2">
-              <label className="block text-sm font-medium text-slate-700">
-                Nombre Completo *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={form.nombreCompleto}
-                      onChange={(event) =>
-                        updateField("nombreCompleto", event.target.value)
-                      }
-                      placeholder="Ej. Juan Pérez"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-              </label>
+              <AppInput label="Nombre Completo *" icon={User} value={form.nombreCompleto} onChange={(event) => updateField("nombreCompleto", event.target.value)} placeholder="Ej. Juan Pérez" />
 
-              <label className="block text-sm font-medium text-slate-700">
-                Email *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      value={form.email}
-                      onChange={(event) =>
-                        updateField("email", event.target.value)
-                      }
-                      placeholder="correo@empresa.com"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                  {emailError && (
-                    <p className="mt-1 text-sm text-rose-500">
-                      Email debe contener @ y .
-                    </p>
-                  )}
-                </div>
-              </label>
+              <div>
+                <AppInput
+                  label="Email *"
+                  icon={Mail}
+                  value={form.email}
+                  onChange={(event) =>
+                    updateField("email", event.target.value.toLowerCase())
+                  }
+                  placeholder="correo@empresa.com"
+                  error={emailError ? "Email debe contener @ y ." : undefined}
+                />
+              </div>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
-              <label className="block text-sm font-medium text-slate-700">
-                Contraseña *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      type="password"
-                      value={form.password}
-                      onChange={(event) =>
-                        updateField("password", event.target.value)
-                      }
-                      placeholder="••••••••"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                  {passwordError && (
-                    <p className="mt-1 text-sm text-rose-500">
-                      Contraseña mínimo 6 caracteres.
-                    </p>
-                  )}
-                </div>
-              </label>
+              <AppInput label="Contraseña *" icon={LockKeyhole} type="password" value={form.password} onChange={(event) => updateField("password", event.target.value)} placeholder="••••••••" error={passwordError ? "Contraseña mínimo 6 caracteres." : undefined} />
 
-              <label className="block text-sm font-medium text-slate-700">
-                Confirmar contraseña *
-                <div className="mt-1">
-                  <div className="relative h-[44px]">
-                    <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <Input
-                      type="password"
-                      value={form.confirmPassword}
-                      onChange={(event) =>
-                        updateField("confirmPassword", event.target.value)
-                      }
-                      placeholder="••••••••"
-                      className="h-[44px] w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400"
-                    />
-                  </div>
-                  {confirmPasswordError && (
-                    <p className="mt-1 text-sm text-rose-500">
-                      Las contraseñas no coinciden.
-                    </p>
-                  )}
-                </div>
-              </label>
+              <AppInput label="Confirmar contraseña *" icon={LockKeyhole} type="password" value={form.confirmPassword} onChange={(event) => updateField("confirmPassword", event.target.value)} placeholder="••••••••" error={confirmPasswordError ? "Las contraseñas no coinciden." : undefined} />
             </div>
 
             <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-700">

@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
           name: decoded.nombre || "Usuario",
           email: decoded.email || "",
           avatarURL: decoded.avatarUrl || "",
+          role: decoded.role || "",
         });
       } catch {
         setUser(null);

@@ -2,15 +2,8 @@ import { ShieldCheck, Globe, MapPinned, Smartphone } from "lucide-react";
 
 import { Section } from "./Section";
 import { AppInput } from "@/components/ui/custom/AppInput";
+import { AppSelect } from "@/components/ui/custom/AppSelect";
 import { Button } from "@/components/ui/button";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export function RecuperacionForm({
   form,
@@ -30,31 +23,24 @@ export function RecuperacionForm({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[160px_180px_1fr_auto] gap-3 items-start">
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">País</label>
-
-            <Select
-              value={form.codigoPais || "+54"}
-              onValueChange={(value) => updateField("codigoPais", value)}
-            >
-              <SelectTrigger className="w-full">
-                <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-slate-400" />
-                  <SelectValue placeholder="Código" />
-                </div>
-              </SelectTrigger>
-
-              <SelectContent className="bg-white border border-slate-200 text-slate-900">
-                <SelectItem value="+54">🇦🇷 +54</SelectItem>
-                <SelectItem value="+55">🇧🇷 +55</SelectItem>
-                <SelectItem value="+56">🇨🇱 +56</SelectItem>
-                <SelectItem value="+57">🇨🇴 +57</SelectItem>
-                <SelectItem value="+58">🇻🇪 +58</SelectItem>
-                <SelectItem value="+1">🇺🇸 +1</SelectItem>
-                <SelectItem value="+34">🇪🇸 +34</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <AppSelect
+            label="País"
+            icon={Globe}
+            value={form.codigoPais || "+54"}
+            onValueChange={(value) => updateField("codigoPais", value)}
+            options={[
+              { id: "+54", nombre: "🇦🇷 +54" },
+              { id: "+55", nombre: "🇧🇷 +55" },
+              { id: "+56", nombre: "🇨🇱 +56" },
+              { id: "+57", nombre: "🇨🇴 +57" },
+              { id: "+58", nombre: "🇻🇪 +58" },
+              { id: "+1", nombre: "🇺🇸 +1" },
+              { id: "+34", nombre: "🇪🇸 +34" },
+            ]}
+            optionValue="id"
+            optionLabel="nombre"
+            placeholder="Código"
+          />
 
           {/* CODIGO AREA */}
           <div className="space-y-1">

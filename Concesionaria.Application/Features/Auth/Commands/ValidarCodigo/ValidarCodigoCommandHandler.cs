@@ -43,6 +43,6 @@ public class ValidarCodigoCommandHandler : IRequestHandler<ValidarCodigoCommand,
         usuario.LimpiarCodigoRecuperacion();
         await _userManager.UpdateAsync(usuario);
 
-        return _tokenService.CreateToken(usuario);
+        return await _tokenService.CreateToken(usuario);
     }
 }

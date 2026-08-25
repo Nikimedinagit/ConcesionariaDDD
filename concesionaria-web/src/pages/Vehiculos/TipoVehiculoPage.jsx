@@ -8,8 +8,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useTiposVehiculos } from "@/hooks/Vehiculo/useTiposVehiculos";
 import TipoVehiculoService from "@/services/Vehiculo/tipoVehiculoService";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const TipoVehiculoPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -105,9 +107,11 @@ export const TipoVehiculoPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Tipos de Vehículos" icon={CarFront}>
-          <AddButton onClick={handleOpenCreate}>
-            Nuevo Tipo de Vehículo
-          </AddButton>
+          {can("TIPOS_VEHICULO_CREAR") && (
+            <AddButton onClick={handleOpenCreate}>
+              Nuevo Tipo de Vehículo
+            </AddButton>
+          )}
         </PageHeader>
 
         {loading && data.length === 0 && !debouncedFiltro ? (
@@ -122,6 +126,9 @@ export const TipoVehiculoPage = () => {
             onSearch={setFiltro}
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
+            canEdit={can("TIPOS_VEHICULO_EDITAR")}
+            canActivate={can("TIPOS_VEHICULO_ACTIVAR")}
+            canDeactivate={can("TIPOS_VEHICULO_DESACTIVAR")}
           />
         )}
 

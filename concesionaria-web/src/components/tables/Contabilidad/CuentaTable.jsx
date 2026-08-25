@@ -158,6 +158,10 @@ const CuentaTable = ({
   onAddChild,
   onEdit,
   onToggleStatus,
+  canCreate = true,
+  canEdit = true,
+  canActivate = true,
+  canDeactivate = true,
 }) => {
   const [expandedIds, setExpandedIds] = useState(new Set());
   const [searchValue, setSearchValue] = useState("");
@@ -358,7 +362,7 @@ const CuentaTable = ({
                       <div className="flex justify-end gap-0.5">
                         {tipo === "activas" && (
                           <>
-                            <Tooltip text="Agregar">
+                            {canCreate && <Tooltip text="Agregar">
                               <Button
                                 type="button"
                                 variant="ghost"
@@ -372,9 +376,9 @@ const CuentaTable = ({
                               >
                                 <CirclePlus className="h-[18px] w-[18px]" />
                               </Button>
-                            </Tooltip>
+                            </Tooltip>}
 
-                            {!protectedBase && (
+                            {!protectedBase && canEdit && (
                               <>
                                 <Tooltip text="Editar">
                                   <Button
@@ -391,7 +395,7 @@ const CuentaTable = ({
                                   </Button>
                                 </Tooltip>
 
-                                <Tooltip text="Desactivar">
+                                {canDeactivate && <Tooltip text="Desactivar">
                                   <Button
                                     type="button"
                                     variant="ghost"
@@ -404,13 +408,13 @@ const CuentaTable = ({
                                   >
                                     <Trash2 className="h-[18px] w-[18px]" />
                                   </Button>
-                                </Tooltip>
+                                </Tooltip>}
                               </>
                             )}
                           </>
                         )}
 
-                        {tipo === "inactivas" && !protectedBase && (
+                        {tipo === "inactivas" && !protectedBase && canActivate && (
                           <Tooltip text="Activar">
                             <Button
                               type="button"

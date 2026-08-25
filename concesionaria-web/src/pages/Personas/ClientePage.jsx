@@ -9,8 +9,10 @@ import { useClientes } from "@/hooks/Persona/useClientes";
 import ClienteService from "@/services/Persona/clienteService";
 import { getLocalidades } from "@/services/Ubicacion/localidadService";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const ClientePage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -100,7 +102,9 @@ export const ClientePage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Clientes" icon={ContactRound}>
-          <AddButton onClick={() => openModal()}>Nuevo Cliente</AddButton>
+          {can("CLIENTES_CREAR") && (
+            <AddButton onClick={() => openModal()}>Nuevo Cliente</AddButton>
+          )}
         </PageHeader>
         {loading && data.length === 0 && !debouncedFiltro ? (
           <div className="flex h-64 items-center justify-center">
@@ -115,6 +119,9 @@ export const ClientePage = () => {
             onEdit={openModal}
             onToggleStatus={handleToggleStatus}
             localidades={localidades}
+            canEdit={can("CLIENTES_EDITAR")}
+            canActivate={can("CLIENTES_ACTIVAR")}
+            canDeactivate={can("CLIENTES_DESACTIVAR")}
           />
         )}
         {isModalOpen && (

@@ -8,8 +8,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useMarcas } from "@/hooks/Vehiculo/useMarcas";
 import MarcaService from "@/services/Vehiculo/marcaService";
 import { toastService } from "@/services/toastService";
+import { usePermissions } from "@/context/PermissionContext";
 
 export const MarcaPage = () => {
+  const { can } = usePermissions();
   const [tipo, setTipo] = useState("activas");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
@@ -105,7 +107,9 @@ export const MarcaPage = () => {
     <TooltipProvider delayDuration={300}>
       <div>
         <PageHeader title="Marcas" icon={Tags}>
-          <AddButton onClick={handleOpenCreate}>Nueva Marca</AddButton>
+          {can("MARCAS_CREAR") && (
+            <AddButton onClick={handleOpenCreate}>Nueva Marca</AddButton>
+          )}
         </PageHeader>
 
         {loading && data.length === 0 && !debouncedFiltro ? (
@@ -120,6 +124,9 @@ export const MarcaPage = () => {
             onSearch={setFiltro}
             onEdit={handleOpenEdit}
             onToggleStatus={handleToggleStatus}
+            canEdit={can("MARCAS_EDITAR")}
+            canActivate={can("MARCAS_ACTIVAR")}
+            canDeactivate={can("MARCAS_DESACTIVAR")}
           />
         )}
 

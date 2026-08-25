@@ -3,7 +3,17 @@ import DataTable from "../DataTable";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 
-const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit, onToggleStatus }) => {
+const CategoriaGastoTable = ({
+  data,
+  tipo,
+  onToggle,
+  onSearch,
+  onEdit,
+  onToggleStatus,
+  canEdit = true,
+  canActivate = true,
+  canDeactivate = true,
+}) => {
   const columns = useMemo(
     () => [
       { accessorKey: "nombre", header: "Nombre" },
@@ -12,25 +22,25 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit, onToggleS
         header: "Acciones",
         cell: ({ row }) => (
           <div className="flex justify-end gap-0.5">
-            {tipo === "activas" && (
+            {tipo === "activas" && (canEdit || canDeactivate) && (
               <>
-                <Tooltip text="Editar">
+                {canEdit && <Tooltip text="Editar">
                   <ActionButton
                     type="edit"
                     onClick={() => onEdit(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
 
-                <Tooltip text="Desactivar">
+                {canDeactivate && <Tooltip text="Desactivar">
                   <ActionButton
                     type="desactivar"
                     onClick={() => onToggleStatus(row.original)}
                   />
-                </Tooltip>
+                </Tooltip>}
               </>
             )}
 
-            {tipo === "inactivas" && (
+            {tipo === "inactivas" && canActivate && (
               <Tooltip text="Activar">
                 <ActionButton
                   type="activar"
@@ -42,7 +52,7 @@ const CategoriaGastoTable = ({ data, tipo, onToggle, onSearch, onEdit, onToggleS
         ),
       },
     ],
-    [tipo, onEdit, onToggleStatus], 
+    [tipo, onEdit, onToggleStatus, canEdit, canActivate, canDeactivate],
   );
 
   return (
