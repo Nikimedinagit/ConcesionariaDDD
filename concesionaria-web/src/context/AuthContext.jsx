@@ -21,11 +21,15 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(token);
         const rawRoles = decoded.role || [];
         const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
+        const avatarURL = (decoded.avatarUrl || "").replace(
+          /\/avatars\/av-(\d+)\.(png|jpg|jpeg)$/i,
+          "/avatars/av-$1-optimized.webp",
+        );
 
         setUser({
           name: decoded.nombre || "Usuario",
           email: decoded.email || "",
-          avatarURL: decoded.avatarUrl || "",
+          avatarURL,
           roles,
           role: roles[0] || "",
         });

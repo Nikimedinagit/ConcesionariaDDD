@@ -35,6 +35,9 @@ export function PerfilForm() {
 
   const { perfil, loading } = usePerfil();
 
+  const normalizeAvatarUrl = (url) =>
+    url?.replace(/\/avatars\/av-(\d+)\.(png|jpg|jpeg)$/i, "/avatars/av-$1-optimized.webp") || "";
+
   const [localidades, setLocalidades] = useState([]);
 
   const [savingEmpresa, setSavingEmpresa] = useState(false);
@@ -124,7 +127,7 @@ export function PerfilForm() {
 
         telefono,
 
-        avatar: perfil.avatarUrl || "",
+        avatar: normalizeAvatarUrl(perfil.avatarUrl),
       }));
     }
   }, [perfil]);

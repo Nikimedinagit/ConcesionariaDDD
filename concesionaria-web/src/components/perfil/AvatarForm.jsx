@@ -3,7 +3,7 @@ import { Section } from "./Section";
 
 const AVATARS = Array.from(
   { length: 18 },
-  (_, i) => `/avatars/av-${i + 1}.png`,
+  (_, i) => `/avatars/av-${i + 1}-optimized.webp`,
 );
 
 export function PerfilAvatarSection({ form, updateField, onSave }) {
