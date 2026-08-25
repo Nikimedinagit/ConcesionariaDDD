@@ -29,7 +29,9 @@ import {
 
 export function PerfilForm() {
   const { updateUserData, user } = useAuth();
-  const isAdministrador = user?.role?.toUpperCase() === "ADMINISTRADOR";
+  const isAdministrador = (user?.roles || [user?.role])
+    .filter(Boolean)
+    .some((role) => String(role).toUpperCase() === "ADMINISTRADOR");
 
   const { perfil, loading } = usePerfil();
 

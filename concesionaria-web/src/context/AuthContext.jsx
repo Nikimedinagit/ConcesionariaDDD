@@ -19,11 +19,15 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
+        const rawRoles = decoded.role || [];
+        const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
+
         setUser({
           name: decoded.nombre || "Usuario",
           email: decoded.email || "",
           avatarURL: decoded.avatarUrl || "",
-          role: decoded.role || "",
+          roles,
+          role: roles[0] || "",
         });
       } catch {
         setUser(null);

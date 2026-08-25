@@ -206,16 +206,63 @@ export function RegisterForm() {
       >
         {step === 1 && (
           <div className="space-y-3">
-            <AppInput label="Razón Social *" icon={Building2} value={form.razonSocial} onChange={(event) => updateField("razonSocial", event.target.value)} placeholder="Ej. Concesionaria Santa Fe" />
+            <AppInput
+              label="Razón Social *"
+              icon={Building2}
+              value={form.razonSocial}
+              onChange={(event) =>
+                updateField("razonSocial", event.target.value.toUpperCase())
+              }
+              placeholder="Ej. CONCESIONARIA SANTA FE"
+            />
 
             <div className="grid gap-1 sm:grid-cols-2">
-              <AppInput label="Nombre Fantasía *" icon={Tag} value={form.nombreFantasia} onChange={(event) => updateField("nombreFantasia", event.target.value)} placeholder="Ej. Santa Fe Motors" />
+              <AppInput
+                label="Nombre Fantasía *"
+                icon={Tag}
+                value={form.nombreFantasia}
+                onChange={(event) =>
+                  updateField(
+                    "nombreFantasia",
+                    event.target.value.toUpperCase(),
+                  )
+                }
+                placeholder="Ej. SANTA FE MOTORS"
+              />
 
-              <AppInput label="CUIT *" icon={Hash} value={form.cuit} onChange={(event) => updateField("cuit", event.target.value)} placeholder="20-12345678-9" error={cuitError ? "CUIT debe tener 11 dígitos." : undefined} />
+              <AppInput
+                label="CUIT *"
+                icon={Hash}
+                value={form.cuit}
+                onChange={(event) => updateField("cuit", event.target.value)}
+                placeholder="20-12345678-9"
+                error={cuitError ? "CUIT debe tener 11 dígitos." : undefined}
+              />
 
-              <AppSearchSelect label="Localidad *" icon={MapPin} value={form.localidadId} onValueChange={(value) => updateField("localidadId", value)} options={localidades} optionValue="id" optionLabel="nombre" placeholder="Localidad" searchPlaceholder="Buscar localidad" />
+              <AppSearchSelect
+                label="Localidad *"
+                icon={MapPin}
+                value={form.localidadId}
+                onValueChange={(value) => updateField("localidadId", value)}
+                options={localidades}
+                optionValue="id"
+                optionLabel="nombre"
+                placeholder="SELECCIONE..."
+                searchPlaceholder="Buscar localidad"
+              />
 
-              <AppSelect label="Moneda Principal *" icon={DollarSign} value={form.moneda} onValueChange={(value) => updateField("moneda", value)} options={[{ value: "ARS", label: "ARS" }, { value: "USD", label: "USD" }, { value: "BRL", label: "BRL" }]} placeholder="Moneda Principal" />
+              <AppSelect
+                label="Moneda Principal *"
+                icon={DollarSign}
+                value={form.moneda}
+                onValueChange={(value) => updateField("moneda", value)}
+                options={[
+                  { value: "ARS", label: "ARS" },
+                  { value: "USD", label: "USD" },
+                  { value: "BRL", label: "BRL" },
+                ]}
+                placeholder="MONEDA PRINCIPAL"
+              />
             </div>
           </div>
         )}
@@ -223,7 +270,18 @@ export function RegisterForm() {
         {step === 2 && (
           <div className="space-y-4">
             <div className="grid gap-2 sm:grid-cols-2">
-              <AppInput label="Nombre Completo *" icon={User} value={form.nombreCompleto} onChange={(event) => updateField("nombreCompleto", event.target.value)} placeholder="Ej. Juan Pérez" />
+              <AppInput
+                label="Nombre Completo *"
+                icon={User}
+                value={form.nombreCompleto}
+                onChange={(event) =>
+                  updateField(
+                    "nombreCompleto",
+                    event.target.value.toUpperCase(),
+                  )
+                }
+                placeholder="Ej. JUAN PÉREZ"
+              />
 
               <div>
                 <AppInput
@@ -240,9 +298,35 @@ export function RegisterForm() {
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
-              <AppInput label="Contraseña *" icon={LockKeyhole} type="password" value={form.password} onChange={(event) => updateField("password", event.target.value)} placeholder="••••••••" error={passwordError ? "Contraseña mínimo 6 caracteres." : undefined} />
+              <AppInput
+                label="Contraseña *"
+                icon={LockKeyhole}
+                type="password"
+                value={form.password}
+                onChange={(event) =>
+                  updateField("password", event.target.value)
+                }
+                placeholder="••••••••"
+                error={
+                  passwordError ? "Contraseña mínimo 6 caracteres." : undefined
+                }
+              />
 
-              <AppInput label="Confirmar contraseña *" icon={LockKeyhole} type="password" value={form.confirmPassword} onChange={(event) => updateField("confirmPassword", event.target.value)} placeholder="••••••••" error={confirmPasswordError ? "Las contraseñas no coinciden." : undefined} />
+              <AppInput
+                label="Confirmar contraseña *"
+                icon={LockKeyhole}
+                type="password"
+                value={form.confirmPassword}
+                onChange={(event) =>
+                  updateField("confirmPassword", event.target.value)
+                }
+                placeholder="••••••••"
+                error={
+                  confirmPasswordError
+                    ? "Las contraseñas no coinciden."
+                    : undefined
+                }
+              />
             </div>
 
             <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-700">
