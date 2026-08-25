@@ -27,4 +27,8 @@ public class PerfilDto
     public string Telefono { get; set; }
 
     public string AvatarUrl { get; set; }
+
+    public string RolNombre { get; set; } = string.Empty;
+
+    public string SucursalNombre { get; set; } = string.Empty;
 }

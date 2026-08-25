@@ -1,4 +1,4 @@
-import { User, Mail } from "lucide-react";
+import { User, Mail, ShieldCheck, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,11 @@ export function PerfilUsuarioSection({ form, updateField, onSave, saving, errors
         )}
 
         <AppInput label="Email" value={form.email} disabled icon={Mail} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <AppInput label="Rol" value={form.rolNombre || "Sin asignar"} disabled icon={ShieldCheck} />
+          <AppInput label="Sucursal" value={form.sucursalNombre || "Sin asignar"} disabled icon={MapPin} />
+        </div>
 
         <Button
           onClick={onSave}

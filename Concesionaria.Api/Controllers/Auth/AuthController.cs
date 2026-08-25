@@ -141,6 +141,7 @@ public class AuthController : ControllerBase
         var administrador = await _roleManager.FindByNameAsync("ADMINISTRADOR");
         if (administrador is not null)
         {
+            user.AsignarRol(administrador.Id);
             await _userManager.AddToRoleAsync(user, administrador.Name!);
         }
 

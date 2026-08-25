@@ -77,7 +77,11 @@ export function PerfilForm() {
 
     telefono: "",
 
-    avatar: "",
+        avatar: "",
+
+        rolNombre: "",
+
+        sucursalNombre: "",
 
     passwordActual: "",
 
@@ -128,6 +132,10 @@ export function PerfilForm() {
         telefono,
 
         avatar: normalizeAvatarUrl(perfil.avatarUrl),
+
+        rolNombre: perfil.rolNombre || "",
+
+        sucursalNombre: perfil.sucursalNombre || "",
       }));
     }
   }, [perfil]);

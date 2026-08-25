@@ -12,12 +12,18 @@ public class GetPerfilQueryHandler
     private readonly UserManager<ApplicationUser> _userManager;
 
     private readonly ICurrentUserService _currentUserService;
+    private readonly IApplicationDbContext _context;
+    private readonly RoleManager<IdentityRole> _roleManager;
     public GetPerfilQueryHandler(
         UserManager<ApplicationUser> userManager,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IApplicationDbContext context,
+        RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _currentUserService = currentUserService;
+        _context = context;
+        _roleManager = roleManager;
     }
 
     public async Task<PerfilDto> Handle(
@@ -52,6 +58,28 @@ public class GetPerfilQueryHandler
         if (usuario == null)
             throw new Exception("Usuario no encontrado");
 
+        var usuarioSistema = await _context.Usuarios
+            .Include(x => x.Sucursal)
+            .FirstOrDefaultAsync(x => x.Email == usuario.Email, cancellationToken);
+
+        var rol = !string.IsNullOrWhiteSpace(usuario.RolId)
+            ? await _roleManager.FindByIdAsync(usuario.RolId)
+            : null;
+
+        var rolNombre = rol?.Name;
+        if (string.IsNullOrWhiteSpace(rolNombre))
+        {
+            var roles = await _userManager.GetRolesAsync(usuario);
+            rolNombre = roles.FirstOrDefault() ?? string.Empty;
+        }
+
+        var sucursalNombre = string.Equals(
+            rolNombre,
+            "ADMINISTRADOR",
+            StringComparison.OrdinalIgnoreCase)
+            ? "TODAS LAS SUCURSALES"
+            : usuarioSistema?.Sucursal?.Nombre ?? "Sin asignar";
+
 
 
         return new PerfilDto
@@ -79,6 +107,8 @@ public class GetPerfilQueryHandler
             Telefono = usuario.Telefono,
 
             AvatarUrl = usuario.AvatarUrl
+                ,RolNombre = rolNombre
+                ,SucursalNombre = sucursalNombre
         };
     }
 }
