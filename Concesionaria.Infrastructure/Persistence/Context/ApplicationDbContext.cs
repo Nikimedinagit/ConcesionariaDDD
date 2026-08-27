@@ -33,6 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<MarcaVehiculo> MarcasVehiculos => Set<MarcaVehiculo>();
     public DbSet<TipoVehiculo> TiposVehiculos => Set<TipoVehiculo>();
     public DbSet<ModeloVehiculo> ModelosVehiculos => Set<ModeloVehiculo>();
+    public DbSet<Vehiculo> Vehiculos => Set<Vehiculo>();
     public DbSet<Proveedor> Proveedores => Set<Proveedor>();
     public DbSet<Cliente> Clientes => Set<Cliente>();
 
@@ -143,6 +144,26 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         .WithMany()
         .HasForeignKey(m => m.LocalidadId)
         .OnDelete(DeleteBehavior.NoAction);
+
+         builder.Entity<Vehiculo>(entity =>
+        {
+            
+        entity.HasOne(m => m.Empresa)
+        .WithMany()
+        .HasForeignKey(m => m.EmpresaId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        entity.HasOne(m => m.Modelo)
+        .WithMany()
+        .HasForeignKey(m => m.ModeloId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        entity.HasOne(m => m.Sucursal)
+        .WithMany()
+        .HasForeignKey(m => m.SucursalId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        });
 
         ApplyGlobalFilters(builder);
     }

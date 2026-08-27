@@ -11,3 +11,18 @@ public enum NombreEntidadVehiculoEstado
     Activo,
     Desactivado
 }
+
+public enum CondicionVehiculo
+{
+    Nuevo,
+    Usado,
+    Consignacion
+}
+
+public enum EstadoVehiculo
+{
+    Disponible,
+    Vendido,
+    Reservado,
+    En_Reparacion
+}
