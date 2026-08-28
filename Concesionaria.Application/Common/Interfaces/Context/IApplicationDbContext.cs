@@ -20,6 +20,7 @@ public interface IApplicationDbContext
     DbSet<MarcaVehiculo> MarcasVehiculos { get; }
     DbSet<TipoVehiculo> TiposVehiculos { get; }
     DbSet<ModeloVehiculo> ModelosVehiculos { get; }
+    DbSet<Vehiculo> Vehiculos { get; }
     DbSet<Proveedor> Proveedores { get; }
     DbSet<Cliente> Clientes { get; }
 

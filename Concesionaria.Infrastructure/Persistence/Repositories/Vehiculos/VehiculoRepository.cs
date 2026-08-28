@@ -29,7 +29,9 @@ public class VehiculoRepository : IVehiculoRepository
     public async Task<List<Vehiculo>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
         var obtenerVehiculosActivos = _context
-            .Vehiculos.Where(v => v.EmpresaId == empresaId && v.Estado != EstadoVehiculo.Vendido)
+            .Vehiculos
+            .IgnoreQueryFilters()
+            .Where(v => v.EmpresaId == empresaId && v.Estado != EstadoVehiculo.Vendido)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
