@@ -47,6 +47,25 @@ public class VehiculoRepository : IVehiculoRepository
         return await obtenerVehiculosActivos.ToListAsync();
     }
 
+       // METODO PARA OBTENER VENDIDOS SEGUN FILTRO
+    public async Task<List<Vehiculo>> ObtenerVendidosAsync(Guid empresaId, string filtro = null)
+    {
+        var obtenerVehiculosVendidos = _context
+            .Vehiculos
+            .IgnoreQueryFilters()
+            .Where(v => v.EmpresaId == empresaId && v.Estado == EstadoVehiculo.Vendido)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filtro))
+        {
+            obtenerVehiculosVendidos = obtenerVehiculosVendidos.Where(v =>
+                v.Version.Contains(filtro)
+            );
+        }
+
+        return await obtenerVehiculosVendidos.ToListAsync();
+    }
+
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
     public async Task<bool> ExistePorPatenteAsync(string patente, Guid empresaId)
     {

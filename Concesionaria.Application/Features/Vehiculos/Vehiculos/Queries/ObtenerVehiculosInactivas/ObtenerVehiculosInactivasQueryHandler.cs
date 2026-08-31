@@ -1,30 +1,31 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Interfaces.IRepositories;
 using MediatR;
 
-namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosActivas;
+namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosInactivas;
 
-public class ObtenerVehiculosActivasQueryHandler
-    : IRequestHandler<ObtenerVehiculosActivasQuery, List<VehiculoDto>>
+public class ObtenerVehiculosInactivasQueryHandler
+    : IRequestHandler<ObtenerVehiculosInactivasQuery, List<VehiculoDto>>
 {
     private readonly IVehiculoRepository _repository;
     private readonly ICurrentUserService _currentUserService;
 
-
-    public ObtenerVehiculosActivasQueryHandler(IVehiculoRepository repository, ICurrentUserService currentUserService)
+    public ObtenerVehiculosInactivasQueryHandler(
+        IVehiculoRepository repository,
+        ICurrentUserService currentUserService
+    )
     {
         _repository = repository;
         _currentUserService = currentUserService;
     }
 
     public async Task<List<VehiculoDto>> Handle(
-    ObtenerVehiculosActivasQuery request,
-    CancellationToken cancellationToken)
+        ObtenerVehiculosInactivasQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var empresaId = _currentUserService.EmpresaId;
-
-        var vehiculos = await _repository.ObtenerActivasAsync(
-            empresaId,
-            request.Filtro);
+        var vehiculos = await _repository.ObtenerVendidosAsync(empresaId, request.Filtro);
 
         return vehiculos
             .OrderBy(v => v.Anio)
@@ -41,7 +42,7 @@ public class ObtenerVehiculosActivasQueryHandler
                 PrecioCompra = v.PrecioCompra,
                 PrecioVenta = v.PrecioVenta,
                 ModeloId = v.ModeloId,
-                SucursalId = v.SucursalId
+                SucursalId = v.SucursalId,
             })
             .ToList();
     }
