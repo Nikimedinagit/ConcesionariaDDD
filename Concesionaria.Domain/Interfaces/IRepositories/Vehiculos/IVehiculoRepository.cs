@@ -21,4 +21,7 @@ public interface IVehiculoRepository
         Guid empresaId,
         Guid vehiculoId
     );
+
+    //TAREA PARA OBTENER POR MODELO ID
+    Task<bool> ObtenerPorModeloIdAsync(Guid modeloId, Guid empresaId);
 }

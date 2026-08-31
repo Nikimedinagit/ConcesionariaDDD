@@ -1,3 +1,4 @@
+using Application.Features.Vehiculos.Commands.AgregarVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosInactivas;
 using MediatR;
@@ -39,5 +40,16 @@ public class VehiculosController : ControllerBase
         );
 
         return Ok(resultadoVehiculosInactivas);
+    }
+
+    //METODO AGREGAR VEHICULO
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarVehiculoCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Vehículo agregado correctamente.", vehiculoId = id }
+        );
     }
 }

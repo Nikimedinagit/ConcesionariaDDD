@@ -14,14 +14,14 @@ public enum NombreEntidadVehiculoEstado
 
 public enum CondicionVehiculo
 {
-    Nuevo,
+    Nuevo = 1,
     Usado,
     Consignacion
 }
 
 public enum EstadoVehiculo
 {
-    Disponible,
+    Disponible = 1,
     Vendido,
     Reservado,
     En_Reparacion

@@ -99,4 +99,15 @@ public class VehiculoRepository : IVehiculoRepository
             return false;
         return entidad.Value ? false : true;
     }
+
+    // METODO PARA OBTENER POR MODELO ID
+    public async Task<bool> ObtenerPorModeloIdAsync(Guid modeloId, Guid empresaId)
+    {
+        var vehiculo = await _context
+            .Vehiculos
+            .IgnoreQueryFilters()
+            .AnyAsync(v => v.ModeloId == modeloId && v.EmpresaId == empresaId);
+
+        return vehiculo;
+    }
 }
