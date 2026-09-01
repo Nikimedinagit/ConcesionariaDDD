@@ -1,3 +1,4 @@
+using Application.Features.Vehiculos.Commands.ActualizarVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosActivas;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosInactivas;
@@ -51,5 +52,21 @@ public class VehiculosController : ControllerBase
         return Ok(
             new { mensaje = "Vehículo agregado correctamente.", vehiculoId = id }
         );
+    }
+
+      // METODO ACTUALIZAR
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarVehiculoCommand command
+    )
+    {
+        if (id != command.VehiculoId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Vehículo actualizado correctamente." });
     }
 }

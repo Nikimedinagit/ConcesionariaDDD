@@ -3,7 +3,7 @@ using Concesionaria.Domain.Common;
 using Concesionaria.Domain.Common.Interfaces;
 using Concesionaria.Domain.Empresas;
 
-public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IAuditable
+public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IAuditable, ISoftDelete
 {
     public string Version { get; private set; }
     public string Patente { get; private set; }
@@ -18,6 +18,7 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IAuditable
 
     [Column(TypeName = "decimal(18,2)")]
     public decimal PrecioVenta { get; private set; }
+    public bool Eliminado { get; set; }
 
     public Guid EmpresaId { get; private set; }
     public Empresa Empresa { get; private set; }
@@ -51,6 +52,7 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IAuditable
         ModeloId = modeloId;
         SucursalId = sucursalId;
         EmpresaId = empresaId;
+        Eliminado = false;
     }
 
     public static Vehiculo Crear(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, EstadoVehiculo estado, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId, Guid empresaId)

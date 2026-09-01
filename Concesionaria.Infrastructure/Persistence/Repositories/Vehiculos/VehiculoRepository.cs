@@ -29,8 +29,7 @@ public class VehiculoRepository : IVehiculoRepository
     public async Task<List<Vehiculo>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
     {
         var obtenerVehiculosActivos = _context
-            .Vehiculos
-            .IgnoreQueryFilters()
+            .Vehiculos.IgnoreQueryFilters()
             .Where(v => v.EmpresaId == empresaId && v.Estado != EstadoVehiculo.Vendido)
             .AsQueryable();
 
@@ -47,12 +46,11 @@ public class VehiculoRepository : IVehiculoRepository
         return await obtenerVehiculosActivos.ToListAsync();
     }
 
-       // METODO PARA OBTENER VENDIDOS SEGUN FILTRO
+    // METODO PARA OBTENER VENDIDOS SEGUN FILTRO
     public async Task<List<Vehiculo>> ObtenerVendidosAsync(Guid empresaId, string filtro = null)
     {
         var obtenerVehiculosVendidos = _context
-            .Vehiculos
-            .IgnoreQueryFilters()
+            .Vehiculos.IgnoreQueryFilters()
             .Where(v => v.EmpresaId == empresaId && v.Estado == EstadoVehiculo.Vendido)
             .AsQueryable();
 
@@ -69,16 +67,14 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
     public async Task<bool> ExistePorPatenteAsync(string patente, Guid empresaId)
     {
-        var normalized = patente.Trim();
+        var normalized = patente.ToUpper().Trim();
 
-        bool? entidad = await _context
+        bool entidad = await _context
             .Vehiculos.IgnoreQueryFilters()
             .Where(m => m.EmpresaId == empresaId && m.Patente == normalized)
             .AnyAsync();
 
-        if (entidad == null)
-            return false;
-        return entidad.Value ? false : true;
+        return entidad;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
@@ -88,26 +84,24 @@ public class VehiculoRepository : IVehiculoRepository
         Guid vehiculoId
     )
     {
-        var normalized = patente.Trim();
+        var normalized = patente.ToUpper().Trim();
 
-        bool? entidad = await _context
+        bool entidad = await _context
             .Vehiculos.IgnoreQueryFilters()
             .Where(m => m.EmpresaId == empresaId && m.Patente == normalized && m.Id != vehiculoId)
             .AnyAsync();
 
-        if (entidad == null)
-            return false;
-        return entidad.Value ? false : true;
+        return entidad;
     }
 
     // METODO PARA OBTENER POR MODELO ID
     public async Task<bool> ObtenerPorModeloIdAsync(Guid modeloId, Guid empresaId)
     {
-        var vehiculo = await _context
-            .Vehiculos
-            .IgnoreQueryFilters()
+        // AnyAsync devuelve true si existe al menos un registro
+        bool existe = await _context
+            .Vehiculos.IgnoreQueryFilters()
             .AnyAsync(v => v.ModeloId == modeloId && v.EmpresaId == empresaId);
 
-        return vehiculo;
+        return existe; // devolvés directamente el resultado
     }
 }

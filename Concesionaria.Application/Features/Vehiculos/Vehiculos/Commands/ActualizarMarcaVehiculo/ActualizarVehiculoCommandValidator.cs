@@ -1,12 +1,12 @@
-namespace Application.Features.Vehiculos.Commands.AgregarVehiculo;
+namespace Application.Features.Vehiculos.Commands.ActualizarVehiculo;
 
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
-public class AgregarVehiculoCommandValidator : AbstractValidator<AgregarVehiculoCommand>
+public class ActualizarVehiculoCommandValidator : AbstractValidator<ActualizarVehiculoCommand>
 {
-    public AgregarVehiculoCommandValidator(
+    public ActualizarVehiculoCommandValidator(
         IVehiculoRepository repository,
         ICurrentUserService currentUser
     )
@@ -36,15 +36,16 @@ public class AgregarVehiculoCommandValidator : AbstractValidator<AgregarVehiculo
                 "La patente ingresada no tiene un formato válido (ejemplo: ABC123 o AB123CD)."
             )
             .MustAsync(
-                async (patente, cancellationToken) =>
+                async (Vehiculo, patente, cancellationToken) =>
                 {
                     var empresaId = currentUser.EmpresaId;
 
-                    var vehiculoExistente = await repository.ExistePorPatenteAsync(
+                    var vehiculoExistente = await repository.ExistePorPatenteExluyendoIdAsync(
                         patente,
-                        empresaId
+                        empresaId,
+                        Vehiculo.VehiculoId                    
                     );
-                    return vehiculoExistente;
+                    return !vehiculoExistente;
                 }
             )
             .WithMessage("La patente del vehículo ya está en uso.");
