@@ -25,16 +25,35 @@ public class ActualizarVehiculoCommandHandler
     )
     {
         var empresaId = _currentUser.EmpresaId;
+        var sucursalId = _currentUser.SucursalId;
 
-        var obtenerVehiculoId = await _context.Vehiculos.FirstOrDefaultAsync(
-            m => m.Id == request.VehiculoId && m.EmpresaId == empresaId && m.Estado != EstadoVehiculo.Vendido,
+        if (sucursalId == Guid.Empty)
+            throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
+
+        var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(
+            vehiculo =>
+                vehiculo.Id == request.VehiculoId &&
+                vehiculo.EmpresaId == empresaId &&
+                vehiculo.SucursalId == sucursalId &&
+                vehiculo.Estado != EstadoVehiculo.Vendido,
             cancellationToken
         );
 
-        if (obtenerVehiculoId == null)
-            throw new Exception("Vehículo no encontrada.");
+        if (vehiculo == null)
+            throw new Exception("Vehículo no encontrado.");
 
-        obtenerVehiculoId.ActualizarVehiculo(request.Version, request.Patente, request.Color, request.Anio, request.Kilometraje, request.Condicion, request.Estado, request.PrecioCompra, request.PrecioVenta, request.ModeloId, request.SucursalId);
+        vehiculo.ActualizarVehiculo(
+            request.Version,
+            request.Patente,
+            request.Color,
+            request.Anio,
+            request.Kilometraje,
+            request.Condicion,
+            request.Estado,
+            request.PrecioCompra,
+            request.PrecioVenta,
+            request.ModeloId,
+            sucursalId);
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

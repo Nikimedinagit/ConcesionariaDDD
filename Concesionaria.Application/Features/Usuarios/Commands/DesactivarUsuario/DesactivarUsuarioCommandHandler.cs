@@ -44,7 +44,9 @@ public class DesactivarUsuarioCommandHandler
         if (identityUser == null)
             throw new Exception("Usuario de acceso no encontrado.");
 
+        identityUser.InvalidarSesion();
         identityUser.LockoutEnd = DateTimeOffset.MaxValue;
+        
         var identityResult = await _userManager.UpdateAsync(identityUser);
 
         if (!identityResult.Succeeded)

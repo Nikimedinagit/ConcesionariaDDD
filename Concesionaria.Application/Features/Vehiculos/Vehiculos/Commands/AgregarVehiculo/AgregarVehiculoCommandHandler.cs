@@ -25,9 +25,34 @@ public class AgregarVehiculoCommandHandler
     {
         var empresaId = _currentUser.EmpresaId;
 
-        var vehiculo = Vehiculo.Crear(request.Version, request.Patente, request.Color, request.Anio, request.Kilometraje, request.Condicion, request.Estado, request.PrecioCompra, request.PrecioVenta, request.ModeloId, request.SucursalId, empresaId);
+        var sucursalId = _currentUser.SucursalId;
 
-        await _context.Vehiculos.AddAsync(vehiculo, cancellationToken);
+        if (sucursalId == Guid.Empty)
+        {
+            throw new UnauthorizedAccessException(
+                "El usuario autenticado no tiene una sucursal asignada."
+            );
+        }
+
+        var vehiculo = Vehiculo.Crear(
+            request.Version,
+            request.Patente,
+            request.Color,
+            request.Anio,
+            request.Kilometraje,
+            request.Condicion,
+            request.Estado,
+            request.PrecioCompra,
+            request.PrecioVenta,
+            request.ModeloId,
+            sucursalId,
+            empresaId);
+
+        await _context.Vehiculos.AddAsync(
+            vehiculo,
+            cancellationToken
+        );
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return vehiculo.Id;

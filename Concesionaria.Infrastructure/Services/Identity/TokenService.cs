@@ -6,23 +6,28 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Concesionaria.Application.Common.Authorization;
+using Concesionaria.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 public class TokenService : ITokenService
 {
     private readonly SymmetricSecurityKey _key;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApplicationDbContext _dbContext;
 
     public TokenService(
         IConfiguration config,
         RoleManager<IdentityRole> roleManager,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        ApplicationDbContext dbContext)
     {
         _key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(config["TokenKey"]!)
         );
         _roleManager = roleManager;
         _userManager = userManager;
+        _dbContext = dbContext;
     }
 
     public async Task<string> CreateToken(ApplicationUser user)
@@ -47,11 +52,31 @@ public class TokenService : ITokenService
             new Claim("email", user.Email!),
             new Claim("nombre", user.NombreCompleto),
             new Claim("avatarUrl", user.AvatarUrl ?? ""),
-            new Claim("EmpresaId", user.EmpresaId.ToString()),
+            new Claim("empresaId", user.EmpresaId.ToString()),
+            new Claim("sessionVersion", user.SessionVersion.ToString()),
             new Claim("role", roleName),
             new Claim(ClaimTypes.Role, roleName)
-
         };
+
+        if (user.SucursalId.HasValue)
+        {
+            var sucursalNombre = await _dbContext.Sucursales
+                .IgnoreQueryFilters()
+                .Where(sucursal =>
+                    sucursal.Id == user.SucursalId.Value &&
+                    sucursal.EmpresaId == user.EmpresaId &&
+                    !sucursal.Eliminado)
+                .Select(sucursal => sucursal.Nombre)
+                .FirstOrDefaultAsync();
+
+            claims.Add(
+                new Claim("sucursalId", user.SucursalId.Value.ToString())
+            );
+
+            claims.Add(
+                new Claim("sucursalNombre", sucursalNombre ?? string.Empty)
+            );
+        }
 
         var roleClaims = await _roleManager.GetClaimsAsync(
             await _roleManager.FindByNameAsync(roleName) ?? new IdentityRole());

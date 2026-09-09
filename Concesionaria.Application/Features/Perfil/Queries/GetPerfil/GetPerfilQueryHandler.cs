@@ -73,12 +73,7 @@ public class GetPerfilQueryHandler
             rolNombre = roles.FirstOrDefault() ?? string.Empty;
         }
 
-        var sucursalNombre = string.Equals(
-            rolNombre,
-            "ADMINISTRADOR",
-            StringComparison.OrdinalIgnoreCase)
-            ? "TODAS LAS SUCURSALES"
-            : usuarioSistema?.Sucursal?.Nombre ?? "Sin asignar";
+        var sucursalNombre = usuarioSistema?.Sucursal?.Nombre ?? "Sin asignar";
 
 
 

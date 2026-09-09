@@ -32,6 +32,10 @@ export const AuthProvider = ({ children }) => {
           avatarURL,
           roles,
           role: roles[0] || "",
+          empresaId: decoded.empresaId || "",
+          sucursalId: decoded.sucursalId || "",
+          sucursalNombre: decoded.sucursalNombre || "Sin sucursal asignada",
+          sessionVersion: decoded.sessionVersion || "",
         });
       } catch {
         setUser(null);

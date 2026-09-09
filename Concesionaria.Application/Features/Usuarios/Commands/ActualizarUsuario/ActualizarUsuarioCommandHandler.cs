@@ -51,8 +51,16 @@ public class ActualizarUsuarioCommandHandler : IRequestHandler<ActualizarUsuario
         if (role?.Name == null)
             throw new Exception("El rol no es válido.");
 
+        var cambioDeAcceso = identityUser.RolId != request.RolId || identityUser.SucursalId != request.SucursalId;
+
         identityUser.ActualizarNombre(request.NombreCompleto);
         identityUser.AsignarRol(request.RolId);
+        identityUser.AsignarSucursal(request.SucursalId);
+        
+        if (cambioDeAcceso)
+        {
+            identityUser.InvalidarSesion();
+        }
 
         var updateResult = await _userManager.UpdateAsync(identityUser);
 

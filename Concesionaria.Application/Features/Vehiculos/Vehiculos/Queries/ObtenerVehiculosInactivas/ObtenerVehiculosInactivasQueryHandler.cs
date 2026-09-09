@@ -25,7 +25,15 @@ public class ObtenerVehiculosInactivasQueryHandler
     )
     {
         var empresaId = _currentUserService.EmpresaId;
-        var vehiculos = await _repository.ObtenerVendidosAsync(empresaId, request.Filtro);
+        var sucursalId = _currentUserService.SucursalId;
+
+        if (sucursalId == Guid.Empty)
+            throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
+
+        var vehiculos = await _repository.ObtenerVendidosAsync(
+            empresaId,
+            sucursalId,
+            request.Filtro);
 
         return vehiculos
             .OrderBy(v => v.Anio)

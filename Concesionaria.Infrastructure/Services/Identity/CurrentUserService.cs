@@ -25,21 +25,57 @@ public class CurrentUserService : ICurrentUserService
             .FindFirstValue("nameid")
             ?? string.Empty;
 
-   public Guid EmpresaId
-{
-    get
+    public Guid EmpresaId
     {
-        var empresaId = _httpContextAccessor
-            .HttpContext?
-            .User?
-            .FindFirst("EmpresaId")?
-            .Value;
+        get
+        {
+            var empresaId = _httpContextAccessor
+                .HttpContext?
+                .User?
+                .FindFirstValue("empresaId")
+                ?? _httpContextAccessor
+                    .HttpContext?
+                    .User?
+                    .FindFirstValue("EmpresaId");
 
-        Console.WriteLine("EMPRESA ID: " + empresaId);
-
-        return empresaId != null
-            ? Guid.Parse(empresaId)
-            : Guid.Empty;
+            return Guid.TryParse(empresaId, out var parsedEmpresaId)
+                ? parsedEmpresaId
+                : Guid.Empty;
+        }
     }
-}
+
+    public Guid SucursalId
+    {
+        get
+        {
+            var sucursalId = _httpContextAccessor
+                .HttpContext?
+                .User?
+                .FindFirstValue("sucursalId");
+
+            return Guid.TryParse(sucursalId, out var parsedSucursalId)
+                ? parsedSucursalId
+                : Guid.Empty;
+        }
+    }
+
+    public int SessionVersion
+    {
+        get
+        {
+            var sessionVersion = _httpContextAccessor
+                .HttpContext?
+                .User?
+                .FindFirstValue("sessionVersion");
+
+            return int.TryParse(sessionVersion, out var parsedSessionVersion)
+                ? parsedSessionVersion
+                : 0;
+        }
+    }
+
+    public bool EsAdministrador => _httpContextAccessor
+        .HttpContext?
+        .User?
+        .IsInRole("ADMINISTRADOR") == true;
 }

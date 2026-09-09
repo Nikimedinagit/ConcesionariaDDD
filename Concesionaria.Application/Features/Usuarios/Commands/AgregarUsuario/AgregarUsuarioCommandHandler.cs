@@ -52,7 +52,10 @@ public class AgregarUsuarioCommandHandler : IRequestHandler<AgregarUsuarioComman
             LockoutEnabled = true,
             LockoutEnd = null,
         };
+
         identityUser.AsignarRol(request.RolId);
+        identityUser.AsignarSucursal(request.SucursalId);
+
 
         var identityResult = await _userManager.CreateAsync(identityUser, request.Password);
 

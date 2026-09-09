@@ -26,42 +26,53 @@ public class VehiculoRepository : IVehiculoRepository
     }
 
     // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
-    public async Task<List<Vehiculo>> ObtenerActivasAsync(Guid empresaId, string filtro = null)
+    public async Task<List<Vehiculo>> ObtenerActivasAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null)
     {
-        var obtenerVehiculosActivos = _context
+        var vehiculosActivosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
-            .Where(v => v.EmpresaId == empresaId && v.Estado != EstadoVehiculo.Vendido)
+            .Where(vehiculo =>
+                vehiculo.EmpresaId == empresaId &&
+                vehiculo.SucursalId == sucursalId &&
+                !vehiculo.Eliminado &&
+                vehiculo.Estado != EstadoVehiculo.Vendido)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerVehiculosActivos = obtenerVehiculosActivos.Where(v =>
-                v.Version.Contains(filtro)
+            vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
+                vehiculo.Version.Contains(filtro)
             );
         }
 
-        // if (sucursalId.HasValue)
-        //     obtenerVehiculosActivos = obtenerVehiculosActivos.Where(v => v.SucursalId == sucursalId.Value);
-
-        return await obtenerVehiculosActivos.ToListAsync();
+        return await vehiculosActivosQuery.ToListAsync();
     }
 
     // METODO PARA OBTENER VENDIDOS SEGUN FILTRO
-    public async Task<List<Vehiculo>> ObtenerVendidosAsync(Guid empresaId, string filtro = null)
+    public async Task<List<Vehiculo>> ObtenerVendidosAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null)
     {
-        var obtenerVehiculosVendidos = _context
+        var vehiculosVendidosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
-            .Where(v => v.EmpresaId == empresaId && v.Estado == EstadoVehiculo.Vendido)
+            .Where(vehiculo =>
+                vehiculo.EmpresaId == empresaId &&
+                vehiculo.SucursalId == sucursalId &&
+                !vehiculo.Eliminado &&
+                vehiculo.Estado == EstadoVehiculo.Vendido)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
-            obtenerVehiculosVendidos = obtenerVehiculosVendidos.Where(v =>
-                v.Version.Contains(filtro)
+            vehiculosVendidosQuery = vehiculosVendidosQuery.Where(vehiculo =>
+                vehiculo.Version.Contains(filtro)
             );
         }
 
-        return await obtenerVehiculosVendidos.ToListAsync();
+        return await vehiculosVendidosQuery.ToListAsync();
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR

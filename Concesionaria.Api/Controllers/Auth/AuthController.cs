@@ -179,7 +179,44 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Email o contraseña incorrectos." });
         }
 
+        if (!user.SucursalId.HasValue)
+        {
+            return Unauthorized(new
+            {
+                message = "El usuario no tiene una sucursal asignada."
+            });
+        }
+
+        var empresaActiva = await _context.Empresas.AnyAsync(empresa =>
+            empresa.Id == user.EmpresaId &&
+            empresa.Activa &&
+            !empresa.Eliminado);
+
+        if (!empresaActiva)
+        {
+            return Unauthorized(new
+            {
+                message = "La empresa del usuario no está disponible."
+            });
+        }
+
+        var sucursalValida = await _context.Sucursales
+            .IgnoreQueryFilters()
+            .AnyAsync(sucursal =>
+                sucursal.Id == user.SucursalId.Value &&
+                sucursal.EmpresaId == user.EmpresaId &&
+                !sucursal.Eliminado);
+
+        if (!sucursalValida)
+        {
+            return Unauthorized(new
+            {
+                message = "La sucursal asignada al usuario no está disponible."
+            });
+        }
+
         var usuario = await _context.Usuarios
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u =>
                 u.Email == user.Email &&
                 u.EmpresaId == user.EmpresaId);

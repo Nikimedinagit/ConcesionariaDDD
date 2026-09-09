@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common;
 using Concesionaria.Domain.Common.Interfaces;
 using Concesionaria.Domain.Cuentas;
 using Concesionaria.Domain.Empresas;
@@ -14,6 +15,9 @@ namespace Concesionaria.Infrastructure.Persistence;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
     private readonly ICurrentUserService _currentUser;
+
+    private Guid CurrentEmpresaId => _currentUser.EmpresaId;
+    private Guid CurrentSucursalId => _currentUser.SucursalId;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
@@ -54,6 +58,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             .WithMany()
             .HasForeignKey(u => u.EmpresaId)
             .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<ApplicationUser>()
+            .HasOne<Sucursal>()
+            .WithMany()
+            .HasForeignKey(u => u.SucursalId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<Cuenta>(entity =>
@@ -172,27 +182,72 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     {
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
-            if (typeof(IHasEmpresa).IsAssignableFrom(entityType.ClrType))
-            {
-                var method = typeof(ApplicationDbContext)
-                    .GetMethod(nameof(SetGlobalFilter),
-                        System.Reflection.BindingFlags.NonPublic |
-                        System.Reflection.BindingFlags.Static)!
-                    .MakeGenericMethod(entityType.ClrType);
+            if (!typeof(IHasEmpresa).IsAssignableFrom(entityType.ClrType))
+                continue;
 
-                method.Invoke(null, new object[] { builder, _currentUser });
-            }
+            var hasSucursal = typeof(IHasSucursal).IsAssignableFrom(entityType.ClrType);
+            var hasSoftDelete = typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType);
+
+            var filterMethodName = (hasSucursal, hasSoftDelete) switch
+            {
+                (true, true) => nameof(SetEmpresaSucursalSoftDeleteFilter),
+                (true, false) => nameof(SetEmpresaSucursalFilter),
+                (false, true) => nameof(SetEmpresaSoftDeleteFilter),
+                _ => nameof(SetEmpresaFilter)
+            };
+
+            var filterMethod = typeof(ApplicationDbContext)
+                .GetMethod(
+                    filterMethodName,
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Static)!
+                .MakeGenericMethod(entityType.ClrType);
+
+            filterMethod.Invoke(null, new object[] { builder, this });
         }
     }
 
-    private static void SetGlobalFilter<TEntity>(
+    private static void SetEmpresaFilter<TEntity>(
         ModelBuilder builder,
-        ICurrentUserService currentUser)
+        ApplicationDbContext context)
         where TEntity : class, IHasEmpresa
     {
         builder.Entity<TEntity>()
-            .HasQueryFilter(x =>
-                !EF.Property<bool>(x, "Eliminado"));
+            .HasQueryFilter(entity => entity.EmpresaId == context.CurrentEmpresaId);
+    }
+
+    private static void SetEmpresaSoftDeleteFilter<TEntity>(
+        ModelBuilder builder,
+        ApplicationDbContext context)
+        where TEntity : class, IHasEmpresa, ISoftDelete
+    {
+        builder.Entity<TEntity>()
+            .HasQueryFilter(entity =>
+                entity.EmpresaId == context.CurrentEmpresaId &&
+                !entity.Eliminado);
+    }
+
+    private static void SetEmpresaSucursalFilter<TEntity>(
+        ModelBuilder builder,
+        ApplicationDbContext context)
+        where TEntity : class, IHasEmpresa, IHasSucursal
+    {
+        builder.Entity<TEntity>()
+            .HasQueryFilter(entity =>
+                entity.EmpresaId == context.CurrentEmpresaId &&
+                entity.SucursalId == context.CurrentSucursalId);
+    }
+
+    private static void SetEmpresaSucursalSoftDeleteFilter<TEntity>(
+        ModelBuilder builder,
+        ApplicationDbContext context)
+        where TEntity : class, IHasEmpresa, IHasSucursal, ISoftDelete
+    {
+        builder.Entity<TEntity>()
+            .HasQueryFilter(entity =>
+                entity.EmpresaId == context.CurrentEmpresaId &&
+                entity.SucursalId == context.CurrentSucursalId &&
+                !entity.Eliminado);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

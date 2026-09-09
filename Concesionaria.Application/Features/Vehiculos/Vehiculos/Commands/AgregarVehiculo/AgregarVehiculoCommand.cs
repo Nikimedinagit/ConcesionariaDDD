@@ -14,5 +14,4 @@ public record AgregarVehiculoCommand : IRequest<Guid>
     public decimal PrecioCompra { get; set; }
     public decimal PrecioVenta { get; set; }
     public Guid ModeloId { get; set; }
-    public Guid SucursalId { get; set; }
 }

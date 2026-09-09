@@ -1,9 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Concesionaria.Api.Middleware;
 using Concesionaria.Application;
-using Concesionaria.Application.Perfil.Commands.ActualizarEmpresa;
 using Concesionaria.Infrastructure;
-using Concesionaria.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -86,13 +84,17 @@ app.UseHttpsRedirection();
 
 app.UseCors("FrontendCors");
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseRouting();
+
 app.UseAuthentication();
+
+app.UseMiddleware<SessionValidationMiddleware>();
 
 app.UseAuthorization();
 
 app.UseMiddleware<PermissionMiddleware>();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

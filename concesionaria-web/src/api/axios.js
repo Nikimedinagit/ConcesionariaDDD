@@ -8,7 +8,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-
   const token = localStorage.getItem("token");
 
   if (token) {
@@ -17,5 +16,30 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    const responseCode = error.response?.data?.code;
+    const requestUrl = error.config?.url || "";
+    const isLoginRequest = requestUrl.includes("/auth/login");
+    const hasToken = Boolean(localStorage.getItem("token"));
+
+    const sessionIsInvalid =
+      responseCode === "SESSION_INVALIDATED" ||
+      (status === 401 && hasToken && !isLoginRequest);
+
+    if (sessionIsInvalid) {
+      localStorage.removeItem("token");
+
+      if (window.location.pathname !== "/") {
+        window.location.replace("/?reason=session-invalidated");
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default api;

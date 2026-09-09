@@ -15,5 +15,4 @@ public record ActualizarVehiculoCommand : IRequest<Unit>
     public decimal PrecioCompra { get; set; }
     public decimal PrecioVenta { get; set; }
     public Guid ModeloId { get; set; }
-    public Guid SucursalId { get; set; }
 }

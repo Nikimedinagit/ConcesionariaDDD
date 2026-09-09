@@ -3,7 +3,7 @@ using Concesionaria.Domain.Common;
 using Concesionaria.Domain.Common.Interfaces;
 using Concesionaria.Domain.Empresas;
 
-public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IAuditable, ISoftDelete
+public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable, ISoftDelete
 {
     public string Version { get; private set; }
     public string Patente { get; private set; }

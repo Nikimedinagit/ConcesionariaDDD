@@ -61,6 +61,12 @@ export function UserDropdown() {
           <p className="text-sm font-medium text-white/60 truncate">
             {user.email}
           </p>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-white/70">
+            {user.role || "Sin rol asignado"}
+          </p>
+          <p className="mt-1 text-xs text-white/60">
+            {user.sucursalNombre}
+          </p>
         </div>
 
         <DropdownMenuSeparator className="bg-white/10 my-1" />

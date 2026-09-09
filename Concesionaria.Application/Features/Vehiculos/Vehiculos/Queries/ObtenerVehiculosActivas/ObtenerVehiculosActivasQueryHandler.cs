@@ -21,9 +21,14 @@ public class ObtenerVehiculosActivasQueryHandler
     CancellationToken cancellationToken)
     {
         var empresaId = _currentUserService.EmpresaId;
+        var sucursalId = _currentUserService.SucursalId;
+
+        if (sucursalId == Guid.Empty)
+            throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
 
         var vehiculos = await _repository.ObtenerActivasAsync(
             empresaId,
+            sucursalId,
             request.Filtro);
 
         return vehiculos

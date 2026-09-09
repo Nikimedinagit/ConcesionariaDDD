@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { ArrowRight, LockKeyhole, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AppInput } from "@/components/ui/custom/AppInput"
@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext"
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { updateUserData } = useAuth() 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -17,6 +18,8 @@ export function LoginForm() {
   const emailError = email.length > 0 && (!email.includes("@") || !email.includes("."));
   const passwordError = password.length > 0 && password.length < 6;
   const loginValid = email.length > 0 && password.length >= 6 && !emailError && !passwordError;
+  const sessionInvalidated =
+    new URLSearchParams(location.search).get("reason") === "session-invalidated";
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -71,6 +74,12 @@ export function LoginForm() {
       {error ? (
         <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
+        </div>
+      ) : null}
+
+      {sessionInvalidated && !error ? (
+        <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          Tu rol, sucursal o acceso fue modificado. Iniciá sesión nuevamente.
         </div>
       ) : null}
 

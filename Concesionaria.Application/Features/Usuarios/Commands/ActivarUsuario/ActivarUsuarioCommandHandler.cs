@@ -45,6 +45,7 @@ public class ActivarUsuarioCommandHandler : IRequestHandler<ActivarUsuarioComman
         if (identityUser == null)
             throw new Exception("Usuario de acceso no encontrado.");
 
+        identityUser.InvalidarSesion();
         identityUser.LockoutEnd = null;
         var identityResult = await _userManager.UpdateAsync(identityUser);
 

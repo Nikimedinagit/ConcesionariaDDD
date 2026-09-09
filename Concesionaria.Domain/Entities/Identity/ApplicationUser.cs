@@ -12,7 +12,8 @@ public class ApplicationUser : IdentityUser
     public string Telefono { get; private set; }
     public string RolId { get; private set; }
     public string AvatarUrl { get; private set; }
-
+    public Guid? SucursalId { get; private set; }
+    public int SessionVersion { get; private set; } = 1;
     public string CodigoRecuperacion { get; private set; }
     public DateTime? ExpiracionCodigo { get; private set; }
 
@@ -22,7 +23,7 @@ public class ApplicationUser : IdentityUser
     {
         EmpresaId = empresaId;
         Email = email;
-        UserName = email; 
+        UserName = email;
         NombreCompleto = nombreCompleto;
     }
 
@@ -32,7 +33,7 @@ public class ApplicationUser : IdentityUser
     public void ActualizarTelefono(string telefono)
         => Telefono = telefono;
 
-        public void EstablecerCodigoRecuperacion(string codigo, int minutosValidez = 5)
+    public void EstablecerCodigoRecuperacion(string codigo, int minutosValidez = 5)
     {
         CodigoRecuperacion = codigo;
         ExpiracionCodigo = DateTime.UtcNow.AddMinutes(minutosValidez);
@@ -42,5 +43,15 @@ public class ApplicationUser : IdentityUser
     {
         CodigoRecuperacion = null;
         ExpiracionCodigo = null;
+    }
+
+    public void AsignarSucursal(Guid? sucursalId)
+    {
+        SucursalId = sucursalId;
+    }
+
+    public void InvalidarSesion()
+    {
+        SessionVersion++;
     }
 }
