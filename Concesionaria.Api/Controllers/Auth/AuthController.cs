@@ -179,7 +179,9 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Email o contraseña incorrectos." });
         }
 
-        if (!user.SucursalId.HasValue)
+        var esAdministrador = await _userManager.IsInRoleAsync(user, "ADMINISTRADOR");
+
+        if (!esAdministrador && !user.SucursalId.HasValue)
         {
             return Unauthorized(new
             {
@@ -200,19 +202,22 @@ public class AuthController : ControllerBase
             });
         }
 
-        var sucursalValida = await _context.Sucursales
-            .IgnoreQueryFilters()
-            .AnyAsync(sucursal =>
-                sucursal.Id == user.SucursalId.Value &&
-                sucursal.EmpresaId == user.EmpresaId &&
-                !sucursal.Eliminado);
-
-        if (!sucursalValida)
+        if (!esAdministrador)
         {
-            return Unauthorized(new
+            var sucursalValida = await _context.Sucursales
+                .IgnoreQueryFilters()
+                .AnyAsync(sucursal =>
+                    sucursal.Id == user.SucursalId!.Value &&
+                    sucursal.EmpresaId == user.EmpresaId &&
+                    !sucursal.Eliminado);
+
+            if (!sucursalValida)
             {
-                message = "La sucursal asignada al usuario no está disponible."
-            });
+                return Unauthorized(new
+                {
+                    message = "La sucursal asignada al usuario no está disponible."
+                });
+            }
         }
 
         var usuario = await _context.Usuarios

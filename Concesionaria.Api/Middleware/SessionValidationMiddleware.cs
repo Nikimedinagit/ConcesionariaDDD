@@ -26,6 +26,9 @@ public class SessionValidationMiddleware
         var estaAutenticado =
             context.User.Identity?.IsAuthenticated == true;
 
+        var esAdministrador =
+            context.User.IsInRole("ADMINISTRADOR");
+
         // Login, registro y endpoints públicos no necesitan esta validación.
         if (permiteAnonimo || !estaAutenticado)
         {
@@ -83,7 +86,7 @@ public class SessionValidationMiddleware
             usuarioBloqueado ||
             sesionDesactualizada ||
             !session.EmpresaValida ||
-            !session.SucursalValida
+            (!esAdministrador && !session.SucursalValida)
         )
         {
             await ResponderSesionInvalida(context);
