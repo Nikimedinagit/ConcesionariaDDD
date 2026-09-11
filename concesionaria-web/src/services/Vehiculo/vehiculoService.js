@@ -1,13 +1,23 @@
 import api from "@/api/axios";
 
 const VehiculoService = {
-    getActivas: async (filtro = "") => {
-        const response = await api.get("/Vehiculos/activas", { params: { filtro } });
+    getActivasDisponibles: async (filtro = "") => {
+        const response = await api.get("/Vehiculos/activas-disponibles", { params: { filtro } });
         return response.data;
     },
 
-    getInactivas: async (filtro = "") => {
-        const response = await api.get("/Vehiculos/inactivas", { params: { filtro } });
+    getActivasReservados: async (filtro = "") => {
+        const response = await api.get("/Vehiculos/activas-reservados", { params: { filtro } });
+        return response.data;
+    },
+
+    getActivasVendidos: async (filtro = "") => {
+        const response = await api.get("/Vehiculos/activas-vendidos", { params: { filtro } });
+        return response.data;
+    },
+
+    getActivasEnServicio: async (filtro = "") => {
+        const response = await api.get("/Vehiculos/activas-en-servicio", { params: { filtro } });
         return response.data;
     },
 

@@ -1,8 +1,14 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useCallback, useEffect, useState } from "react";
 import VehiculoService from "@/services/Vehiculo/vehiculoService";
 
-export const useVehiculos = (tipo = "activas", filtro = "") => {
+const consultasPorTipo = {
+    disponibles: VehiculoService.getActivasDisponibles,
+    reservados: VehiculoService.getActivasReservados,
+    vendidos: VehiculoService.getActivasVendidos,
+    enServicio: VehiculoService.getActivasEnServicio,
+};
+
+export const useVehiculos = (tipo = "disponibles", filtro = "") => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -13,20 +19,26 @@ export const useVehiculos = (tipo = "activas", filtro = "") => {
 
     useEffect(() => {
         let isMounted = true;
-        setLoading(true);
 
         const fetchData = async () => {
+            setLoading(true);
+
             try {
-                const result =
-                    tipo === "activas"
-                        ? await VehiculoService.getActivos(filtro)
-                        : await VehiculoService.getInactivos(filtro);
+                const consulta =
+                    consultasPorTipo[tipo] ??
+                    consultasPorTipo.disponibles;
+
+                const result = await consulta(filtro);
 
                 if (isMounted) {
                     setData(result);
                 }
             } catch (error) {
                 console.error("Error al obtener los vehículos:", error);
+
+                if (isMounted) {
+                    setData([]);
+                }
             } finally {
                 if (isMounted) {
                     setLoading(false);
@@ -41,6 +53,9 @@ export const useVehiculos = (tipo = "activas", filtro = "") => {
         };
     }, [tipo, filtro, refreshTrigger]);
 
-    return { data, loading, refetch };
-}
-
+    return {
+        data,
+        loading,
+        refetch,
+    };
+};
