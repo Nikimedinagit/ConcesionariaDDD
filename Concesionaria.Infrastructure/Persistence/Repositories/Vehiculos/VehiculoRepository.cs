@@ -25,8 +25,8 @@ public class VehiculoRepository : IVehiculoRepository
         await _context.SaveChangesAsync();
     }
 
-    // METODO PARA OBTENER ACTIVAS SEGUN FILTRO
-    public async Task<List<Vehiculo>> ObtenerActivasAsync(
+    // METODO PARA OBTENER DISONIBLES SEGUN FILTRO
+    public async Task<List<Vehiculo>> ObtenerDisponiblesAsync(
         Guid empresaId,
         Guid sucursalId,
         string filtro = null)
@@ -37,7 +37,57 @@ public class VehiculoRepository : IVehiculoRepository
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
                 !vehiculo.Eliminado &&
-                vehiculo.Estado != EstadoVehiculo.Vendido)
+                vehiculo.Estado == EstadoVehiculo.Disponible)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filtro))
+        {
+            vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
+                vehiculo.Version.Contains(filtro)
+            );
+        }
+
+        return await vehiculosActivosQuery.ToListAsync();
+    }
+
+    // METODO PARA OBTENER RESERVADOS SEGUN FILTRO
+    public async Task<List<Vehiculo>> ObtenerReservadosAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null)
+    {
+        var vehiculosActivosQuery = _context
+            .Vehiculos.IgnoreQueryFilters()
+            .Where(vehiculo =>
+                vehiculo.EmpresaId == empresaId &&
+                vehiculo.SucursalId == sucursalId &&
+                !vehiculo.Eliminado &&
+                vehiculo.Estado == EstadoVehiculo.Reservado)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filtro))
+        {
+            vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
+                vehiculo.Version.Contains(filtro)
+            );
+        }
+
+        return await vehiculosActivosQuery.ToListAsync();
+    }
+
+    // METODO PARA OBTENER EN REPARACION SEGUN FILTRO
+    public async Task<List<Vehiculo>> ObtenerEnReparacionAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null)
+    {
+        var vehiculosActivosQuery = _context
+            .Vehiculos.IgnoreQueryFilters()
+            .Where(vehiculo =>
+                vehiculo.EmpresaId == empresaId &&
+                vehiculo.SucursalId == sucursalId &&
+                !vehiculo.Eliminado &&
+                vehiculo.Estado == EstadoVehiculo.En_Reparacion)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))

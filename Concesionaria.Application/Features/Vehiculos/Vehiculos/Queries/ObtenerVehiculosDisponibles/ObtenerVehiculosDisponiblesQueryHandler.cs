@@ -1,28 +1,24 @@
 using Concesionaria.Application.Common.Interfaces;
-using Concesionaria.Domain.Interfaces.IRepositories;
 using MediatR;
 
-namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosInactivas;
+namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosDisponibles;
 
-public class ObtenerVehiculosInactivasQueryHandler
-    : IRequestHandler<ObtenerVehiculosInactivasQuery, List<VehiculoDto>>
+public class ObtenerVehiculosDisponiblesQueryHandler
+    : IRequestHandler<ObtenerVehiculosDisponiblesQuery, List<VehiculoDto>>
 {
     private readonly IVehiculoRepository _repository;
     private readonly ICurrentUserService _currentUserService;
 
-    public ObtenerVehiculosInactivasQueryHandler(
-        IVehiculoRepository repository,
-        ICurrentUserService currentUserService
-    )
+
+    public ObtenerVehiculosDisponiblesQueryHandler(IVehiculoRepository repository, ICurrentUserService currentUserService)
     {
         _repository = repository;
         _currentUserService = currentUserService;
     }
 
     public async Task<List<VehiculoDto>> Handle(
-        ObtenerVehiculosInactivasQuery request,
-        CancellationToken cancellationToken
-    )
+    ObtenerVehiculosDisponiblesQuery request,
+    CancellationToken cancellationToken)
     {
         var empresaId = _currentUserService.EmpresaId;
         var sucursalId = _currentUserService.SucursalId;
@@ -30,7 +26,7 @@ public class ObtenerVehiculosInactivasQueryHandler
         if (sucursalId == Guid.Empty)
             throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
 
-        var vehiculos = await _repository.ObtenerVendidosAsync(
+        var vehiculos = await _repository.ObtenerDisponiblesAsync(
             empresaId,
             sucursalId,
             request.Filtro);
@@ -50,7 +46,7 @@ public class ObtenerVehiculosInactivasQueryHandler
                 PrecioCompra = v.PrecioCompra,
                 PrecioVenta = v.PrecioVenta,
                 ModeloId = v.ModeloId,
-                SucursalId = v.SucursalId,
+                SucursalId = v.SucursalId
             })
             .ToList();
     }

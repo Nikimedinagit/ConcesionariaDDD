@@ -6,8 +6,19 @@ public interface IVehiculoRepository
     //TAREA PARA ACTUALIZAR
     Task UpdateAsync();
 
-    // TAREA PARA OBTENER ACTIVAS
-    Task<List<Vehiculo>> ObtenerActivasAsync(
+    // TAREA PARA OBTENER DISONIBLES
+    Task<List<Vehiculo>> ObtenerDisponiblesAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null);
+
+    // TAREA PARA OBTENER RESERVADOS
+    Task<List<Vehiculo>> ObtenerReservadosAsync(
+        Guid empresaId,
+        Guid sucursalId,
+        string filtro = null);
+    // TAREA PARA OBTENER EN REPARACION
+    Task<List<Vehiculo>> ObtenerEnReparacionAsync(
         Guid empresaId,
         Guid sucursalId,
         string filtro = null);

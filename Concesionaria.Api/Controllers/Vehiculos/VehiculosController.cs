@@ -1,7 +1,9 @@
 using Application.Features.Vehiculos.Commands.ActualizarVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarVehiculo;
-using Application.Features.Vehiculos.Queries.ObtenerVehiculosActivas;
-using Application.Features.Vehiculos.Queries.ObtenerVehiculosInactivas;
+using Application.Features.Vehiculos.Queries.ObtenerVehiculosDisponibles;
+using Application.Features.Vehiculos.Queries.ObtenerVehiculosEnReparacion;
+using Application.Features.Vehiculos.Queries.ObtenerVehiculosReservados;
+using Application.Features.Vehiculos.Queries.ObtenerVehiculosVendidos;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,26 +23,47 @@ public class VehiculosController : ControllerBase
         _mediator = mediator;
     }
 
-    // METODO OBTENER ACTIVAS
-    [HttpGet("activas")]
-    public async Task<IActionResult> ObtenerActivas([FromQuery] string filtro)
+    // METODO OBTENER DISPONIBLES
+    [HttpGet("disponibles")]
+    public async Task<IActionResult> ObtenerDisponibles([FromQuery] string filtro)
     {
-        var resultadoVehiculosActivas = await _mediator.Send(
-            new ObtenerVehiculosActivasQuery { Filtro = filtro }
+        var resultadoVehiculosDisponibles = await _mediator.Send(
+            new ObtenerVehiculosDisponiblesQuery { Filtro = filtro }
         );
 
-        return Ok(resultadoVehiculosActivas);
+        return Ok(resultadoVehiculosDisponibles);
+    }
+    // METODO OBTENER RESERVADOS
+    [HttpGet("reservados")]
+    public async Task<IActionResult> ObtenerReservados([FromQuery] string filtro)
+    {
+        var resultadoVehiculosReservados = await _mediator.Send(
+            new ObtenerVehiculosReservadosQuery { Filtro = filtro }
+        );
+
+        return Ok(resultadoVehiculosReservados);
+    }
+    
+    // METODO OBTENER EN REPARACION
+    [HttpGet("reparacion")]
+    public async Task<IActionResult> ObtenerEnReparacion([FromQuery] string filtro)
+    {
+        var resultadoVehiculosEnReparacion = await _mediator.Send(
+            new ObtenerVehiculosEnReparacionQuery { Filtro = filtro }
+        );
+
+        return Ok(resultadoVehiculosEnReparacion);
     }
 
-    // METODO OBTENER INACTIVAS
-    [HttpGet("inactivas")]
-    public async Task<IActionResult> ObtenerInactivas([FromQuery] string filtro)
+    // METODO OBTENER VENDIDOS
+    [HttpGet("vendidos")]
+    public async Task<IActionResult> ObtenerVendidos([FromQuery] string filtro)
     {
-        var resultadoVehiculosInactivas = await _mediator.Send(
-            new ObtenerVehiculosInactivasQuery { Filtro = filtro }
+        var resultadoVehiculosVendidos = await _mediator.Send(
+            new ObtenerVehiculosVendidosQuery { Filtro = filtro }
         );
 
-        return Ok(resultadoVehiculosInactivas);
+        return Ok(resultadoVehiculosVendidos);
     }
 
     //METODO AGREGAR VEHICULO
