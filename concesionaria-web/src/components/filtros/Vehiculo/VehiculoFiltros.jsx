@@ -1,0 +1,138 @@
+import { CalendarDays, ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AppInput } from "@/components/ui/custom/AppInput";
+import { AppSelect } from "@/components/ui/custom/AppSelect";
+
+const condiciones = [
+  { value: "todos", label: "TODAS" },
+  { value: "1", label: "NUEVO" },
+  { value: "2", label: "USADO" },
+  { value: "3", label: "CONSIGNACIÓN" },
+];
+
+const estados = [
+  { value: "todos", label: "TODOS" },
+  { value: "1", label: "DISPONIBLE" },
+  { value: "2", label: "VENDIDO" },
+  { value: "3", label: "RESERVADO" },
+  { value: "4", label: "EN SERVICIO" },
+];
+
+export const VehiculoFiltrosButton = ({ isOpen, activeCount, onToggle }) => (
+  <Button
+    type="button"
+    size="sm"
+    variant="outline"
+    onClick={onToggle}
+    className={`h-8 gap-2 border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 hover:text-slate-900 ${
+      activeCount
+        ? "border-[hsl(var(--nav-bg)/0.35)] text-[hsl(var(--nav-bg))]"
+        : ""
+    }`}
+    aria-expanded={isOpen}
+  >
+    <Filter className="h-3.5 w-3.5" />
+    Filtros
+    {activeCount > 0 && (
+      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[hsl(var(--nav-bg))] px-1 text-[11px] font-bold text-white">
+        {activeCount}
+      </span>
+    )}
+    <ChevronDown
+      className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+    />
+  </Button>
+);
+
+const VehiculoFiltros = ({
+  marca,
+  modelo,
+  condicion,
+  estado,
+  anio,
+  marcas,
+  modelos,
+  onMarcaChange,
+  onModeloChange,
+  onCondicionChange,
+  onEstadoChange,
+  onAnioChange,
+  onClear,
+}) => {
+  const activeCount =
+    [marca, modelo, condicion, estado].filter((value) => value !== "todos")
+      .length + Number(Boolean(anio));
+
+  const marcaOptions = [
+    { value: "todos", label: "TODAS" },
+    ...marcas.map((item) => ({ value: item, label: item })),
+  ];
+
+  const modeloOptions = [
+    { value: "todos", label: "TODOS" },
+    ...modelos.map((item) => ({
+      value: item.modeloId,
+      label: item.modeloNombre,
+    })),
+  ];
+
+  return (
+    <div className="border-b border-slate-200 bg-[hsl(var(--nav-bg)/0.035)] px-4 py-3">
+      <div className="flex flex-col items-stretch gap-3 xl:flex-row xl:items-end">
+        <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <AppSelect
+            label="Marca"
+            value={marca}
+            onValueChange={onMarcaChange}
+            options={marcaOptions}
+          />
+          <AppSelect
+            label="Modelo"
+            value={modelo}
+            onValueChange={onModeloChange}
+            options={modeloOptions}
+          />
+          <AppSelect
+            label="Condición"
+            value={condicion}
+            onValueChange={onCondicionChange}
+            options={condiciones}
+          />
+          <AppSelect
+            label="Estado"
+            value={estado}
+            onValueChange={onEstadoChange}
+            options={estados}
+          />
+          <AppInput
+            label="Año"
+            icon={CalendarDays}
+            type="number"
+            min="1900"
+            max={new Date().getFullYear()}
+            placeholder="Ej: 2024"
+            value={anio}
+            onChange={(event) =>
+              onAnioChange(event.target.value.replace(/\D/g, "").slice(0, 4))
+            }
+          />
+        </div>
+
+        {activeCount > 0 && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onClear}
+            className="h-10 gap-1.5 text-xs text-slate-500 hover:text-[hsl(var(--nav-bg))]"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Limpiar
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default VehiculoFiltros;

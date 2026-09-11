@@ -1,7 +1,7 @@
 using Application.Features.Vehiculos.Commands.ActualizarVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosDisponibles;
-using Application.Features.Vehiculos.Queries.ObtenerVehiculosEnReparacion;
+using Application.Features.Vehiculos.Queries.ObtenerVehiculosEnServicio;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosReservados;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosVendidos;
 using MediatR;
@@ -44,15 +44,15 @@ public class VehiculosController : ControllerBase
         return Ok(resultadoVehiculosReservados);
     }
     
-    // METODO OBTENER EN REPARACION
-    [HttpGet("reparacion")]
-    public async Task<IActionResult> ObtenerEnReparacion([FromQuery] string filtro)
+    // METODO OBTENER EN SERVICIO
+    [HttpGet("servicio")]
+    public async Task<IActionResult> ObtenerEnServicio([FromQuery] string filtro)
     {
-        var resultadoVehiculosEnReparacion = await _mediator.Send(
-            new ObtenerVehiculosEnReparacionQuery { Filtro = filtro }
+        var resultadoVehiculosEnServicio = await _mediator.Send(
+            new ObtenerVehiculosEnServicioQuery { Filtro = filtro }
         );
 
-        return Ok(resultadoVehiculosEnReparacion);
+        return Ok(resultadoVehiculosEnServicio);
     }
 
     // METODO OBTENER VENDIDOS

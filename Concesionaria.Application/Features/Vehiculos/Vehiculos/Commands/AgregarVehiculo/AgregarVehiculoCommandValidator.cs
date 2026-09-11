@@ -32,10 +32,12 @@ public class AgregarVehiculoCommandValidator : AbstractValidator<AgregarVehiculo
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("La patente del vehículo es obligatoria.")
-            .Matches(@"^([A-Za-z]{3}\d{3}|[A-Za-z]{2}\d{3}[A-Za-z]{2})$")
-            .WithMessage(
-                "La patente ingresada no tiene un formato válido (ejemplo: ABC123 o AB123CD)."
-            )
+            .MinimumLength(2)
+            .WithMessage("La patente debe tener al menos 2 caracteres.")
+            .MaximumLength(15)
+            .WithMessage("La patente no puede superar los 15 caracteres.")
+            .Matches(@"^[A-Za-z0-9 -]+$")
+            .WithMessage("La patente solo puede contener letras, números, espacios y guiones.")
             .MustAsync(
                 async (patente, cancellationToken) =>
                 {

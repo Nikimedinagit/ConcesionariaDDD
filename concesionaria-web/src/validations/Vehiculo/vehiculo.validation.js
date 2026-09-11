@@ -22,12 +22,23 @@ export const vehiculoSchema = z.object({
         .min(1900, "El año mínimo es 1900.")
         .max(anioActual, `El año máximo es ${anioActual}.`),
 
-    kilometraje: z.coerce
-        .number({
-            error: "Ingresá un kilometraje válido.",
+    kilometraje: z
+        .string({
+            error: "Campo obligatorio.",
         })
-        .int("El kilometraje debe ser un número entero.")
-        .min(0, "El kilometraje no puede ser negativo."),
+        .trim()
+        .nonempty("Campo obligatorio.")
+        .refine(
+            (value) => !Number.isNaN(Number(value)),
+            "Ingresá un kilometraje válido.",
+        )
+        .transform((value) => Number(value))
+        .pipe(
+            z
+                .number()
+                .int("El kilometraje debe ser un número entero.")
+                .min(0, "El kilometraje no puede ser negativo."),
+        ),
 
     condicion: z.coerce
         .number({

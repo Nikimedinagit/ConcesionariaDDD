@@ -34,6 +34,10 @@ public class VehiculoRepository : IVehiculoRepository
     {
         var vehiculosActivosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.MarcaVehiculo)
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.TipoVehiculo)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
@@ -43,8 +47,14 @@ public class VehiculoRepository : IVehiculoRepository
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
+            var filtroNormalizado = filtro.Trim();
             vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
-                vehiculo.Version.Contains(filtro)
+                vehiculo.Modelo.MarcaVehiculo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Patente.Contains(filtroNormalizado) ||
+                vehiculo.Modelo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Kilometraje.ToString().Contains(filtroNormalizado) ||
+                vehiculo.Version.Contains(filtroNormalizado) ||
+                vehiculo.Anio.ToString().Contains(filtroNormalizado)
             );
         }
 
@@ -59,6 +69,10 @@ public class VehiculoRepository : IVehiculoRepository
     {
         var vehiculosActivosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.MarcaVehiculo)
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.TipoVehiculo)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
@@ -68,22 +82,32 @@ public class VehiculoRepository : IVehiculoRepository
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
+            var filtroNormalizado = filtro.Trim();
             vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
-                vehiculo.Version.Contains(filtro)
+                vehiculo.Modelo.MarcaVehiculo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Patente.Contains(filtroNormalizado) ||
+                vehiculo.Modelo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Kilometraje.ToString().Contains(filtroNormalizado) ||
+                vehiculo.Version.Contains(filtroNormalizado) ||
+                vehiculo.Anio.ToString().Contains(filtroNormalizado)
             );
         }
 
         return await vehiculosActivosQuery.ToListAsync();
     }
 
-    // METODO PARA OBTENER EN REPARACION SEGUN FILTRO
-    public async Task<List<Vehiculo>> ObtenerEnReparacionAsync(
+    // METODO PARA OBTENER EN SERVICIO SEGUN FILTRO
+    public async Task<List<Vehiculo>> ObtenerEnServicioAsync(
         Guid empresaId,
         Guid sucursalId,
         string filtro = null)
     {
         var vehiculosActivosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.MarcaVehiculo)
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.TipoVehiculo)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
@@ -93,8 +117,14 @@ public class VehiculoRepository : IVehiculoRepository
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
+            var filtroNormalizado = filtro.Trim();
             vehiculosActivosQuery = vehiculosActivosQuery.Where(vehiculo =>
-                vehiculo.Version.Contains(filtro)
+                vehiculo.Modelo.MarcaVehiculo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Patente.Contains(filtroNormalizado) ||
+                vehiculo.Modelo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Kilometraje.ToString().Contains(filtroNormalizado) ||
+                vehiculo.Version.Contains(filtroNormalizado) ||
+                vehiculo.Anio.ToString().Contains(filtroNormalizado)
             );
         }
 
@@ -109,6 +139,10 @@ public class VehiculoRepository : IVehiculoRepository
     {
         var vehiculosVendidosQuery = _context
             .Vehiculos.IgnoreQueryFilters()
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.MarcaVehiculo)
+            .Include(vehiculo => vehiculo.Modelo)
+                .ThenInclude(modelo => modelo.TipoVehiculo)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
@@ -118,8 +152,14 @@ public class VehiculoRepository : IVehiculoRepository
 
         if (!string.IsNullOrWhiteSpace(filtro))
         {
+            var filtroNormalizado = filtro.Trim();
             vehiculosVendidosQuery = vehiculosVendidosQuery.Where(vehiculo =>
-                vehiculo.Version.Contains(filtro)
+                vehiculo.Modelo.MarcaVehiculo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Patente.Contains(filtroNormalizado) ||
+                vehiculo.Modelo.Nombre.Contains(filtroNormalizado) ||
+                vehiculo.Kilometraje.ToString().Contains(filtroNormalizado) ||
+                vehiculo.Version.Contains(filtroNormalizado) ||
+                vehiculo.Anio.ToString().Contains(filtroNormalizado)
             );
         }
 
@@ -159,11 +199,10 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA OBTENER POR MODELO ID
     public async Task<bool> ObtenerPorModeloIdAsync(Guid modeloId, Guid empresaId)
     {
-        // AnyAsync devuelve true si existe al menos un registro
-        bool existe = await _context
-            .Vehiculos.IgnoreQueryFilters()
-            .AnyAsync(v => v.ModeloId == modeloId && v.EmpresaId == empresaId);
-
-        return existe; // devolvés directamente el resultado
+        return await _context.ModelosVehiculos
+            .AnyAsync(modelo =>
+                modelo.Id == modeloId &&
+                modelo.EmpresaId == empresaId &&
+                !modelo.Eliminado);
     }
 }

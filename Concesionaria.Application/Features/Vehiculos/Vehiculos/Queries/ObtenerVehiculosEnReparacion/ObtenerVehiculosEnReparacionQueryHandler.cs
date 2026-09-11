@@ -2,15 +2,15 @@ using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using MediatR;
 
-namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosEnReparacion;
+namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosEnServicio;
 
-public class ObtenerVehiculosEnReparacionQueryHandler
-    : IRequestHandler<ObtenerVehiculosEnReparacionQuery, List<VehiculoDto>>
+public class ObtenerVehiculosEnServicioQueryHandler
+    : IRequestHandler<ObtenerVehiculosEnServicioQuery, List<VehiculoDto>>
 {
     private readonly IVehiculoRepository _repository;
     private readonly ICurrentUserService _currentUserService;
 
-    public ObtenerVehiculosEnReparacionQueryHandler(
+    public ObtenerVehiculosEnServicioQueryHandler(
         IVehiculoRepository repository,
         ICurrentUserService currentUserService
     )
@@ -20,7 +20,7 @@ public class ObtenerVehiculosEnReparacionQueryHandler
     }
 
     public async Task<List<VehiculoDto>> Handle(
-        ObtenerVehiculosEnReparacionQuery request,
+        ObtenerVehiculosEnServicioQuery request,
         CancellationToken cancellationToken
     )
     {
@@ -30,7 +30,7 @@ public class ObtenerVehiculosEnReparacionQueryHandler
         if (sucursalId == Guid.Empty)
             throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
 
-        var vehiculos = await _repository.ObtenerEnReparacionAsync(
+        var vehiculos = await _repository.ObtenerEnServicioAsync(
             empresaId,
             sucursalId,
             request.Filtro);
@@ -50,6 +50,9 @@ public class ObtenerVehiculosEnReparacionQueryHandler
                 PrecioCompra = v.PrecioCompra,
                 PrecioVenta = v.PrecioVenta,
                 ModeloId = v.ModeloId,
+                ModeloNombre = v.Modelo.Nombre,
+                MarcaNombre = v.Modelo.MarcaVehiculo.Nombre,
+                TipoVehiculoNombre = v.Modelo.TipoVehiculo.Nombre,
                 SucursalId = v.SucursalId,
             })
             .ToList();

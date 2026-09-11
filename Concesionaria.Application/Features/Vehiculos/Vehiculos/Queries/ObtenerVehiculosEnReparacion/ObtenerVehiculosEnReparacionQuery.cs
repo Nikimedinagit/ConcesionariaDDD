@@ -1,8 +1,8 @@
  using MediatR;
 
-namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosEnReparacion;
+namespace Application.Features.Vehiculos.Queries.ObtenerVehiculosEnServicio;
 
- public record ObtenerVehiculosEnReparacionQuery : IRequest<List<VehiculoDto>>
+ public record ObtenerVehiculosEnServicioQuery : IRequest<List<VehiculoDto>>
 {
    public string Filtro { get; set; }
 }

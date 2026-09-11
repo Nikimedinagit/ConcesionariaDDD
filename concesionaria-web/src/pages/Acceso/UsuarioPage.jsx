@@ -5,7 +5,7 @@ import UsuarioService from "@/services/Acceso/usuarioService";
 import SucursalService from "@/services/Ubicacion/sucursalService";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
-import { UsuarioCards } from "@/components/cards/UsuarioCards";
+import { UsuarioCards } from "@/components/cards/usuarios/UsuarioCards";
 import { UsuarioModal } from "@/components/modals/Acceso/UsuarioModal";
 import { UsuarioPasswordModal } from "@/components/modals/Acceso/UsuarioPasswordModal";
 import { TooltipProvider } from "@/components/ui/tooltip";

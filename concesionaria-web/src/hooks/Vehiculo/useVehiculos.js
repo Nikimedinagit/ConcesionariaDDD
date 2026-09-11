@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import VehiculoService from "@/services/Vehiculo/vehiculoService";
 
 const consultasPorTipo = {
-    disponibles: VehiculoService.getActivasDisponibles,
-    reservados: VehiculoService.getActivasReservados,
-    vendidos: VehiculoService.getActivasVendidos,
-    enServicio: VehiculoService.getActivasEnServicio,
+    disponibles: VehiculoService.getDisponibles,
+    reservados: VehiculoService.getReservados,
+    vendidos: VehiculoService.getVendidos,
+    servicio: VehiculoService.getEnServicio,
 };
 
 export const useVehiculos = (tipo = "disponibles", filtro = "") => {

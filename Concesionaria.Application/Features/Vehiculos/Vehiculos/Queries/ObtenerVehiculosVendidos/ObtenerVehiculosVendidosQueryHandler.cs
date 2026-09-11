@@ -50,6 +50,9 @@ public class ObtenerVehiculosVendidosQueryHandler
                 PrecioCompra = v.PrecioCompra,
                 PrecioVenta = v.PrecioVenta,
                 ModeloId = v.ModeloId,
+                ModeloNombre = v.Modelo.Nombre,
+                MarcaNombre = v.Modelo.MarcaVehiculo.Nombre,
+                TipoVehiculoNombre = v.Modelo.TipoVehiculo.Nombre,
                 SucursalId = v.SucursalId,
             })
             .ToList();

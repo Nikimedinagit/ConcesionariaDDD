@@ -17,8 +17,8 @@ public interface IVehiculoRepository
         Guid empresaId,
         Guid sucursalId,
         string filtro = null);
-    // TAREA PARA OBTENER EN REPARACION
-    Task<List<Vehiculo>> ObtenerEnReparacionAsync(
+    // TAREA PARA OBTENER EN SERVICI0O
+    Task<List<Vehiculo>> ObtenerEnServicioAsync(
         Guid empresaId,
         Guid sucursalId,
         string filtro = null);
