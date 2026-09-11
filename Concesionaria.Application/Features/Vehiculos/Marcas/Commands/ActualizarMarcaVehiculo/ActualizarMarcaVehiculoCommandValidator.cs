@@ -2,6 +2,7 @@ namespace Application.Features.Vehiculos.Commands.ActualizarMarcaVehiculo;
 
 using System.ComponentModel.Design;
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -25,10 +26,10 @@ public class ActualizarMarcaVehiculoCommandValidator
                         context.InstanceToValidate.MarcaVehiculoId
                     );
 
-                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una marca activa con ese nombre.");
 
-                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una marca inactiva con ese nombre. Puede reactivarla.");
                 }
             );

@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -81,7 +82,7 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<NombreModeloEstado> ExistePorNombreAsync(
+    public async Task<EstadoExistencia> ExistePorNombreAsync(
         string nombre,
         Guid empresaId,
         Guid tipoVehiculoId,
@@ -102,12 +103,12 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
             .FirstOrDefaultAsync();
 
         if (entidad == null)
-            return NombreModeloEstado.NoExiste;
-        return entidad.Value ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
+            return EstadoExistencia.NoExiste;
+        return entidad.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<NombreModeloEstado> ExistePorNombreTipoMarcaExluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorNombreTipoMarcaExluyendoIdAsync(
         string nombre,
         Guid empresaId,
         Guid modeloVehiculoId,
@@ -128,7 +129,7 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
             .FirstOrDefaultAsync();
 
         if (entidad == null)
-            return NombreModeloEstado.NoExiste;
-        return entidad.Value ? NombreModeloEstado.Desactivado : NombreModeloEstado.Activo;
+            return EstadoExistencia.NoExiste;
+        return entidad.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 }

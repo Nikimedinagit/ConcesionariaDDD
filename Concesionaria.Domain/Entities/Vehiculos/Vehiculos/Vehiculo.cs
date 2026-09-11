@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Concesionaria.Domain.Common;
 using Concesionaria.Domain.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Empresas;
 
 public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable, ISoftDelete

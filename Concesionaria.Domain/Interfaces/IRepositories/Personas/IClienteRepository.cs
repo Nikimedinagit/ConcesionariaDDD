@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Concesionaria.Domain.Common.Enums;
 
 namespace Concesionaria.Domain.Interfaces.IRepositories
 {
@@ -18,17 +19,17 @@ namespace Concesionaria.Domain.Interfaces.IRepositories
         Task<List<Cliente>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
 
         // TAREA PARA EXTIENCIA AGREGAR
-        Task<ClienteEstado> ExistePorDniAsync(string dni, Guid empresaId);
-        Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId);
+        Task<EstadoExistencia> ExistePorDniAsync(string dni, Guid empresaId);
+        Task<EstadoExistencia> ExistePorEmailAsync(string email, Guid empresaId);
 
         // TAREA PARA EXISTENCIA ACTUALIZAR
-        Task<ClienteEstado> ExistePorDniExcluyendoIdAsync(
+        Task<EstadoExistencia> ExistePorDniExcluyendoIdAsync(
             string dni,
             Guid empresaId,
             Guid clienteId
         );
     
-        Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+        Task<EstadoExistencia> ExistePorEmailExcluyendoIdAsync(
             string email,
             Guid empresaId,
             Guid clienteId

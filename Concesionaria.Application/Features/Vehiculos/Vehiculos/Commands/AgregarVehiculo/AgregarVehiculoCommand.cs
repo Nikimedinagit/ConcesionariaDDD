@@ -1,10 +1,11 @@
+using Concesionaria.Domain.Cuentas.Enums;
 using MediatR;
 
 namespace Application.Features.Vehiculos.Commands.AgregarVehiculo;
 
 public record AgregarVehiculoCommand : IRequest<Guid>
 {
- public string Version { get; set; }
+    public string Version { get; set; }
     public string Patente { get; set; }
     public string Color { get; set; }
     public int Anio { get; set; }

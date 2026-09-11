@@ -3,6 +3,7 @@ using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Concesionaria.Domain.Cuentas.Enums;
+using Concesionaria.Domain.Common.Enums;
 
 namespace Infrastructure.Persistence.Repositories;
 
@@ -81,7 +82,7 @@ public class CuentaRepository : ICuentaRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA POR NOMBRE PARA AGREGAR
-    public async Task<EstadoCuenta> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo)
+    public async Task<EstadoExistencia> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo)
     {
         var eliminado = await _context.Cuentas
             .IgnoreQueryFilters()
@@ -93,14 +94,14 @@ public class CuentaRepository : ICuentaRepository
 
         return eliminado switch
         {
-            null => EstadoCuenta.NoExiste,
-            true => EstadoCuenta.Desactivado,
-            _ => EstadoCuenta.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 
     // METODO PARA VALIDAR EXISTENCIA POR CODIGO PARA AGREGAR
-    public async Task<EstadoCuenta> ExistePorCodigoAsync(string codigo, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorCodigoAsync(string codigo, Guid empresaId)
     {
         var eliminado = await _context.Cuentas
             .IgnoreQueryFilters()
@@ -110,14 +111,14 @@ public class CuentaRepository : ICuentaRepository
 
         return eliminado switch
         {
-            null => EstadoCuenta.NoExiste,
-            true => EstadoCuenta.Desactivado,
-            _ => EstadoCuenta.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<EstadoCuenta> ExistePorNombreExluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorNombreExluyendoIdAsync(
      string nombre,
      Guid empresaId,
      Guid cuentaId)
@@ -129,7 +130,7 @@ public class CuentaRepository : ICuentaRepository
             .FirstOrDefaultAsync();
 
         if (!tipo.HasValue)
-            return EstadoCuenta.NoExiste;
+            return EstadoExistencia.NoExiste;
 
         var eliminado = await _context.Cuentas
             .IgnoreQueryFilters()
@@ -142,9 +143,9 @@ public class CuentaRepository : ICuentaRepository
 
         return eliminado switch
         {
-            null => EstadoCuenta.NoExiste,
-            true => EstadoCuenta.Desactivado,
-            _ => EstadoCuenta.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 

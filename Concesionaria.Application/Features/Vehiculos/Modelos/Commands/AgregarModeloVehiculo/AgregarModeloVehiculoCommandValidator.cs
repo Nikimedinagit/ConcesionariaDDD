@@ -1,6 +1,7 @@
 namespace Application.Features.Vehiculos.Commands.AgregarModeloVehiculo;
 
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -25,10 +26,10 @@ public class AgregarModeloVehiculoCommandValidator : AbstractValidator<AgregarMo
                         context.InstanceToValidate.MarcaVehiculoId
                     );
 
-                    if (estado == NombreModeloEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe un modelo activo con ese nombre, marca y tipo.");
 
-                    if (estado == NombreModeloEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya existe un modelo inactivo con ese nombre, marca y tipo. Puede reactivarlo."
                         );

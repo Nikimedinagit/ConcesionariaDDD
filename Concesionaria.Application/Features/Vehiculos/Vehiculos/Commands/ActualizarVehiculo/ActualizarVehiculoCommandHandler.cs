@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,7 +36,7 @@ public class ActualizarVehiculoCommandHandler
                 vehiculo.Id == request.VehiculoId &&
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
-                vehiculo.Estado != EstadoVehiculo.Vendido,
+                vehiculo.Estado != EstadoVehiculo.VENDIDO,
             cancellationToken
         );
 

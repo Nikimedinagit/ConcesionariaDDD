@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Cuentas;
 using Concesionaria.Domain.Cuentas.Enums;
 
@@ -20,11 +21,11 @@ public interface ICuentaRepository
         TipoCuenta? tipo = null,
         int? nivel = null);
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
-    Task<EstadoCuenta> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo);
-    Task<EstadoCuenta> ExistePorCodigoAsync(string codigo, Guid empresaId);
+    Task<EstadoExistencia> ExistePorNombreAsync(string nombre, Guid empresaId, TipoCuenta tipo);
+    Task<EstadoExistencia> ExistePorCodigoAsync(string codigo, Guid empresaId);
 
     //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
-    Task<EstadoCuenta> ExistePorNombreExluyendoIdAsync(
+    Task<EstadoExistencia> ExistePorNombreExluyendoIdAsync(
         string nombre,
         Guid empresaId,
         Guid cuentaId

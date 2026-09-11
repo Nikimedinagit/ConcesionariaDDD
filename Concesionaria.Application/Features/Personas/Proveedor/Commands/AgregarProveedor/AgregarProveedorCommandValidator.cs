@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -27,10 +28,10 @@ public class AgregarProveedorCommandValidator : AbstractValidator<AgregarProveed
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorCuilAsync(cuil.Trim(), empresaId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe un proveedor activo con ese CUIL.");
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un proveedor inactivo con ese CUIL. Puede reactivarlo."
                         );
@@ -47,10 +48,10 @@ public class AgregarProveedorCommandValidator : AbstractValidator<AgregarProveed
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorEmailAsync(email.Trim(), empresaId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe un proveedor activo con ese Email.");
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un proveedor inactivo con ese Email. Puede reactivarlo."
                         );

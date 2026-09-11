@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +62,7 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<NombreCategoriaGastoEstado> ExistePorNombreAsync(string nombre, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorNombreAsync(string nombre, Guid empresaId)
     {
         var eliminado = await _context.CategoriasGastos
             .IgnoreQueryFilters()
@@ -71,14 +72,14 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
 
         return eliminado switch
         {
-            null => NombreCategoriaGastoEstado.NoExiste,
-            true => NombreCategoriaGastoEstado.Desactivado,
-            _ => NombreCategoriaGastoEstado.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<NombreCategoriaGastoEstado> ExistePorNombreExluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorNombreExluyendoIdAsync(
      string nombre,
      Guid empresaId,
      Guid categoriaGastoId)
@@ -91,9 +92,9 @@ public class CategoriaGastoRepository : ICategoriaGastoRepository
 
         return eliminado switch
         {
-            null => NombreCategoriaGastoEstado.NoExiste,
-            true => NombreCategoriaGastoEstado.Desactivado,
-            _ => NombreCategoriaGastoEstado.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 

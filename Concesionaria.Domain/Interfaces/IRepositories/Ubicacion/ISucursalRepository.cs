@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Concesionaria.Domain.Common.Enums;
 
 public interface ISucursalRepository
 {
@@ -13,14 +14,14 @@ public interface ISucursalRepository
     Task AddAsync(Sucursal sucursal);
 
     //TAREA PARA EXISTENCIA AGREGAR NOMBRE
-    Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+    Task<EstadoExistencia> ExistePorNombreLocalidadAsync(
         string nombre,
         Guid empresaId,
         Guid localidadId
     );
 
     //TAREA PARA EXISTENCIA ACTUALIZAR NOMBRE
-    Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+    Task<EstadoExistencia> ExistePorNombreLocalidadAsync(
         string nombre,
         Guid empresaId,
         Guid localidadId,

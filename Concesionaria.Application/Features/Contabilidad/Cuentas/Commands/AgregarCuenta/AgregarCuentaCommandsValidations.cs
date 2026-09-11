@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
@@ -19,10 +20,10 @@ public class AgregarCuentaCommandValidation : AbstractValidator<AgregarCuentaCom
                 {
                     var estado = await repository.ExistePorCodigoAsync(codigo.Trim(), currentUser.EmpresaId);
 
-                    if (estado == EstadoCuenta.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una cuenta activa con ese código.");
 
-                    if (estado == EstadoCuenta.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una cuenta inactiva con ese código. Puede reactivarla.");
                 }
             );
@@ -38,10 +39,10 @@ public class AgregarCuentaCommandValidation : AbstractValidator<AgregarCuentaCom
                         currentUser.EmpresaId,
                         context.InstanceToValidate.Tipo);
 
-                    if (estado == EstadoCuenta.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una cuenta activa con ese nombre y tipo.");
 
-                    if (estado == EstadoCuenta.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una cuenta inactiva con ese nombre y tipo. Puede reactivarla.");
                 }
             );

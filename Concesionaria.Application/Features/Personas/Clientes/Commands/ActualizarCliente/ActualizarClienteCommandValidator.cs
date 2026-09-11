@@ -1,6 +1,7 @@
 namespace Application.Features.Personas.Commands.ActualizarCliente;
 
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -29,12 +30,12 @@ public class ActualizarClienteCommandValidator
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorDniExcluyendoIdAsync(dni.Trim(), empresaId, context.InstanceToValidate.ClienteId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure(
                             "Ya existe un cliente activo con ese DNI."
                         );
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un cliente inactivo con ese DNI. Puede reactivarlo."
                         );
@@ -50,12 +51,12 @@ public class ActualizarClienteCommandValidator
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorEmailExcluyendoIdAsync(email.Trim(), empresaId, context.InstanceToValidate.ClienteId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure(
                             "Ya existe un cliente activo con ese Email."
                         );
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un cliente inactivo con ese Email. Puede reactivarlo."
                         );

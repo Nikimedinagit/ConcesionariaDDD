@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +74,7 @@ public class ClienteRepository : IClienteRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<ClienteEstado> ExistePorDniAsync(string dni, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorDniAsync(string dni, Guid empresaId)
     {
         bool? estado = await _context.Clientes.IgnoreQueryFilters()
        .Where(c => c.EmpresaId == empresaId && c.Dni == dni)
@@ -81,12 +82,12 @@ public class ClienteRepository : IClienteRepository
        .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
-    public async Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorEmailAsync(string email, Guid empresaId)
     {
         bool? estado = await _context.Clientes.IgnoreQueryFilters()
         .Where(c => c.EmpresaId == empresaId && c.Email.ToLower() == email.ToLower().Trim())
@@ -94,13 +95,13 @@ public class ClienteRepository : IClienteRepository
         .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<ClienteEstado> ExistePorDniExcluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorDniExcluyendoIdAsync(
         string dni,
         Guid empresaId,
         Guid clienteId
@@ -112,12 +113,12 @@ public class ClienteRepository : IClienteRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
-    public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorEmailExcluyendoIdAsync(
         string email,
         Guid empresaId,
         Guid clienteId
@@ -129,8 +130,8 @@ public class ClienteRepository : IClienteRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 }

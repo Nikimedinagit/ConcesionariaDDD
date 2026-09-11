@@ -2,6 +2,7 @@ namespace Application.Features.Ubicaciones.Commands.AgregarSucursal;
 
 using Application.Features.Ubicaciones.Commands.AgregarSucursal;
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -24,10 +25,10 @@ public class AgregarSucursalCommandValidator : AbstractValidator<AgregarSucursal
                         context.InstanceToValidate.LocalidadId
                     );
 
-                    if (estado == NombreSucursalEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una sucursal activa con ese nombre y localidad.");
 
-                    if (estado == NombreSucursalEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una sucursal inactiva con ese nombre y localidad. Puede reactivarla.");
                 }
             );

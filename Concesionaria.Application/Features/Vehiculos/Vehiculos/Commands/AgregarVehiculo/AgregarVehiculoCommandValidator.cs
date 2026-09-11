@@ -1,6 +1,7 @@
 namespace Application.Features.Vehiculos.Commands.AgregarVehiculo;
 
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -52,12 +53,12 @@ public class AgregarVehiculoCommandValidator : AbstractValidator<AgregarVehiculo
         RuleFor(v => v.Kilometraje)
             .GreaterThan(0)
             .WithMessage("El kilometraje debe ser mayor a cero.")
-            .When(v => v.Condicion == CondicionVehiculo.Usado);
+            .When(v => v.Condicion == CondicionVehiculo.USADO);
 
         RuleFor(v => v.Kilometraje)
             .Equal(0)
             .WithMessage("El kilometraje de un vehículo nuevo debe ser 0.")
-            .When(v => v.Condicion == CondicionVehiculo.Nuevo);
+            .When(v => v.Condicion == CondicionVehiculo.NUEVO);
 
         RuleFor(v => v.ModeloId)
             .Cascade(CascadeMode.Stop)

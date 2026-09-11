@@ -1,6 +1,7 @@
 namespace Application.Features.Vehiculos.Commands.AgregarTipoVehiculo;
 
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -20,10 +21,10 @@ public class AgregarTipoVehiculoCommandValidator
                 {
                     var estado = await repository.ExistePorNombreAsync(nombre.Trim(), currentUser.EmpresaId);
 
-                    if (estado == NombreEntidadVehiculoEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe un tipo de vehículo activo con ese nombre.");
 
-                    if (estado == NombreEntidadVehiculoEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe un tipo de vehículo inactivo con ese nombre. Puede reactivarlo.");
                 }
             );

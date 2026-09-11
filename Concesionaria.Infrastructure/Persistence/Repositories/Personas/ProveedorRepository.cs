@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -76,7 +77,7 @@ public class ProveedorRepository : IProveedorRepository
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<ClienteEstado> ExistePorCuilAsync(string cuil, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorCuilAsync(string cuil, Guid empresaId)
     {
         bool? estado = await _context
             .Proveedores.IgnoreQueryFilters()
@@ -85,13 +86,13 @@ public class ProveedorRepository : IProveedorRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA EN AGREGAR
-    public async Task<ClienteEstado> ExistePorEmailAsync(string email, Guid empresaId)
+    public async Task<EstadoExistencia> ExistePorEmailAsync(string email, Guid empresaId)
     {
         bool? estado = await _context
             .Proveedores.IgnoreQueryFilters()
@@ -100,13 +101,13 @@ public class ProveedorRepository : IProveedorRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
     // METODO PARA VALIDAR EXISTENCIA PARA ACTUALIZAR
-    public async Task<ClienteEstado> ExistePorCuilExcluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorCuilExcluyendoIdAsync(
         string cuil,
         Guid empresaId,
         Guid clienteId
@@ -118,12 +119,12 @@ public class ProveedorRepository : IProveedorRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 
-    public async Task<ClienteEstado> ExistePorEmailExcluyendoIdAsync(
+    public async Task<EstadoExistencia> ExistePorEmailExcluyendoIdAsync(
         string email,
         Guid empresaId,
         Guid clienteId
@@ -135,8 +136,8 @@ public class ProveedorRepository : IProveedorRepository
             .FirstOrDefaultAsync();
 
         if (estado == null)
-            return ClienteEstado.NoExiste;
+            return EstadoExistencia.NoExiste;
 
-        return estado.Value ? ClienteEstado.Desactivado : ClienteEstado.Activo;
+        return estado.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
 }

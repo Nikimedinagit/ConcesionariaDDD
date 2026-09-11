@@ -1,3 +1,5 @@
+using Concesionaria.Domain.Cuentas.Enums;
+
 public class VehiculoDto
 {
     public Guid VehiculoId { get; set; }

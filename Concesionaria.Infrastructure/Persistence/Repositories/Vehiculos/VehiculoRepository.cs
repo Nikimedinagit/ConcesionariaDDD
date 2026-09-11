@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ public class VehiculoRepository : IVehiculoRepository
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
                 !vehiculo.Eliminado &&
-                vehiculo.Estado == EstadoVehiculo.Disponible)
+                vehiculo.Estado == EstadoVehiculo.DISPONIBLE)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
@@ -62,7 +63,7 @@ public class VehiculoRepository : IVehiculoRepository
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
                 !vehiculo.Eliminado &&
-                vehiculo.Estado == EstadoVehiculo.Reservado)
+                vehiculo.Estado == EstadoVehiculo.RESERVADO)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
@@ -87,7 +88,7 @@ public class VehiculoRepository : IVehiculoRepository
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
                 !vehiculo.Eliminado &&
-                vehiculo.Estado == EstadoVehiculo.En_Reparacion)
+                vehiculo.Estado == EstadoVehiculo.EN_SERVICIO)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
@@ -112,7 +113,7 @@ public class VehiculoRepository : IVehiculoRepository
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
                 !vehiculo.Eliminado &&
-                vehiculo.Estado == EstadoVehiculo.Vendido)
+                vehiculo.Estado == EstadoVehiculo.VENDIDO)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))

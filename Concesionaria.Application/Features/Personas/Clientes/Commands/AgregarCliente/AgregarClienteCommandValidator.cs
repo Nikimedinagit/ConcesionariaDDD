@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -26,12 +27,12 @@ public class AgregarClienteCommandValidator : AbstractValidator<AgregarClienteCo
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorDniAsync(dni.Trim(), empresaId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure(
                             "Ya existe un cliente activo con ese DNI."
                         );
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un cliente inactivo con ese DNI. Puede reactivarlo."
                         );
@@ -47,12 +48,12 @@ public class AgregarClienteCommandValidator : AbstractValidator<AgregarClienteCo
                     var empresaId = currentUser.EmpresaId;
                     var estado = await repository.ExistePorEmailAsync(email.Trim(), empresaId);
 
-                    if (estado == ClienteEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure(
                             "Ya existe un cliente activo con ese Email."
                         );
 
-                    if (estado == ClienteEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure(
                             "Ya se encuentra un cliente inactivo con ese Email. Puede reactivarlo."
                         );

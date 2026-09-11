@@ -1,3 +1,4 @@
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,7 +58,7 @@ public class SucursalRepository : ISucursalRepository
         return await obtenerSucursalesInactivas.ToListAsync();
     }
 
-    public async Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+    public async Task<EstadoExistencia> ExistePorNombreLocalidadAsync(
         string nombre,
         Guid empresaId,
         Guid localidadId
@@ -75,13 +76,13 @@ public class SucursalRepository : ISucursalRepository
 
         return eliminado switch
         {
-            null => NombreSucursalEstado.NoExiste,
-            true => NombreSucursalEstado.Desactivado,
-            _ => NombreSucursalEstado.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 
-    public async Task<NombreSucursalEstado> ExistePorNombreLocalidadAsync(
+    public async Task<EstadoExistencia> ExistePorNombreLocalidadAsync(
         string nombre,
         Guid empresaId,
         Guid localidadId,
@@ -101,9 +102,9 @@ public class SucursalRepository : ISucursalRepository
 
         return eliminado switch
         {
-            null => NombreSucursalEstado.NoExiste,
-            true => NombreSucursalEstado.Desactivado,
-            _ => NombreSucursalEstado.Activo,
+            null => EstadoExistencia.NoExiste,
+            true => EstadoExistencia.Desactivado,
+            _ => EstadoExistencia.Activo,
         };
     }
 

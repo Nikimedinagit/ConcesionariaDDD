@@ -1,6 +1,7 @@
 namespace Application.Features.CategoriasGastos.Commands.AgregarCategoriaGasto;
 
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
 
@@ -20,10 +21,10 @@ public class AgregarCategoriaGastoCommandValidator
                 {
                     var estado = await repository.ExistePorNombreAsync(nombre.Trim(), currentUser.EmpresaId);
 
-                    if (estado == NombreCategoriaGastoEstado.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una categoría de gasto activa con ese nombre.");
 
-                    if (estado == NombreCategoriaGastoEstado.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una categoría de gasto inactiva con ese nombre. Puede reactivarla.");
                 }
             );

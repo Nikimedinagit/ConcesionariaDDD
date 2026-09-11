@@ -1,3 +1,5 @@
+using Concesionaria.Domain.Common.Enums;
+
 public interface ITipoVehiculoRepository
 {
     //TAREA PARA AGREGAR
@@ -9,12 +11,12 @@ public interface ITipoVehiculoRepository
     //TAREA PARA OBTENER INACTIVAS
     Task<List<TipoVehiculo>> ObtenerInactivasAsync(Guid empresaId, string filtro = null);
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
-    Task<NombreEntidadVehiculoEstado> ExistePorNombreAsync(string nombre, Guid empresaId);
+    Task<EstadoExistencia> ExistePorNombreAsync(string nombre, Guid empresaId);
     //TAREA PARA CONTROL DE RELACION CON MODELOS
     Task<bool> TieneModelosActivosAsync(Guid empresaId, Guid tipoVehiculoId);
 
     //TAREA PARA CONTROL EXISTENCIA ACTUALIZAR
-    Task<NombreEntidadVehiculoEstado> ExistePorNombreExluyendoIdAsync(
+    Task<EstadoExistencia> ExistePorNombreExluyendoIdAsync(
         string nombre,
         Guid empresaId,
         Guid tipoVehiculoId

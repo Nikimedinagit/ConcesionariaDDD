@@ -1,4 +1,5 @@
 using Concesionaria.Application.Common.Interfaces;
+using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Cuentas.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
@@ -25,10 +26,10 @@ public class ActualizarCuentaCommandValidator
                         context.InstanceToValidate.CuentaId
                     );
 
-                    if (estado == EstadoCuenta.Activo)
+                    if (estado == EstadoExistencia.Activo)
                         context.AddFailure("Ya existe una cuenta activa con ese nombre y tipo.");
 
-                    if (estado == EstadoCuenta.Desactivado)
+                    if (estado == EstadoExistencia.Desactivado)
                         context.AddFailure("Ya existe una cuenta inactiva con ese nombre y tipo. Puede reactivarla.");
                 }
             );
