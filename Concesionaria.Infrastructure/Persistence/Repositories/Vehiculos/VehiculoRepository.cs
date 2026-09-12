@@ -29,7 +29,7 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA OBTENER DISONIBLES SEGUN FILTRO
     public async Task<List<Vehiculo>> ObtenerDisponiblesAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null)
     {
         var vehiculosActivosQuery = _context
@@ -38,9 +38,10 @@ public class VehiculoRepository : IVehiculoRepository
                 .ThenInclude(modelo => modelo.MarcaVehiculo)
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
+            .Include(vehiculo => vehiculo.Sucursal)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
-                vehiculo.SucursalId == sucursalId &&
+                (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
                 !vehiculo.Eliminado &&
                 vehiculo.Estado == EstadoVehiculo.DISPONIBLE)
             .AsQueryable();
@@ -64,7 +65,7 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA OBTENER RESERVADOS SEGUN FILTRO
     public async Task<List<Vehiculo>> ObtenerReservadosAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null)
     {
         var vehiculosActivosQuery = _context
@@ -73,9 +74,10 @@ public class VehiculoRepository : IVehiculoRepository
                 .ThenInclude(modelo => modelo.MarcaVehiculo)
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
+            .Include(vehiculo => vehiculo.Sucursal)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
-                vehiculo.SucursalId == sucursalId &&
+                (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
                 !vehiculo.Eliminado &&
                 vehiculo.Estado == EstadoVehiculo.RESERVADO)
             .AsQueryable();
@@ -99,7 +101,7 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA OBTENER EN SERVICIO SEGUN FILTRO
     public async Task<List<Vehiculo>> ObtenerEnServicioAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null)
     {
         var vehiculosActivosQuery = _context
@@ -108,9 +110,10 @@ public class VehiculoRepository : IVehiculoRepository
                 .ThenInclude(modelo => modelo.MarcaVehiculo)
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
+            .Include(vehiculo => vehiculo.Sucursal)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
-                vehiculo.SucursalId == sucursalId &&
+                (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
                 !vehiculo.Eliminado &&
                 vehiculo.Estado == EstadoVehiculo.EN_SERVICIO)
             .AsQueryable();
@@ -134,7 +137,7 @@ public class VehiculoRepository : IVehiculoRepository
     // METODO PARA OBTENER VENDIDOS SEGUN FILTRO
     public async Task<List<Vehiculo>> ObtenerVendidosAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null)
     {
         var vehiculosVendidosQuery = _context
@@ -143,9 +146,10 @@ public class VehiculoRepository : IVehiculoRepository
                 .ThenInclude(modelo => modelo.MarcaVehiculo)
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
+            .Include(vehiculo => vehiculo.Sucursal)
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
-                vehiculo.SucursalId == sucursalId &&
+                (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
                 !vehiculo.Eliminado &&
                 vehiculo.Estado == EstadoVehiculo.VENDIDO)
             .AsQueryable();

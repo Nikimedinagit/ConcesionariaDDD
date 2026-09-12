@@ -8,13 +8,24 @@ import { Button } from "@/components/ui/button";
 const DataTablePagination = ({
   table,
   total = 0,
+  pageIndex = 0,
+  pageCount,
+  onPreviousPage,
+  onNextPage,
 }) => {
 
   const currentPage =
-    table.getState().pagination.pageIndex + 1;
+    table ? table.getState().pagination.pageIndex + 1 : pageIndex + 1;
 
   const totalPages =
-    table.getPageCount();
+    table ? table.getPageCount() : pageCount;
+
+  const canPreviousPage = table
+    ? table.getCanPreviousPage()
+    : pageIndex > 0;
+  const canNextPage = table
+    ? table.getCanNextPage()
+    : pageIndex + 1 < pageCount;
 
   return (
     <div
@@ -87,8 +98,8 @@ const DataTablePagination = ({
         <Button
           size="icon"
           variant="outline"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => table ? table.previousPage() : onPreviousPage()}
+          disabled={!canPreviousPage}
           className="border-slate-200"
         >
           <ChevronLeft className="h-6 w-6 font-bold" />
@@ -97,8 +108,8 @@ const DataTablePagination = ({
         <Button
           size="icon"
           variant="outline"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => table ? table.nextPage() : onNextPage()}
+          disabled={!canNextPage}
           className="border-slate-200"
         >
           <ChevronRight className="h-6 w-6 font-bold" />

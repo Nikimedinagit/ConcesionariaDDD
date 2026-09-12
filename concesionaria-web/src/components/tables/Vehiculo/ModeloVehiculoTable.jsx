@@ -12,6 +12,7 @@ const ModeloVehiculoTable = ({
   tipo,
   onToggle,
   onSearch,
+  searchValue,
   onEdit,
   onToggleStatus,
   marcas,
@@ -123,6 +124,7 @@ const ModeloVehiculoTable = ({
       tipo={tipo}
       onToggle={onToggle}
       onSearch={onSearch}
+      searchValue={searchValue}
       toolbarActions={
         <ModeloVehiculoFiltrosButton
           isOpen={filtersOpen}

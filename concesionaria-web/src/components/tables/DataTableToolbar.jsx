@@ -7,6 +7,7 @@ const DataTableToolbar = ({
   tipo,
   setTipo,
   onSearch,
+  searchValue: controlledSearchValue,
   showStatusFilter = true,
   actions,
 }) => {
@@ -17,6 +18,8 @@ const DataTableToolbar = ({
     setSearchValue(nextValue);
     onSearch(nextValue);
   };
+
+  const displayedSearchValue = controlledSearchValue ?? searchValue;
 
   return (
     <div
@@ -70,7 +73,7 @@ const DataTableToolbar = ({
       <AppInput
         icon={Search}
         placeholder="Buscar..."
-        value={searchValue}
+        value={displayedSearchValue}
         onChange={(event) => handleSearch(event.target.value)}
         autoComplete="new-password"
         name="table-filter-value"

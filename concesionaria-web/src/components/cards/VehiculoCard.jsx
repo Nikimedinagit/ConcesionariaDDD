@@ -1,5 +1,6 @@
 import {
   CalendarDays,
+  Building2,
   CarFront,
   CircleDollarSign,
   Gauge,
@@ -8,6 +9,7 @@ import {
 } from "lucide-react";
 import { ActionButton } from "@/components/ui/custom/ActionButton";
 import { Tooltip } from "@/components/ui/custom/TooltipCustom";
+import { useAuth } from "@/context/AuthContext";
 
 const estados = {
   1: "DISPONIBLE",
@@ -48,7 +50,12 @@ const formatMoney = (value) => {
   }).format(value);
 };
 
-export function VehiculoCard({ vehiculo, onEdit }) {
+export function VehiculoCard({ vehiculo, onEdit, onDelete }) {
+  const { user } = useAuth();
+  const isDisponible = Number(vehiculo.estado) === 1;
+  const isSucursalActual =
+    String(vehiculo.sucursalId).toLowerCase() ===
+    String(user?.sucursalId).toLowerCase();
   const estadoNombre =
     estados[vehiculo.estado] || vehiculo.estado || "SIN ESTADO";
 
@@ -83,6 +90,13 @@ export function VehiculoCard({ vehiculo, onEdit }) {
                 {vehiculo.patente || "SIN PATENTE"}
               </span>
             </div>
+
+            <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+              <Building2 className="h-3.5 w-3.5" />
+              <span className="truncate font-semibold uppercase">
+                {vehiculo.sucursalNombre || "SUCURSAL SIN NOMBRE"}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -96,9 +110,20 @@ export function VehiculoCard({ vehiculo, onEdit }) {
             {estadoNombre}
           </span>
 
-          <Tooltip text="Editar">
-            <ActionButton type="edit" onClick={() => onEdit(vehiculo)} />
-          </Tooltip>
+          {isDisponible && isSucursalActual && (
+            <>
+              <Tooltip text="Editar">
+                <ActionButton type="edit" onClick={() => onEdit(vehiculo)} />
+              </Tooltip>
+
+              <Tooltip text="Eliminar">
+                <ActionButton
+                  type="desactivar"
+                  onClick={() => onDelete(vehiculo)}
+                />
+              </Tooltip>
+            </>
+          )}
         </div>
       </div>
 

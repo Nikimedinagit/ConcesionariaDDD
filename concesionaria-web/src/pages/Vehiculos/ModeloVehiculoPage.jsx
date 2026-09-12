@@ -89,6 +89,7 @@ export const ModeloVehiculoPage = () => {
       const dataError = error.response?.data;
       toastService.error("Error", {
         description:
+          dataError?.errors?.[0]?.errorMessage ||
           dataError?.message ||
           dataError?.mensaje ||
           "No se pudo cambiar el estado del modelo",
@@ -123,6 +124,7 @@ export const ModeloVehiculoPage = () => {
             tipo={tipo}
             onToggle={setTipo}
             onSearch={setFiltro}
+            searchValue={filtro}
             onEdit={openModal}
             onToggleStatus={handleToggleStatus}
             marcas={marcas}

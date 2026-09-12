@@ -41,7 +41,6 @@ public class AgregarVehiculoCommandHandler
             request.Anio,
             request.Kilometraje,
             request.Condicion,
-            request.Estado,
             request.PrecioCompra,
             request.PrecioVenta,
             request.ModeloId,

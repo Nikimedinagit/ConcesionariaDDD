@@ -24,6 +24,7 @@ export const UsuarioPage = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [serverFieldErrors, setServerFieldErrors] = useState({});
   const [passwordServerError, setPasswordServerError] = useState("");
 
   useEffect(() => {
@@ -49,12 +50,14 @@ export const UsuarioPage = () => {
 
   const handleOpenCreate = () => {
     setServerError("");
+    setServerFieldErrors({});
     setSelectedUsuario(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (usuario) => {
     setServerError("");
+    setServerFieldErrors({});
     setSelectedUsuario(usuario);
     setIsModalOpen(true);
   };
@@ -73,6 +76,7 @@ export const UsuarioPage = () => {
   const handleSave = async (payload) => {
     setModalLoading(true);
     setServerError("");
+    setServerFieldErrors({});
 
     try {
       if (payload.usuarioId) {
@@ -90,7 +94,24 @@ export const UsuarioPage = () => {
       setIsModalOpen(false);
       refetch();
     } catch (error) {
-      setServerError(getErrorMessage(error, "Ocurrió un error al guardar"));
+      const data = error.response?.data;
+      const validationErrors = data?.errors || [];
+      const fieldErrors = validationErrors.reduce((result, item) => {
+        if (!item?.propertyName) return result;
+
+        const fieldName =
+          item.propertyName.charAt(0).toLowerCase() + item.propertyName.slice(1);
+        result[fieldName] = item.errorMessage;
+        return result;
+      }, {});
+      const message = getErrorMessage(error, "Ocurrió un error al guardar");
+
+      if (!fieldErrors.email && /email/i.test(message)) {
+        fieldErrors.email = message;
+      }
+
+      setServerFieldErrors(fieldErrors);
+      setServerError(Object.keys(fieldErrors).length > 0 ? "" : message);
     } finally {
       setModalLoading(false);
     }
@@ -169,6 +190,7 @@ export const UsuarioPage = () => {
           sucursales={sucursales}
           loading={modalLoading}
           serverError={serverError}
+          serverFieldErrors={serverFieldErrors}
         />
 
         <UsuarioPasswordModal

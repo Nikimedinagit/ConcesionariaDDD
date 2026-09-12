@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import {
+  AlertCircle,
   AtSign,
   ContactRound,
   MapPin,
@@ -21,6 +22,7 @@ export function ClienteModal({
   localidades = [],
   loading = false,
   serverError = "",
+  serverFieldErrors = {},
 }) {
   const [form, setForm] = useState({
     nombreCompleto: "",
@@ -43,6 +45,20 @@ export function ClienteModal({
     });
     setLocalErrors({});
   }, [cliente, isOpen]);
+
+  useEffect(() => {
+    if (Object.keys(serverFieldErrors).length === 0) return;
+
+    setLocalErrors((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        Object.entries(serverFieldErrors).map(([field, message]) => [
+          field,
+          [message],
+        ]),
+      ),
+    }));
+  }, [serverFieldErrors]);
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -72,6 +88,13 @@ export function ClienteModal({
       saveText={cliente ? "Actualizar" : "Guardar"}
       maxWidth="max-w-3xl"
     >
+      {serverError && (
+        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{serverError}</span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <AppInput
           label="Nombre completo *"
@@ -81,7 +104,7 @@ export function ClienteModal({
           onChange={(event) =>
             updateField("nombreCompleto", event.target.value.toUpperCase())
           }
-          error={localErrors.nombreCompleto?.[0] || serverError}
+          error={localErrors.nombreCompleto?.[0]}
           autoFocus
         />
         <AppInput

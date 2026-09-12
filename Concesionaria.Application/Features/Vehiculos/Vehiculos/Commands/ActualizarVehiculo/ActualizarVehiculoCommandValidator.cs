@@ -81,8 +81,6 @@ public class ActualizarVehiculoCommandValidator : AbstractValidator<ActualizarVe
             .NotEmpty()
             .WithMessage("La condición del vehículo es obligatoria.");
 
-        RuleFor(v => v.Estado).NotEmpty().WithMessage("El estado del vehículo es obligatorio.");
-
         RuleFor(v => v.PrecioCompra)
             .GreaterThan(0)
             .WithMessage("El precio de compra debe ser mayor a cero.");

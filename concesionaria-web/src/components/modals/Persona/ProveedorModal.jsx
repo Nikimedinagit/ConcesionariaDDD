@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import {
+  AlertCircle,
   AtSign,
   ContactRound,
   MapPin,
@@ -22,6 +23,7 @@ export function ProveedorModal({
   localidades = [],
   loading = false,
   serverError = "",
+  serverFieldErrors = {},
 }) {
   const [form, setForm] = useState({
     nombre: "",
@@ -50,6 +52,20 @@ export function ProveedorModal({
     setLocalErrors({});
   }, [proveedor, isOpen]);
 
+  useEffect(() => {
+    if (Object.keys(serverFieldErrors).length === 0) return;
+
+    setLocalErrors((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        Object.entries(serverFieldErrors).map(([field, message]) => [
+          field,
+          [message],
+        ]),
+      ),
+    }));
+  }, [serverFieldErrors]);
+
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
     if (localErrors[field])
@@ -76,9 +92,17 @@ export function ProveedorModal({
       icon={ContactRound}
       loading={loading}
       saveText={proveedor ? "Actualizar" : "Guardar"}
-      maxWidth="max-w-3xl"
+      maxWidth="max-w-5xl"
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {serverError && (
+        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{serverError}</span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-x-5 gap-y-4 md:grid-cols-3">
+
         <AppInput
           label="Nombre *"
           icon={UserRound}
@@ -87,9 +111,10 @@ export function ProveedorModal({
           onChange={(event) =>
             updateField("nombre", event.target.value.toUpperCase())
           }
-          error={localErrors.nombre?.[0] || serverError}
+          error={localErrors.nombre?.[0]}
           autoFocus
         />
+
         <AppInput
           label="CUIL *"
           icon={ContactRound}
@@ -103,6 +128,7 @@ export function ProveedorModal({
           }
           error={localErrors.cuil?.[0]}
         />
+
         <AppInput
           label="Teléfono *"
           icon={Phone}
@@ -111,6 +137,8 @@ export function ProveedorModal({
           onChange={(event) => updateField("telefono", event.target.value)}
           error={localErrors.telefono?.[0]}
         />
+
+
         <AppInput
           label="Email *"
           icon={AtSign}
@@ -119,6 +147,7 @@ export function ProveedorModal({
           onChange={(event) => updateField("email", event.target.value)}
           error={localErrors.email?.[0]}
         />
+
         <AppInput
           label="Domicilio *"
           icon={MapPinned}
@@ -130,25 +159,6 @@ export function ProveedorModal({
           error={localErrors.domicilio?.[0]}
         />
 
-        <AppInput
-          label="Servicio *"
-          icon={MapPin}
-          placeholder="Ej: REPUESTOS"
-          value={form.servicio}
-          onChange={(event) =>
-            updateField("servicio", event.target.value.toUpperCase())
-          }
-          error={localErrors.servicio?.[0]}
-        />
-        <AppTextarea
-          label="Observaciones"
-          icon={MapPin}
-          placeholder="Ej: OBSERVACIONES ADICIONALES ..."
-          value={form.observacion}
-          onChange={(event) =>
-            updateField("observacion", event.target.value.toUpperCase())
-          }
-        />
         <AppSearchSelect
           label="Localidad *"
           icon={MapPin}
@@ -162,6 +172,31 @@ export function ProveedorModal({
           emptyText="No se encontraron localidades"
           error={localErrors.localidadId?.[0]}
         />
+
+        <div className="md:col-span-3">
+          <AppInput
+            label="Servicio *"
+            icon={MapPin}
+            placeholder="Ej: REPUESTOS, MECÁNICA, LUBRICANTES..."
+            value={form.servicio}
+            onChange={(event) =>
+              updateField("servicio", event.target.value.toUpperCase())
+            }
+            error={localErrors.servicio?.[0]}
+          />
+        </div>
+
+        <div className="md:col-span-3">
+          <AppTextarea
+            label="Observaciones"
+            icon={MapPin}
+            placeholder="Ej: OBSERVACIONES ADICIONALES..."
+            value={form.observacion}
+            onChange={(event) =>
+              updateField("observacion", event.target.value.toUpperCase())
+            }
+          />
+        </div>
       </div>
     </ModalCustom>
   );

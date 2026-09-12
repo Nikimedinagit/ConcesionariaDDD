@@ -9,24 +9,24 @@ public interface IVehiculoRepository
     // TAREA PARA OBTENER DISONIBLES
     Task<List<Vehiculo>> ObtenerDisponiblesAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null);
 
     // TAREA PARA OBTENER RESERVADOS
     Task<List<Vehiculo>> ObtenerReservadosAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null);
     // TAREA PARA OBTENER EN SERVICI0O
     Task<List<Vehiculo>> ObtenerEnServicioAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null);
 
     // TAREA PARA OBTENER VENDIDOS
     Task<List<Vehiculo>> ObtenerVendidosAsync(
         Guid empresaId,
-        Guid sucursalId,
+        Guid? sucursalId,
         string filtro = null);
 
     //TAREA PARA OBTENER INACTIVAS

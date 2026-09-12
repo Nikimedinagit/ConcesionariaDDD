@@ -9,7 +9,6 @@ import {
   Palette,
   Settings2,
   Sparkles,
-  CircleDot,
   RectangleHorizontal,
 } from "lucide-react";
 import { ModalCustom } from "../ModalCustom";
@@ -23,13 +22,6 @@ const condiciones = [
   { id: "3", nombre: "CONSIGNACIÓN" },
 ];
 
-const estados = [
-  { id: "1", nombre: "DISPONIBLE" },
-  { id: "2", nombre: "VENDIDO" },
-  { id: "3", nombre: "RESERVADO" },
-  { id: "4", nombre: "EN SERVICIO" },
-];
-
 const initialForm = {
   modeloId: "",
   version: "",
@@ -38,7 +30,6 @@ const initialForm = {
   anio: "",
   kilometraje: "",
   condicion: "",
-  estado: "",
   precioCompra: "",
   precioVenta: "",
 };
@@ -101,7 +92,6 @@ export function VehiculoModal({
       anio: vehiculo?.anio?.toString() || "",
       kilometraje: vehiculo?.kilometraje?.toString() || "",
       condicion: vehiculo?.condicion?.toString() || "",
-      estado: vehiculo?.estado?.toString() || "",
       precioCompra: vehiculo?.precioCompra?.toString() || "",
       precioVenta: vehiculo?.precioVenta?.toString() || "",
     });
@@ -235,7 +225,7 @@ export function VehiculoModal({
           />
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <AppInput
             label="Patente *"
             icon={RectangleHorizontal}
@@ -248,7 +238,7 @@ export function VehiculoModal({
           />
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <AppInput
             label="Color *"
             icon={Palette}
@@ -261,7 +251,7 @@ export function VehiculoModal({
           />
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <AppSelect
             label="Condición *"
             icon={Sparkles}
@@ -272,20 +262,6 @@ export function VehiculoModal({
             optionLabel="nombre"
             placeholder="SELECCIONE..."
             error={localErrors.condicion?.[0]}
-          />
-        </div>
-
-        <div className="md:col-span-3">
-          <AppSelect
-            label="Estado *"
-            icon={CircleDot}
-            value={form.estado}
-            onValueChange={(value) => updateField("estado", value)}
-            options={estados}
-            optionValue="id"
-            optionLabel="nombre"
-            placeholder="SELECCIONE..."
-            error={localErrors.estado?.[0]}
           />
         </div>
 

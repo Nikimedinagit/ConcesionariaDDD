@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppInput } from "@/components/ui/custom/AppInput";
@@ -6,6 +7,9 @@ import { VehiculoCard } from "./VehiculoCard";
 import VehiculoFiltros, {
   VehiculoFiltrosButton,
 } from "@/components/filtros/Vehiculo/VehiculoFiltros";
+import DataTablePagination from "@/components/tables/DataTablePagination";
+
+const PAGE_SIZE = 9;
 
 const filtros = [
   { value: "disponibles", label: "Disponibles" },
@@ -14,13 +18,24 @@ const filtros = [
   { value: "servicio", label: "En Servicio" },
 ];
 
-export function VehiculoCards({ data, tipo, onTipoChange, onSearch, onEdit }) {
+export function VehiculoCards({
+  data,
+  loading = false,
+  tipo,
+  onTipoChange,
+  onSearch,
+  sucursalFiltro,
+  onSucursalChange,
+  sucursales = [],
+  onEdit,
+  onDelete,
+}) {
   const [showFilters, setShowFilters] = useState(false);
   const [marca, setMarca] = useState("todos");
   const [modelo, setModelo] = useState("todos");
   const [condicion, setCondicion] = useState("todos");
-  const [estado, setEstado] = useState("todos");
   const [anio, setAnio] = useState("");
+  const [pageIndex, setPageIndex] = useState(0);
 
   const marcas = useMemo(
     () =>
@@ -52,22 +67,33 @@ export function VehiculoCards({ data, tipo, onTipoChange, onSearch, onEdit }) {
           (marca === "todos" || item.marcaNombre === marca) &&
           (modelo === "todos" || item.modeloId === modelo) &&
           (condicion === "todos" || String(item.condicion) === condicion) &&
-          (estado === "todos" || String(item.estado) === estado) &&
           (!anio || String(item.anio) === anio),
       ),
-    [data, marca, modelo, condicion, estado, anio],
+    [data, marca, modelo, condicion, anio],
   );
 
   const activeCount =
-    [marca, modelo, condicion, estado].filter((value) => value !== "todos")
-      .length + Number(Boolean(anio));
+    [marca, modelo, condicion].filter((value) => value !== "todos")
+      .length +
+    Number(Boolean(anio)) +
+    Number(sucursalFiltro !== "actual");
+
+  const pageCount = Math.max(1, Math.ceil(filteredData.length / PAGE_SIZE));
+  const paginatedData = filteredData.slice(
+    pageIndex * PAGE_SIZE,
+    (pageIndex + 1) * PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setPageIndex(0);
+  }, [data, tipo, marca, modelo, condicion, anio, sucursalFiltro]);
 
   const clearFilters = () => {
     setMarca("todos");
     setModelo("todos");
     setCondicion("todos");
-    setEstado("todos");
     setAnio("");
+    onSucursalChange("actual");
   };
 
   const handleMarcaChange = (value) => {
@@ -83,7 +109,10 @@ export function VehiculoCards({ data, tipo, onTipoChange, onSearch, onEdit }) {
             <Button
               key={filtro.value}
               size="sm"
-              onClick={() => onTipoChange(filtro.value)}
+              onClick={() => {
+                setPageIndex(0);
+                onTipoChange(filtro.value);
+              }}
               className={
                 tipo === filtro.value
                   ? "bg-[hsl(var(--nav-bg))] text-white hover:opacity-90"
@@ -121,26 +150,32 @@ export function VehiculoCards({ data, tipo, onTipoChange, onSearch, onEdit }) {
           marca={marca}
           modelo={modelo}
           condicion={condicion}
-          estado={estado}
           anio={anio}
+          sucursalId={sucursalFiltro}
+          sucursales={sucursales}
           marcas={marcas}
           modelos={modelos}
           onMarcaChange={handleMarcaChange}
           onModeloChange={setModelo}
           onCondicionChange={setCondicion}
-          onEstadoChange={setEstado}
           onAnioChange={setAnio}
+          onSucursalChange={onSucursalChange}
           onClear={clearFilters}
         />
       )}
 
-      {filteredData.length ? (
+      {loading && data.length === 0 ? (
+        <div className="flex h-32 items-center justify-center text-sm text-slate-500">
+          Cargando...
+        </div>
+      ) : paginatedData.length ? (
         <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredData.map((vehiculo) => (
+          {paginatedData.map((vehiculo) => (
             <VehiculoCard
               key={vehiculo.vehiculoId}
               vehiculo={vehiculo}
               onEdit={onEdit}
+              onDelete={onDelete}
             />
           ))}
         </div>
@@ -149,6 +184,14 @@ export function VehiculoCards({ data, tipo, onTipoChange, onSearch, onEdit }) {
           No hay vehículos para mostrar.
         </div>
       )}
+
+      <DataTablePagination
+        total={filteredData.length}
+        pageIndex={pageIndex}
+        pageCount={pageCount}
+        onPreviousPage={() => setPageIndex((current) => current - 1)}
+        onNextPage={() => setPageIndex((current) => current + 1)}
+      />
     </div>
   );
 }

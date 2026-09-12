@@ -38,7 +38,7 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable,
 
     protected Vehiculo() { }
 
-    private Vehiculo(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, EstadoVehiculo estado, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId, Guid empresaId)
+    private Vehiculo(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId, Guid empresaId)
     {
         Id = Guid.NewGuid();
         Version = version.ToUpper().Trim();
@@ -47,7 +47,7 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable,
         Anio = anio;
         Kilometraje = kilometraje;
         Condicion = condicion;
-        Estado = estado;
+        Estado = EstadoVehiculo.DISPONIBLE;
         PrecioCompra = precioCompra;
         PrecioVenta = precioVenta;
         ModeloId = modeloId;
@@ -56,12 +56,12 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable,
         Eliminado = false;
     }
 
-    public static Vehiculo Crear(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, EstadoVehiculo estado, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId, Guid empresaId)
+    public static Vehiculo Crear(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId, Guid empresaId)
     {
-        return new Vehiculo(version, patente, color, anio, kilometraje, condicion, estado, precioCompra, precioVenta, modeloId, sucursalId, empresaId);
+        return new Vehiculo(version, patente, color, anio, kilometraje, condicion, precioCompra, precioVenta, modeloId, sucursalId, empresaId);
     }
 
-    public void ActualizarVehiculo(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, EstadoVehiculo estado, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId)
+    public void ActualizarVehiculo(string version, string patente, string color, int anio, int kilometraje, CondicionVehiculo condicion, decimal precioCompra, decimal precioVenta, Guid modeloId, Guid sucursalId)
     {
         Version = version.ToUpper().Trim();
         Patente = patente.ToUpper().Trim();
@@ -69,7 +69,6 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable,
         Anio = anio;
         Kilometraje = kilometraje;
         Condicion = condicion;
-        Estado = estado;
         PrecioCompra = precioCompra;
         PrecioVenta = precioVenta;
         ModeloId = modeloId;

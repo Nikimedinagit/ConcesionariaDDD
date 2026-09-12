@@ -22,6 +22,7 @@ export const ProveedorPage = () => {
   const [selectedProveedor, setSelectedProveedor] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [serverFieldErrors, setServerFieldErrors] = useState({});
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedFiltro(filtro), 500);
@@ -39,6 +40,7 @@ export const ProveedorPage = () => {
 
   const openModal = (proveedor = null) => {
     setServerError("");
+    setServerFieldErrors({});
     setSelectedProveedor(proveedor);
     setIsModalOpen(true);
   };
@@ -46,6 +48,7 @@ export const ProveedorPage = () => {
   const handleSave = async (payload) => {
     setModalLoading(true);
     setServerError("");
+    setServerFieldErrors({});
     try {
       if (payload.proveedorId) {
         await ProveedorService.actualizar(payload.proveedorId, payload);
@@ -62,11 +65,28 @@ export const ProveedorPage = () => {
       refetch();
     } catch (error) {
       const dataError = error.response?.data;
+      const validationErrors = dataError?.errors || [];
+      const fieldErrors = validationErrors.reduce((result, item) => {
+        const message = item?.errorMessage;
+        let fieldName = item?.propertyName
+          ? item.propertyName.charAt(0).toLowerCase() +
+            item.propertyName.slice(1)
+          : "";
+
+        if (!fieldName && /cuil|dni/i.test(message || "")) fieldName = "cuil";
+        if (!fieldName && /email/i.test(message || "")) fieldName = "email";
+        if (fieldName && message) result[fieldName] = message;
+        return result;
+      }, {});
+
+      setServerFieldErrors(fieldErrors);
       setServerError(
-        dataError?.errors?.[0]?.errorMessage ||
-          dataError?.message ||
-          dataError?.mensaje ||
-          "Ocurrió un error al guardar",
+        Object.keys(fieldErrors).length > 0
+          ? ""
+          : validationErrors[0]?.errorMessage ||
+            dataError?.message ||
+            dataError?.mensaje ||
+            "Ocurrió un error al guardar",
       );
     } finally {
       setModalLoading(false);
@@ -133,6 +153,7 @@ export const ProveedorPage = () => {
             localidades={localidades}
             loading={modalLoading}
             serverError={serverError}
+            serverFieldErrors={serverFieldErrors}
           />
         )}
       </div>

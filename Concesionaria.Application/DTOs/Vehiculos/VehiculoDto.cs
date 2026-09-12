@@ -23,4 +23,5 @@ public class VehiculoDto
     public string TipoVehiculoNombre { get; set; }
 
     public Guid SucursalId { get; set; }
+    public string SucursalNombre { get; set; }
 }

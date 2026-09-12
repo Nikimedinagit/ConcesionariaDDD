@@ -47,13 +47,6 @@ export const vehiculoSchema = z.object({
         .int()
         .positive("Debés seleccionar una condición."),
 
-    estado: z.coerce
-        .number({
-            error: "Debés seleccionar un estado.",
-        })
-        .int()
-        .positive("Debés seleccionar un estado."),
-
     precioCompra: z.coerce
         .number({
             error: "Ingresá un precio de compra válido.",

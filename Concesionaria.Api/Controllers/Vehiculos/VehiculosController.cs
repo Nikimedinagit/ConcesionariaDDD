@@ -26,20 +26,20 @@ public class VehiculosController : ControllerBase
 
     // METODO OBTENER DISPONIBLES
     [HttpGet("disponibles")]
-    public async Task<IActionResult> ObtenerDisponibles([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerDisponibles([FromQuery] string filtro, [FromQuery] Guid? sucursalId, [FromQuery] bool todasSucursales = false)
     {
         var resultadoVehiculosDisponibles = await _mediator.Send(
-            new ObtenerVehiculosDisponiblesQuery { Filtro = filtro }
+            new ObtenerVehiculosDisponiblesQuery { Filtro = filtro, SucursalId = sucursalId, TodasSucursales = todasSucursales }
         );
 
         return Ok(resultadoVehiculosDisponibles);
     }
     // METODO OBTENER RESERVADOS
     [HttpGet("reservados")]
-    public async Task<IActionResult> ObtenerReservados([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerReservados([FromQuery] string filtro, [FromQuery] Guid? sucursalId, [FromQuery] bool todasSucursales = false)
     {
         var resultadoVehiculosReservados = await _mediator.Send(
-            new ObtenerVehiculosReservadosQuery { Filtro = filtro }
+            new ObtenerVehiculosReservadosQuery { Filtro = filtro, SucursalId = sucursalId, TodasSucursales = todasSucursales }
         );
 
         return Ok(resultadoVehiculosReservados);
@@ -47,10 +47,10 @@ public class VehiculosController : ControllerBase
     
     // METODO OBTENER EN SERVICIO
     [HttpGet("servicio")]
-    public async Task<IActionResult> ObtenerEnServicio([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerEnServicio([FromQuery] string filtro, [FromQuery] Guid? sucursalId, [FromQuery] bool todasSucursales = false)
     {
         var resultadoVehiculosEnServicio = await _mediator.Send(
-            new ObtenerVehiculosEnServicioQuery { Filtro = filtro }
+            new ObtenerVehiculosEnServicioQuery { Filtro = filtro, SucursalId = sucursalId, TodasSucursales = todasSucursales }
         );
 
         return Ok(resultadoVehiculosEnServicio);
@@ -58,10 +58,10 @@ public class VehiculosController : ControllerBase
 
     // METODO OBTENER VENDIDOS
     [HttpGet("vendidos")]
-    public async Task<IActionResult> ObtenerVendidos([FromQuery] string filtro)
+    public async Task<IActionResult> ObtenerVendidos([FromQuery] string filtro, [FromQuery] Guid? sucursalId, [FromQuery] bool todasSucursales = false)
     {
         var resultadoVehiculosVendidos = await _mediator.Send(
-            new ObtenerVehiculosVendidosQuery { Filtro = filtro }
+            new ObtenerVehiculosVendidosQuery { Filtro = filtro, SucursalId = sucursalId, TodasSucursales = todasSucursales }
         );
 
         return Ok(resultadoVehiculosVendidos);

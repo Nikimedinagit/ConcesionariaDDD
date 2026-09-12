@@ -8,7 +8,7 @@ const consultasPorTipo = {
     servicio: VehiculoService.getEnServicio,
 };
 
-export const useVehiculos = (tipo = "disponibles", filtro = "") => {
+export const useVehiculos = (tipo = "disponibles", filtro = "", sucursal = "actual") => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -28,7 +28,7 @@ export const useVehiculos = (tipo = "disponibles", filtro = "") => {
                     consultasPorTipo[tipo] ??
                     consultasPorTipo.disponibles;
 
-                const result = await consulta(filtro);
+                const result = await consulta(filtro, sucursal);
 
                 if (isMounted) {
                     setData(result);
@@ -51,7 +51,7 @@ export const useVehiculos = (tipo = "disponibles", filtro = "") => {
         return () => {
             isMounted = false;
         };
-    }, [tipo, filtro, refreshTrigger]);
+    }, [tipo, filtro, sucursal, refreshTrigger]);
 
     return {
         data,

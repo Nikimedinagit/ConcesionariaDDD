@@ -34,7 +34,8 @@ public class ObtenerProveedorInactivasQueryHandler
                 Email = p.Email,
                 Domicilio = p.Domicilio,
                 Servicio = p.Servicio,
-                Observacion = p.Observacion
+                Observacion = p.Observacion,
+                LocalidadId = p.LocalidadId
             })
             .ToList();
     }

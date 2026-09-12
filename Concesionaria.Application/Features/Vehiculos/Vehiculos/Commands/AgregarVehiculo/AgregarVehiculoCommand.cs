@@ -11,7 +11,6 @@ public record AgregarVehiculoCommand : IRequest<Guid>
     public int Anio { get; set; }
     public int Kilometraje { get; set; }
     public CondicionVehiculo Condicion { get; set; }
-    public EstadoVehiculo Estado { get; set; }
     public decimal PrecioCompra { get; set; }
     public decimal PrecioVenta { get; set; }
     public Guid ModeloId { get; set; }

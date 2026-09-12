@@ -1,7 +1,6 @@
 
 namespace Application.Features.Vehiculos.Commands.DesactivarModeloVehiculo;
 
-using System.ComponentModel.Design;
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Interfaces.IRepositories;
 using FluentValidation;
@@ -26,6 +25,6 @@ public class DesactivarModeloVehiculoCommandValidator
                     return !existe;
                 }
             )
-            .WithMessage("No se puede desactivar el modelo porque tiene vehículos asociados.");
+            .WithMessage("No se puede desactivar el modelo porque tiene vehículos asociados. Reasigne esos vehículos a otro modelo antes de continuar.");
     }
 }

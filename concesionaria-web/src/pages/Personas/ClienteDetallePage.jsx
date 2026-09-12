@@ -49,8 +49,8 @@ export function ClienteDetallePage() {
             <h2 className="mt-0.5 text-base font-bold uppercase tracking-wide text-slate-800">{cliente.nombreCompleto}</h2>
           </div>
           <span className={state?.activo === false
-            ? "rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"
-            : "rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"}
+            ? "rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-600 ring-1 ring-slate-200"
+            : "rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase text-emerald-700 ring-1 ring-emerald-200"}
           >
             {state?.activo === false ? "Inactivo" : "Activo"}
           </span>

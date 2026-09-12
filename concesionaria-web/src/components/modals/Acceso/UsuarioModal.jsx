@@ -18,6 +18,7 @@ export function UsuarioModal({
   sucursales = [],
   loading = false,
   serverError = "",
+  serverFieldErrors = {},
 }) {
   const [form, setForm] = useState({
     nombreCompleto: "",
@@ -38,6 +39,20 @@ export function UsuarioModal({
     });
     setLocalErrors({});
   }, [usuario, isOpen]);
+
+  useEffect(() => {
+    if (Object.keys(serverFieldErrors).length === 0) return;
+
+    setLocalErrors((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        Object.entries(serverFieldErrors).map(([field, message]) => [
+          field,
+          [message],
+        ]),
+      ),
+    }));
+  }, [serverFieldErrors]);
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));

@@ -1,28 +1,9 @@
-import { ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppSelect } from "@/components/ui/custom/AppSelect";
+import { FilterButton } from "@/components/ui/custom/FilterButton";
 
-export const ModeloVehiculoFiltrosButton = ({ isOpen, activeCount, onToggle }) => (
-  <Button
-    type="button"
-    size="sm"
-    variant="outline"
-    onClick={onToggle}
-    className={`h-8 gap-2 border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 hover:text-slate-900 ${
-      activeCount ? "border-[hsl(var(--nav-bg)/0.35)] text-[hsl(var(--nav-bg))]" : ""
-    }`}
-    aria-expanded={isOpen}
-  >
-    <Filter className="h-3.5 w-3.5" />
-    Filtros
-    {activeCount > 0 && (
-      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[hsl(var(--nav-bg))] px-1 text-[11px] font-bold text-white">
-        {activeCount}
-      </span>
-    )}
-    <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-  </Button>
-);
+export const ModeloVehiculoFiltrosButton = FilterButton;
 
 const ModeloVehiculoFiltros = ({
   marcaVehiculoId,

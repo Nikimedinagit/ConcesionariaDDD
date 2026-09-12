@@ -23,6 +23,7 @@ const DataTable = ({
   tipo,
   onToggle,
   onSearch,
+  searchValue,
   showStatusFilter = true,
   toolbarActions,
   filters,
@@ -58,6 +59,7 @@ const DataTable = ({
         tipo={tipo}
         setTipo={onToggle}
         onSearch={onSearch}
+        searchValue={searchValue}
         showStatusFilter={showStatusFilter}
         actions={toolbarActions}
       />

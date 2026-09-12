@@ -49,11 +49,11 @@ const tiposCuenta = {
 const getTipoLabel = (tipo) => tiposCuenta[tipo] ?? tipo;
 
 const tipoBadgeClassName = {
-  1: "border-sky-100 bg-sky-50 text-sky-700",
-  2: "border-rose-100 bg-rose-50 text-rose-700",
-  3: "border-violet-100 bg-violet-50 text-violet-700",
-  4: "border-emerald-100 bg-emerald-50 text-emerald-700",
-  5: "border-amber-100 bg-amber-50 text-amber-700",
+  1: "bg-sky-50 text-sky-700 ring-sky-200",
+  2: "bg-rose-50 text-rose-700 ring-rose-200",
+  3: "bg-violet-50 text-violet-700 ring-violet-200",
+  4: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  5: "bg-amber-50 text-amber-700 ring-amber-200",
 };
 
 const isCuentaBase = (cuenta) =>
@@ -336,7 +336,7 @@ const CuentaTable = ({
                             </span>
                             <span className="font-semibold">{cuenta.nombre}</span>
                             {protectedBase && (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-600 ring-1 ring-slate-200">
                                 <LockKeyhole className="h-3 w-3" />
                                 Base
                               </span>
@@ -348,7 +348,7 @@ const CuentaTable = ({
 
                     <TableCell className="px-4 py-0.5 text-sm text-slate-700">
                       <span
-                        className={`inline-flex min-w-[96px] items-center justify-center rounded-md border px-2 py-0.5 text-xs font-bold ${tipoBadgeClassName[cuenta.tipo] ?? "border-slate-200 bg-slate-50 text-slate-700"}`}
+                        className={`inline-flex min-w-[96px] items-center justify-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ring-1 ${tipoBadgeClassName[cuenta.tipo] ?? "bg-slate-100 text-slate-600 ring-slate-200"}`}
                       >
                         {getTipoLabel(cuenta.tipo)}
                       </span>

@@ -4,23 +4,33 @@ import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { VehiculoModal } from "@/components/modals/Vehiculo/VehiculoModal";
+import { ConfirmDeleteModal } from "@/components/modals/ConfirmDeleteModal";
 import { VehiculoCards } from "@/components/cards/VehiculoCards";
 import { useVehiculos } from "@/hooks/Vehiculo/useVehiculos";
 import VehiculoService from "@/services/Vehiculo/vehiculoService";
 import ModeloVehiculoService from "@/services/Vehiculo/modeloVehiculoService";
+import SucursalService from "@/services/Ubicacion/sucursalService";
 import { toastService } from "@/services/toastService";
 
 export const VehiculoPage = () => {
   const [tipo, setTipo] = useState("disponibles");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
-  const { data, loading, refetch } = useVehiculos(tipo, debouncedFiltro);
+  const [sucursalFiltro, setSucursalFiltro] = useState("actual");
+  const { data, loading, refetch } = useVehiculos(
+    tipo,
+    debouncedFiltro,
+    sucursalFiltro,
+  );
   const [modelos, setModelos] = useState([]);
+  const [sucursales, setSucursales] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVehiculo, setSelectedVehiculo] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const [serverFieldErrors, setServerFieldErrors] = useState({});
+  const [vehiculoToDelete, setVehiculoToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedFiltro(filtro), 500);
@@ -28,11 +38,17 @@ export const VehiculoPage = () => {
   }, [filtro]);
 
   useEffect(() => {
-    ModeloVehiculoService.getActivas()
-      .then(setModelos)
+    Promise.all([
+      ModeloVehiculoService.getActivas(),
+      SucursalService.getActivas(),
+    ])
+      .then(([modelosData, sucursalesData]) => {
+        setModelos(modelosData);
+        setSucursales(sucursalesData);
+      })
       .catch(() =>
         toastService.error("Error", {
-          description: "No se pudieron cargar los modelos de vehículos",
+          description: "No se pudieron cargar los datos del formulario",
         }),
       );
   }, []);
@@ -97,6 +113,36 @@ export const VehiculoPage = () => {
     }
   };
 
+  const handleDelete = (vehiculo) => {
+    setVehiculoToDelete(vehiculo);
+  };
+
+  const confirmDelete = async () => {
+    if (!vehiculoToDelete) return;
+
+    setDeleteLoading(true);
+
+    try {
+      await VehiculoService.eliminar(vehiculoToDelete.vehiculoId);
+      toastService.success("Éxito", {
+        description: "Vehículo eliminado correctamente",
+      });
+      setVehiculoToDelete(null);
+      refetch();
+    } catch (error) {
+      const dataError = error.response?.data;
+      toastService.error("Error", {
+        description:
+          dataError?.errors?.[0]?.errorMessage ||
+          dataError?.message ||
+          dataError?.mensaje ||
+          "No se pudo eliminar el vehículo",
+      });
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
     <TooltipProvider delayDuration={300}>
       <div>
@@ -104,19 +150,18 @@ export const VehiculoPage = () => {
           <AddButton onClick={() => openModal()}>Nuevo Vehículo</AddButton>
         </PageHeader>
 
-        {loading && data.length === 0 && !debouncedFiltro ? (
-          <div className="flex h-64 items-center justify-center">
-            Cargando...
-          </div>
-        ) : (
-          <VehiculoCards
-            data={data}
-            tipo={tipo}
-            onTipoChange={setTipo}
-            onSearch={setFiltro}
-            onEdit={openModal}
-          />
-        )}
+        <VehiculoCards
+          data={data}
+          loading={loading}
+          tipo={tipo}
+          onTipoChange={setTipo}
+          onSearch={setFiltro}
+          sucursalFiltro={sucursalFiltro}
+          onSucursalChange={setSucursalFiltro}
+          sucursales={sucursales}
+          onEdit={openModal}
+          onDelete={handleDelete}
+        />
 
         {isModalOpen && (
           <VehiculoModal
@@ -130,6 +175,15 @@ export const VehiculoPage = () => {
             serverFieldErrors={serverFieldErrors}
           />
         )}
+
+        <ConfirmDeleteModal
+          isOpen={Boolean(vehiculoToDelete)}
+          onClose={() => setVehiculoToDelete(null)}
+          onConfirm={confirmDelete}
+          loading={deleteLoading}
+          title="Eliminar vehículo"
+          description={`¿Querés eliminar el vehículo con patente ${vehiculoToDelete?.patente || ""}?`}
+        />
       </div>
     </TooltipProvider>
   );

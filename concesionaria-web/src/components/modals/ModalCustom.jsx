@@ -18,6 +18,7 @@ export function ModalCustom({
   saveText = "Guardar",
   cancelText = "Cancelar",
   maxWidth = "max-w-lg",
+  destructive = false,
 }) {
 
   useEffect(() => {
@@ -138,7 +139,9 @@ export function ModalCustom({
                   disabled:opacity-50
                 "
                 style={{
-                  backgroundColor: "hsl(var(--nav-bg))",
+                  backgroundColor: destructive
+                    ? "#dc2626"
+                    : "hsl(var(--nav-bg))",
                 }}
               >
                 {loading

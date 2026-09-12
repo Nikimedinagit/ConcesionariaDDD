@@ -36,12 +36,12 @@ public class ActualizarVehiculoCommandHandler
                 vehiculo.Id == request.VehiculoId &&
                 vehiculo.EmpresaId == empresaId &&
                 vehiculo.SucursalId == sucursalId &&
-                vehiculo.Estado != EstadoVehiculo.VENDIDO,
+                vehiculo.Estado == EstadoVehiculo.DISPONIBLE,
             cancellationToken
         );
 
         if (vehiculo == null)
-            throw new Exception("Vehículo no encontrado.");
+            throw new Exception("Solo se pueden editar vehículos disponibles.");
 
         vehiculo.ActualizarVehiculo(
             request.Version,
@@ -50,7 +50,6 @@ public class ActualizarVehiculoCommandHandler
             request.Anio,
             request.Kilometraje,
             request.Condicion,
-            request.Estado,
             request.PrecioCompra,
             request.PrecioVenta,
             request.ModeloId,

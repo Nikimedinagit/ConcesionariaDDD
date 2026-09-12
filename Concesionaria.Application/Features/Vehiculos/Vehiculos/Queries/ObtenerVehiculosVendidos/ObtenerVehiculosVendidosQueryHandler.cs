@@ -25,10 +25,14 @@ public class ObtenerVehiculosVendidosQueryHandler
     )
     {
         var empresaId = _currentUserService.EmpresaId;
-        var sucursalId = _currentUserService.SucursalId;
+        var sucursalActualId = _currentUserService.SucursalId;
 
-        if (sucursalId == Guid.Empty)
+        if (sucursalActualId == Guid.Empty)
             throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
+
+        Guid? sucursalId = request.TodasSucursales
+            ? null
+            : request.SucursalId ?? sucursalActualId;
 
         var vehiculos = await _repository.ObtenerVendidosAsync(
             empresaId,
@@ -54,6 +58,7 @@ public class ObtenerVehiculosVendidosQueryHandler
                 MarcaNombre = v.Modelo.MarcaVehiculo.Nombre,
                 TipoVehiculoNombre = v.Modelo.TipoVehiculo.Nombre,
                 SucursalId = v.SucursalId,
+                SucursalNombre = v.Sucursal.Nombre,
             })
             .ToList();
     }
