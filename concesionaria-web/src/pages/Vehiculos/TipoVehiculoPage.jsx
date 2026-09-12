@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CarFront } from "lucide-react";
+import { Shapes  } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
 import { TipoVehiculoModal } from "@/components/modals/Vehiculo/TipoVehiculoModal";
@@ -106,7 +106,7 @@ export const TipoVehiculoPage = () => {
   return (
     <TooltipProvider delayDuration={300}>
       <div>
-        <PageHeader title="Tipos de Vehículos" icon={CarFront}>
+        <PageHeader title="Tipos de Vehículos" icon={Shapes }>
           {can("TIPOS_VEHICULO_CREAR") && (
             <AddButton onClick={handleOpenCreate}>
               Nuevo Tipo de Vehículo

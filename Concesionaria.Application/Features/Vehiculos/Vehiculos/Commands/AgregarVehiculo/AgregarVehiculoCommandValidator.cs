@@ -50,7 +50,7 @@ public class AgregarVehiculoCommandValidator : AbstractValidator<AgregarVehiculo
                     return !vehiculoExistente;
                 }
             )
-            .WithMessage("La patente del vehículo ya está en uso.");
+            .WithMessage("Ya existe un vehículo con esta patente.");
 
         RuleFor(v => v.Kilometraje)
             .GreaterThan(0)

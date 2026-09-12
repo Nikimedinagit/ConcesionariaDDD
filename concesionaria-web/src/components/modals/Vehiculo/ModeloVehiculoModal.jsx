@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CarFront, Tag, Tags } from "lucide-react";
+import { ScanLine, Shapes, Tag, Tags } from "lucide-react";
 import { ModalCustom } from "../ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
 import { AppSearchSelect } from "@/components/ui/custom/AppSelect";
@@ -50,7 +50,7 @@ export function ModeloVehiculoModal({
       onClose={onClose}
       onSave={handleSave}
       title={modelo ? "Editar Modelo" : "Nuevo Modelo"}
-      icon={CarFront}
+      icon={ScanLine}
       loading={loading}
       saveText={modelo ? "Actualizar" : "Agregar"}
       maxWidth="max-w-lg"
@@ -85,7 +85,7 @@ export function ModeloVehiculoModal({
         />
         <AppSearchSelect
           label="Tipo de vehículo *"
-          icon={CarFront}
+          icon={Shapes}
           value={tipoVehiculoId}
           onValueChange={(value) => {
             setTipoVehiculoId(value);

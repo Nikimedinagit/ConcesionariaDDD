@@ -38,7 +38,9 @@ public class ObtenerModelosVehiculosInactivasQueryHandler
                 ModeloVehiculoId = m.Id,
                 Nombre = m.Nombre,
                 MarcaVehiculoId = m.MarcaVehiculoId,
+                MarcaVehiculoNombre = m.MarcaVehiculo.Nombre,
                 TipoVehiculoId = m.TipoVehiculoId,
+                TipoVehiculoNombre = m.TipoVehiculo.Nombre,
             })
             .ToList();
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CarFront } from "lucide-react";
+import { ScanLine  } from "lucide-react";
 import PageHeader from "@/components/ui/custom/PageHeader";
 import AddButton from "@/components/ui/custom/AddButton";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -103,7 +103,7 @@ export const ModeloVehiculoPage = () => {
   return (
     <TooltipProvider delayDuration={300}>
       <div>
-        <PageHeader title="Modelos" icon={CarFront}>
+        <PageHeader title="Modelos" icon={ScanLine }>
           {can("MODELOS_CREAR") && (
             <AddButton onClick={() => openModal()}>Nuevo Modelo</AddButton>
           )}

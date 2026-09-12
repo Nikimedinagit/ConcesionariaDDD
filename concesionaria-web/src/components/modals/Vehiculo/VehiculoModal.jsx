@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import {
   AlertCircle,
   CalendarDays,
+  ScanLine,
   CarFront,
-  CircleDollarSign,
   Gauge,
   Palette,
-  Settings,
-  Tag,
+  Settings2,
+  Sparkles,
+  CircleDot,
+  RectangleHorizontal,
 } from "lucide-react";
 import { ModalCustom } from "../ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
@@ -85,6 +87,7 @@ export function VehiculoModal({
   modelos = [],
   loading = false,
   serverError = "",
+  serverFieldErrors = {},
 }) {
   const [form, setForm] = useState(initialForm);
   const [localErrors, setLocalErrors] = useState({});
@@ -105,6 +108,20 @@ export function VehiculoModal({
 
     setLocalErrors({});
   }, [vehiculo, isOpen]);
+
+  useEffect(() => {
+    if (Object.keys(serverFieldErrors).length === 0) return;
+
+    setLocalErrors((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        Object.entries(serverFieldErrors).map(([field, message]) => [
+          field,
+          [message],
+        ]),
+      ),
+    }));
+  }, [serverFieldErrors]);
 
   const updateField = (field, value) => {
     setForm((current) => ({
@@ -175,14 +192,16 @@ export function VehiculoModal({
         <div className="md:col-span-6">
           <AppSearchSelect
             label="Modelo *"
-            icon={CarFront}
+            icon={ScanLine}
             value={form.modeloId}
             onValueChange={(value) => updateField("modeloId", value)}
             options={modelos}
             optionValue="modeloVehiculoId"
-            optionLabel="nombre"
+            optionLabel={(modelo) =>
+              `${modelo.nombre} — ${modelo.marcaVehiculoNombre} — ${modelo.tipoVehiculoNombre}`
+            }
             placeholder="SELECCIONE..."
-            searchPlaceholder="Buscar modelo..."
+            searchPlaceholder="Buscar modelo, marca o tipo..."
             emptyText="No se encontraron modelos"
             error={localErrors.modeloId?.[0]}
           />
@@ -191,7 +210,7 @@ export function VehiculoModal({
         <div className="md:col-span-3">
           <AppInput
             label="Versión *"
-            icon={Settings}
+            icon={Settings2}
             placeholder="Ej: XEI 2.0"
             value={form.version}
             onChange={(event) =>
@@ -219,7 +238,7 @@ export function VehiculoModal({
         <div className="md:col-span-3">
           <AppInput
             label="Patente *"
-            icon={Tag}
+            icon={RectangleHorizontal}
             placeholder="Ej: AB123CD"
             value={form.patente}
             onChange={(event) =>
@@ -245,7 +264,7 @@ export function VehiculoModal({
         <div className="md:col-span-3">
           <AppSelect
             label="Condición *"
-            icon={CarFront}
+            icon={Sparkles}
             value={form.condicion}
             onValueChange={handleCondicionChange}
             options={condiciones}
@@ -259,7 +278,7 @@ export function VehiculoModal({
         <div className="md:col-span-3">
           <AppSelect
             label="Estado *"
-            icon={CarFront}
+            icon={CircleDot}
             value={form.estado}
             onValueChange={(value) => updateField("estado", value)}
             options={estados}
@@ -290,7 +309,7 @@ export function VehiculoModal({
         <div className="md:col-span-4">
           <AppInput
             label="Precio de compra *"
-            icon={CircleDollarSign}
+            prefix="$"
             type="text"
             inputMode="numeric"
             placeholder="Ej: 15,000,000.50"
@@ -306,7 +325,7 @@ export function VehiculoModal({
         <div className="md:col-span-4">
           <AppInput
             label="Precio de venta *"
-            icon={CircleDollarSign}
+            prefix="$"
             type="text"
             inputMode="numeric"
             placeholder="Ej: 18,000,000.50"

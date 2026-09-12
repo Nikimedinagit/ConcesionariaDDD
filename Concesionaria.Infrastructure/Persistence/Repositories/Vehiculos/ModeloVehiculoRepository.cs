@@ -35,7 +35,10 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     )
     {
         var obtenerModelosActivas = _context
-            .ModelosVehiculos.Where(mv => mv.EmpresaId == empresaId)
+            .ModelosVehiculos
+            .Include(mv => mv.MarcaVehiculo)
+            .Include(mv => mv.TipoVehiculo)
+            .Where(mv => mv.EmpresaId == empresaId)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filtro))
@@ -62,6 +65,8 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
     {
         var obtenerModelosInactivas = _context
             .ModelosVehiculos.IgnoreQueryFilters()
+            .Include(mv => mv.MarcaVehiculo)
+            .Include(mv => mv.TipoVehiculo)
             .Where(mv => mv.EmpresaId == empresaId && mv.Eliminado)
             .AsQueryable();
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Car, CarFront } from "lucide-react";
+import { Car, Shapes  } from "lucide-react";
 import { ModalCustom } from "../ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
 import { tipoVehiculoSchema } from "@/validations/Vehiculo/tipoVehiculo.validation";
@@ -39,7 +39,7 @@ export function TipoVehiculoModal({
       title={
         tipoVehiculo ? "Editar Tipo de Vehículo" : "Nuevo Tipo de Vehículo"
       }
-      icon={CarFront}
+      icon={Shapes }
       loading={loading}
       saveText={tipoVehiculo ? "Actualizar" : "Agregar"}
       maxWidth="max-w-lg"

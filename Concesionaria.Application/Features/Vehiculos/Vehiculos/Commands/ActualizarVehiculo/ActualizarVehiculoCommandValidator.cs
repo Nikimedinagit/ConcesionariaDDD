@@ -46,12 +46,12 @@ public class ActualizarVehiculoCommandValidator : AbstractValidator<ActualizarVe
                     var vehiculoExistente = await repository.ExistePorPatenteExluyendoIdAsync(
                         patente,
                         empresaId,
-                        Vehiculo.VehiculoId                    
+                        Vehiculo.VehiculoId
                     );
                     return !vehiculoExistente;
                 }
             )
-            .WithMessage("La patente del vehículo ya está en uso.");
+            .WithMessage("Ya existe un vehículo con esta patente.");
 
         RuleFor(v => v.Kilometraje)
             .GreaterThan(0)

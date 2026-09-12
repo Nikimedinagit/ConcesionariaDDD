@@ -8,6 +8,7 @@ export function AppInput({
   error, 
   className,
   passwordToggle = false,
+  prefix,
   ...props 
 }) {
   const [visible, setVisible] = useState(false);
@@ -20,11 +21,16 @@ export function AppInput({
         {Icon && (
           <Icon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         )}
+        {prefix && !Icon && (
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">
+            {prefix}
+          </span>
+        )}
         <Input
           {...props}
           type={inputType}
           className={`h-[40px] w-full rounded-lg border border-slate-300 bg-white shadow-sm
-            ${Icon ? "pl-10" : "pl-4"} ${passwordToggle ? "pr-10" : "pr-4"}
+            ${Icon ? "pl-10" : prefix ? "pl-8" : "pl-4"} ${passwordToggle ? "pr-10" : "pr-4"}
             hover:border-slate-400
             focus-visible:border-[hsl(var(--nav-bg))]
             focus-visible:ring-2 focus-visible:ring-[hsl(var(--nav-bg)/0.14)]

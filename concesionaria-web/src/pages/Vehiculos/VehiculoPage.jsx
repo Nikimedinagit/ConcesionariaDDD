@@ -20,6 +20,7 @@ export const VehiculoPage = () => {
   const [selectedVehiculo, setSelectedVehiculo] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [serverFieldErrors, setServerFieldErrors] = useState({});
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedFiltro(filtro), 500);
@@ -38,6 +39,7 @@ export const VehiculoPage = () => {
 
   const openModal = (vehiculo = null) => {
     setServerError("");
+    setServerFieldErrors({});
     setSelectedVehiculo(vehiculo);
     setIsModalOpen(true);
   };
@@ -46,11 +48,13 @@ export const VehiculoPage = () => {
     setIsModalOpen(false);
     setSelectedVehiculo(null);
     setServerError("");
+    setServerFieldErrors({});
   };
 
   const handleSave = async (payload) => {
     setModalLoading(true);
     setServerError("");
+    setServerFieldErrors({});
 
     try {
       if (payload.vehiculoId) {
@@ -69,8 +73,21 @@ export const VehiculoPage = () => {
       refetch();
     } catch (error) {
       const dataError = error.response?.data;
+      const validationErrors = dataError?.errors || [];
+      const fieldErrors = validationErrors.reduce((result, item) => {
+        if (!item?.propertyName) return result;
+
+        const fieldName =
+          item.propertyName.charAt(0).toLowerCase() + item.propertyName.slice(1);
+        result[fieldName] = item.errorMessage;
+        return result;
+      }, {});
+
+      setServerFieldErrors(fieldErrors);
       setServerError(
-        dataError?.errors?.[0]?.errorMessage ||
+        Object.keys(fieldErrors).length > 0
+          ? "No se pudo guardar el vehículo. Revisá los campos marcados."
+          : validationErrors[0]?.errorMessage ||
           dataError?.message ||
           dataError?.mensaje ||
           "Ocurrió un error al guardar el vehículo",
@@ -110,6 +127,7 @@ export const VehiculoPage = () => {
             modelos={modelos}
             loading={modalLoading}
             serverError={serverError}
+            serverFieldErrors={serverFieldErrors}
           />
         )}
       </div>

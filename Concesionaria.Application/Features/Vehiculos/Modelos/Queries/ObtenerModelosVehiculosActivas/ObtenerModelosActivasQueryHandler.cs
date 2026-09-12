@@ -35,7 +35,9 @@ public class ObtenerModelosVehiculosActivasQueryHandler
                 ModeloVehiculoId = m.Id,
                 Nombre = m.Nombre,
                 MarcaVehiculoId = m.MarcaVehiculoId,
-                TipoVehiculoId = m.TipoVehiculoId
+                MarcaVehiculoNombre = m.MarcaVehiculo.Nombre,
+                TipoVehiculoId = m.TipoVehiculoId,
+                TipoVehiculoNombre = m.TipoVehiculo.Nombre
             })
             .ToList();
     }
