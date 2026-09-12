@@ -132,4 +132,13 @@ public class ModeloVehiculoRepository : IModeloVehiculoRepository
             return EstadoExistencia.NoExiste;
         return entidad.Value ? EstadoExistencia.Desactivado : EstadoExistencia.Activo;
     }
+
+        // METODO PARA VALIDAR RELACION CON VEHICULOS
+    public async Task<bool> TieneVehiculosActivosAsync(Guid empresaId, Guid modeloVehiculoId)
+    {
+        return await _context.Vehiculos.AnyAsync(v =>
+            v.EmpresaId == empresaId
+            && v.ModeloId == modeloVehiculoId
+        );
+    }
 }

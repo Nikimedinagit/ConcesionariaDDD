@@ -13,14 +13,16 @@ public interface IModeloVehiculoRepository
         Guid empresaId,
         string filtro = null,
         Guid? marcaVehiculoId = null,
-        Guid? tipoVehiculoId = null);
+        Guid? tipoVehiculoId = null
+    );
 
     //TAREA PARA OBTENER INACTIVAS
     Task<List<ModeloVehiculo>> ObtenerInactivasAsync(
         Guid empresaId,
         string filtro = null,
         Guid? marcaVehiculoId = null,
-        Guid? tipoVehiculoId = null);
+        Guid? tipoVehiculoId = null
+    );
 
     //TAREA PARA CONTROL EXISTENCIA AGREGAR
     Task<EstadoExistencia> ExistePorNombreAsync(
@@ -38,4 +40,7 @@ public interface IModeloVehiculoRepository
         Guid tipoVehiculoId,
         Guid marcaVehiculoId
     );
+
+//TAREA PARA CONTROL RELACION CON VEHICULOS
+    Task<bool> TieneVehiculosActivosAsync(Guid empresaId, Guid modeloVehiculoId);
 }
