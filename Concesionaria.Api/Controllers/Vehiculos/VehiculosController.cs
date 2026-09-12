@@ -1,5 +1,6 @@
 using Application.Features.Vehiculos.Commands.ActualizarVehiculo;
 using Application.Features.Vehiculos.Commands.AgregarVehiculo;
+using Application.Features.Vehiculos.Commands.EliminarVehiculo;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosDisponibles;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosEnServicio;
 using Application.Features.Vehiculos.Queries.ObtenerVehiculosReservados;
@@ -91,5 +92,14 @@ public class VehiculosController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Vehículo actualizado correctamente." });
+    }
+
+      // METODO ELIMINAR
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Eliminar(Guid id)
+    {
+        await _mediator.Send(new EliminarVehiculoCommand { VehiculoId = id });
+
+        return Ok(new { mensaje = "Vehículo eliminado correctamente." });
     }
 }
