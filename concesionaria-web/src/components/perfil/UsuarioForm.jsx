@@ -16,12 +16,8 @@ export function PerfilUsuarioSection({ form, updateField, onSave, saving, errors
           value={form.nombreCompleto.toUpperCase()}
           onChange={(e) => updateField("nombreCompleto", e.target.value)}
           icon={User}
+          error={errors?.nombreCompleto?.[0]}
         />
-        {errors?.nombreCompleto && (
-          <p className="text-red-500 text-sm font-medium mt-1">
-            {errors.nombreCompleto[0]}
-          </p>
-        )}
 
         <AppInput label="Email" value={form.email} disabled icon={Mail} />
 

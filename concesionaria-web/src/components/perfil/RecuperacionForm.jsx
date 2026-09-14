@@ -40,47 +40,34 @@ export function RecuperacionForm({
             optionValue="id"
             optionLabel="nombre"
             placeholder="Código"
+            error={errors?.codigoPais?.[0]}
           />
 
           {/* CODIGO AREA */}
-          <div className="space-y-1">
-            <AppInput
-              label="Cod. Área (sin 0)"
-              placeholder="351"
-              value={form.codigoArea || ""}
-              onChange={(e) =>
-                updateField("codigoArea", e.target.value.replace(/\D/g, ""))
-              }
-              icon={MapPinned}
-              maxLength={4}
-            />
-          </div>
+          <AppInput
+            label="Cod. Área (sin 0)"
+            placeholder="351"
+            value={form.codigoArea || ""}
+            onChange={(e) =>
+              updateField("codigoArea", e.target.value.replace(/\D/g, ""))
+            }
+            icon={MapPinned}
+            maxLength={4}
+            error={errors?.codigoArea?.[0]}
+          />
 
           {/* TELEFONO */}
-          <div className="space-y-1">
-            <AppInput
-              label="Teléfono (sin 15)"
-              placeholder="1234567"
-              value={form.telefono || ""}
-              onChange={(e) =>
-                updateField("telefono", e.target.value.replace(/\D/g, ""))
-              }
-              icon={Smartphone}
-              maxLength={10}
-            />
-
-            <div className="h-5">
-              {(errors?.telefono ||
-                errors?.codigoArea ||
-                errors?.codigoPais) && (
-                <p className="text-red-500 text-sm font-medium mt-1">
-                  {errors?.telefono?.[0] ||
-                    errors?.codigoArea?.[0] ||
-                    errors?.codigoPais?.[0]}
-                </p>
-              )}
-            </div>
-          </div>
+          <AppInput
+            label="Teléfono (sin 15)"
+            placeholder="1234567"
+            value={form.telefono || ""}
+            onChange={(e) =>
+              updateField("telefono", e.target.value.replace(/\D/g, ""))
+            }
+            icon={Smartphone}
+            maxLength={10}
+            error={errors?.telefono?.[0]}
+          />
 
           <Button
             onClick={onSave}

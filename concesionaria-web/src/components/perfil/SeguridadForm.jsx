@@ -7,33 +7,25 @@ export function PerfilSeguridadSection({ form, updateField, onSave, saving, erro
   return (
     <Section title="Seguridad" icon={LockKeyhole}>
       <div className="space-y-4">
-        <div className="space-y-1">
-          <AppInput
-            label="Contraseña Actual"
-            type="password"
-            placeholder="••••••••"
-            value={form.passwordActual || ""}
-            onChange={(e) => updateField("passwordActual", e.target.value)}
-            icon={LockKeyhole}
-          />
-          {errors?.passwordActual && (
-            <p className="text-red-500 text-sm font-medium mt-1">{errors.passwordActual[0]}</p>
-          )}
-        </div>
+        <AppInput
+          label="Contraseña Actual"
+          type="password"
+          placeholder="••••••••"
+          value={form.passwordActual || ""}
+          onChange={(e) => updateField("passwordActual", e.target.value)}
+          icon={LockKeyhole}
+          error={errors?.passwordActual?.[0]}
+        />
 
-        <div className="space-y-1">
-          <AppInput
-            label="Nueva Contraseña"
-            type="password"
-            placeholder="••••••••"
-            value={form.passwordNueva || ""}
-            onChange={(e) => updateField("passwordNueva", e.target.value)}
-            icon={LockKeyhole}
-          />
-          {errors?.passwordNueva && (
-            <p className="text-red-500 text-sm font-medium mt-1">{errors.passwordNueva[0]}</p>
-          )}
-        </div>
+        <AppInput
+          label="Nueva Contraseña"
+          type="password"
+          placeholder="••••••••"
+          value={form.passwordNueva || ""}
+          onChange={(e) => updateField("passwordNueva", e.target.value)}
+          icon={LockKeyhole}
+          error={errors?.passwordNueva?.[0]}
+        />
 
         <Button 
           onClick={onSave}

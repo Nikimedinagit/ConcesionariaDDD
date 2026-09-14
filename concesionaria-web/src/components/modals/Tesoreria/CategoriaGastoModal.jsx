@@ -34,9 +34,9 @@ export function CategoriaGastoModal({
     }
 
     setLocalError("");
-    // IMPORTANTE: Asegúrate de que la clave aquí coincida con lo que espera tu backend/servicio
+
     onSave({
-      categoriaGastoId: categoria?.categoriaGastoId, // Cambiado de 'id' a 'categoriaGastoId'
+      categoriaGastoId: categoria?.categoriaGastoId, 
       nombre,
     });
   };

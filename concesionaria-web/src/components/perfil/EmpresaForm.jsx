@@ -31,26 +31,23 @@ export function PerfilEmpresaSection({
           />
         </div>
 
-       <div className="lg:col-span-2 space-y-1"> 
-          <AppInput
-            label="Nombre Fantasía"
-            value={form.nombreFantasia || ""}
-            onChange={(e) => updateField("nombreFantasia", e.target.value)}
-            icon={Tag}
-          />
-          {errors?.nombreFantasia && (
-            <p className="text-red-500 text-sm font-medium mt-1">
-              {errors.nombreFantasia[0]}
-            </p>
-          )}
-        </div>
+        <AppInput
+          className="lg:col-span-2"
+          label="Nombre Fantasía"
+          value={form.nombreFantasia || ""}
+          onChange={(e) =>
+            updateField("nombreFantasia", e.target.value.toUpperCase())
+          }
+          icon={Tag}
+          error={errors?.nombreFantasia?.[0]}
+        />
 
         <AppInput label="CUIT" value={form.cuit} disabled icon={Hash} />
 
         <AppSearchSelect
           label="Localidad"
           icon={MapPin}
-            value={form.localidadId}
+          value={form.localidadId}
           onValueChange={(v) => updateField("localidadId", v)}
           options={localidades}
           optionValue="id"
@@ -63,9 +60,13 @@ export function PerfilEmpresaSection({
         <AppSelect
           label="Moneda"
           icon={DollarSign}
-            value={form.moneda}
-            onValueChange={(v) => updateField("moneda", v)}
-          options={[{ id: "ARG", nombre: "ARG" }, { id: "USD", nombre: "USD" }, { id: "BRL", nombre: "BRL" }]}
+          value={form.moneda}
+          onValueChange={(v) => updateField("moneda", v)}
+          options={[
+            { id: "ARG", nombre: "ARG" },
+            { id: "USD", nombre: "USD" },
+            { id: "BRL", nombre: "BRL" },
+          ]}
           optionValue="id"
           optionLabel="nombre"
         />

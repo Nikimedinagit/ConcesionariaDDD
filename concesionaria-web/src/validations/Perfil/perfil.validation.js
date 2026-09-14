@@ -6,11 +6,16 @@ export const passwordSchema = z.object({
 });
 
 export const nombreFantasiaSchema = z.object({
-  nombreFantasia: z.string().min(1, "Nombre Fantasía no puede estar vacío."),
+  nombreFantasia: z
+    .string()
+    .min(3, "Nombre Fantasía debe tener al menos 3 caracteres.")
+    .max(100, "Nombre Fantasía debe tener como máximo 100 caracteres."),
 });
 
 export const nombreCompletoSchema = z.object({
-  nombreCompleto: z.string().min(1, "Nombre Completo no puede estar vacío."),
+  nombreCompleto: z.string()
+    .min(3, "Nombre Completo debe tener al menos 3 caracteres.")
+    .max(50, "Nombre Completo debe tener como máximo 50 caracteres."),
 });
 
 export const telefonoSchema = z.object({

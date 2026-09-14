@@ -4,6 +4,8 @@ export function Section({
   children,
   badge,
 }) {
+  const isInactive = String(badge).toLowerCase() === "inactivo";
+
   return (
     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
       <div className="flex justify-between items-center mb-6">
@@ -13,8 +15,13 @@ export function Section({
         </h3>
 
         {badge && (
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase border border-emerald-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span
+            className={
+              isInactive
+                ? "rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-600 ring-1 ring-slate-200"
+                : "rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase text-emerald-700 ring-1 ring-emerald-200"
+            }
+          >
             {badge}
           </span>
         )}
