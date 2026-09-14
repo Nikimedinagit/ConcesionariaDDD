@@ -30,6 +30,8 @@ public class Vehiculo : BaseEntity<Guid>, IHasEmpresa, IHasSucursal, IAuditable,
     public Guid SucursalId { get; private set; }
     public Sucursal Sucursal { get; private set; }
 
+    public ICollection<VehiculoImagen> Imagenes { get; private set; } = new List<VehiculoImagen>();
+
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
 

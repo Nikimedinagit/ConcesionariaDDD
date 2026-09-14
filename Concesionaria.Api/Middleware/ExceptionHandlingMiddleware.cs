@@ -1,5 +1,6 @@
 using System.Net;
 using FluentValidation; 
+using Concesionaria.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace TuProyecto.Api.Middleware
@@ -30,11 +31,37 @@ namespace TuProyecto.Api.Middleware
 
                 await context.Response.WriteAsJsonAsync(new { Errors = errors });
             }
-            catch (Exception ex)
+            catch (ImageProcessingException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { Message = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { Message = ex.Message });
+            }
+            catch (FileStorageException)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(
+                    new { Message = "El almacenamiento de archivos no está disponible." });
+            }
+            catch (Exception)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsJsonAsync(new { Message = ex.Message, Detail = ex.InnerException?.Message });
+                await context.Response.WriteAsJsonAsync(
+                    new { Message = "Ocurrió un error interno en el servidor." });
             }
         }
     }

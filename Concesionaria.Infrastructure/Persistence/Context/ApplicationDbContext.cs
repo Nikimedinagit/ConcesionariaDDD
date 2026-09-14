@@ -6,9 +6,11 @@ using Concesionaria.Domain.Empresas;
 using Concesionaria.Domain.Identity;
 using Concesionaria.Domain.Ubicaciones;
 using Concesionaria.Domain.Usuarios;
+using Concesionaria.Infrastructure.Persistence.Configurations.Vehiculos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Concesionaria.Infrastructure.Persistence;
 
@@ -38,6 +40,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<TipoVehiculo> TiposVehiculos => Set<TipoVehiculo>();
     public DbSet<ModeloVehiculo> ModelosVehiculos => Set<ModeloVehiculo>();
     public DbSet<Vehiculo> Vehiculos => Set<Vehiculo>();
+    public DbSet<VehiculoImagen> VehiculoImagenes => Set<VehiculoImagen>();
     public DbSet<Proveedor> Proveedores => Set<Proveedor>();
     public DbSet<Cliente> Clientes => Set<Cliente>();
 
@@ -52,6 +55,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         builder.Entity<ApplicationUser>()
             .Property(u => u.RolId)
             .HasMaxLength(450);
+
+        builder.ApplyConfiguration(new VehiculoImagenConfiguration());
 
         builder.Entity<ApplicationUser>()
             .HasOne(u => u.Empresa)
@@ -248,6 +253,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
                 entity.EmpresaId == context.CurrentEmpresaId &&
                 entity.SucursalId == context.CurrentSucursalId &&
                 !entity.Eliminado);
+    }
+
+    public async Task<IApplicationTransaction> BeginTransactionAsync(
+        IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
+        CancellationToken cancellationToken = default)
+    {
+        var transaction = await Database.BeginTransactionAsync(
+            isolationLevel,
+            cancellationToken);
+
+        return new ApplicationTransaction(transaction);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

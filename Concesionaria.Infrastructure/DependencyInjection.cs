@@ -1,3 +1,6 @@
+using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Application.Interfaces;
 using Concesionaria.Domain.Identity;
@@ -5,11 +8,14 @@ using Concesionaria.Domain.Interfaces.IRepositories;
 using Concesionaria.Infrastructure.Identity;
 using Concesionaria.Infrastructure.Persistence;
 using Concesionaria.Infrastructure.Services;
+using Concesionaria.Infrastructure.Services.Almacenamiento;
+using Concesionaria.Infrastructure.Services.Imagenes;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Concesionaria.Infrastructure;
 
@@ -68,6 +74,58 @@ public static class DependencyInjection
         services.AddScoped<ISmsService, SmsService>();
 
         services.AddScoped<INotificationService, NotificationService>();
+
+        services.Configure<ImageProcessingOptions>(
+            configuration.GetSection(ImageProcessingOptions.SectionName));
+
+        services.Configure<S3StorageOptions>(
+            configuration.GetSection(S3StorageOptions.SectionName));
+
+        services.AddSingleton<IAmazonS3>(serviceProvider =>
+        {
+            var options = serviceProvider
+                .GetRequiredService<IOptions<S3StorageOptions>>()
+                .Value;
+
+            var clientConfiguration = new AmazonS3Config
+            {
+                ForcePathStyle = options.ForcePathStyle
+            };
+
+            if (!string.IsNullOrWhiteSpace(options.ServiceUrl))
+            {
+                clientConfiguration.ServiceURL = options.ServiceUrl;
+                clientConfiguration.AuthenticationRegion = options.Region;
+            }
+            else
+            {
+                clientConfiguration.RegionEndpoint =
+                    RegionEndpoint.GetBySystemName(options.Region);
+            }
+
+            var hasAccessKey = !string.IsNullOrWhiteSpace(options.AccessKey);
+            var hasSecretKey = !string.IsNullOrWhiteSpace(options.SecretKey);
+
+            if (hasAccessKey != hasSecretKey)
+            {
+                throw new InvalidOperationException(
+                    "S3Storage:AccessKey y S3Storage:SecretKey deben configurarse juntos.");
+            }
+
+            if (hasAccessKey)
+            {
+                var credentials = new BasicAWSCredentials(
+                    options.AccessKey,
+                    options.SecretKey);
+
+                return new AmazonS3Client(credentials, clientConfiguration);
+            }
+
+            return new AmazonS3Client(clientConfiguration);
+        });
+
+        services.AddScoped<IImageProcessor, MagickImageProcessor>();
+        services.AddScoped<IFileStorage, S3FileStorage>();
 
         // =========================
         // Repositories
