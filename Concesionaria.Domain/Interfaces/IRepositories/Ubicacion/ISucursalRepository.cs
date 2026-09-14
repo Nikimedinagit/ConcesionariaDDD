@@ -33,4 +33,10 @@ public interface ISucursalRepository
 
     //TAREA PARA ACTUALIZAR LOCALIDAD
     Task UpdateAsync();
+
+    // TAREA PARA VALDIAR SI LA SUCURSAL TIENE VEHICULOS ACTIVOS
+    Task<bool> TieneVehiculosActivosAsync(
+    Guid empresaId,
+    Guid sucursalId
+);
 }

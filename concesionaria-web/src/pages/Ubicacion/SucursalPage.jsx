@@ -99,9 +99,17 @@ export const SucursalPage = () => {
       }
 
       refetch();
-    } catch {
-      toastService.error("Error", {
-        description: "No se pudo cambiar el estado de la sucursal",
+    } catch (error) {
+      const dataError = error.response?.data;
+
+      const mensajeError =
+        dataError?.errors?.[0]?.errorMessage ||
+        dataError?.message ||
+        dataError?.mensaje ||
+        "No se pudo cambiar el estado de la sucursal";
+
+      toastService.error("No se puede desactivar", {
+        description: mensajeError,
       });
     }
   };
@@ -123,6 +131,7 @@ export const SucursalPage = () => {
           <SucursalTable
             data={data}
             tipo={tipo}
+            searchValue={filtro}
             onToggle={setTipo}
             onSearch={setFiltro}
             onEdit={handleOpenEdit}

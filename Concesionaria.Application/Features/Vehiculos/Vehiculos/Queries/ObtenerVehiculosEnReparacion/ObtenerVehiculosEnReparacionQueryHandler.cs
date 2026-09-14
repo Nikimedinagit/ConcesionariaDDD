@@ -30,9 +30,11 @@ public class ObtenerVehiculosEnServicioQueryHandler
         if (sucursalActualId == Guid.Empty)
             throw new UnauthorizedAccessException("El usuario no tiene una sucursal asignada.");
 
-        Guid? sucursalId = request.TodasSucursales
-            ? null
-            : request.SucursalId ?? sucursalActualId;
+        Guid? sucursalId = _currentUserService.EsAdministrador
+            ? request.TodasSucursales
+                ? null
+                : request.SucursalId ?? sucursalActualId
+            : sucursalActualId;
 
         var vehiculos = await _repository.ObtenerEnServicioAsync(
             empresaId,

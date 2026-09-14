@@ -29,13 +29,14 @@ const VehiculoFiltros = ({
   onAnioChange,
   onSucursalChange,
   onClear,
+  showSucursalFilter = true,
 }) => {
   const { user } = useAuth();
   const activeCount =
     [marca, modelo, condicion].filter((value) => value !== "todos")
       .length +
     Number(Boolean(anio)) +
-    Number(sucursalId !== "actual");
+    Number(showSucursalFilter && sucursalId !== "actual");
 
   const sucursalOptions = [
     {
@@ -71,12 +72,14 @@ const VehiculoFiltros = ({
     <div className="border-b border-slate-200 bg-[hsl(var(--nav-bg)/0.035)] px-4 py-3">
       <div className="flex flex-col items-stretch gap-3 xl:flex-row xl:items-end">
         <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <AppSelect
-            label="Sucursal"
-            value={sucursalId}
-            onValueChange={onSucursalChange}
-            options={sucursalOptions}
-          />
+          {showSucursalFilter && (
+            <AppSelect
+              label="Sucursal"
+              value={sucursalId}
+              onValueChange={onSucursalChange}
+              options={sucursalOptions}
+            />
+          )}
           <AppSelect
             label="Marca"
             value={marca}

@@ -160,6 +160,7 @@ export function VehiculoCards({
           onCondicionChange={setCondicion}
           onAnioChange={setAnio}
           onSucursalChange={onSucursalChange}
+          showSucursalFilter={false}
           onClear={clearFilters}
         />
       )}

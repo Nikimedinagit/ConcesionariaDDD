@@ -6,6 +6,7 @@ import { Tooltip } from "@/components/ui/custom/TooltipCustom";
 const SucursalTable = ({
   data,
   tipo,
+  searchValue,
   onToggle,
   onSearch,
   onEdit,
@@ -82,6 +83,7 @@ const SucursalTable = ({
       tipo={tipo}
       onToggle={onToggle}
       onSearch={onSearch}
+      searchValue={searchValue}
     />
   );
 };

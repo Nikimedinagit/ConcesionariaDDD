@@ -113,6 +113,18 @@ public class SucursalRepository : ISucursalRepository
         return await _context.Localidades.AnyAsync(s => s.Id == localidadId);
     }
 
+
+    public async Task<bool> TieneVehiculosActivosAsync(
+    Guid empresaId,
+    Guid sucursalId
+)
+    {
+        return await _context.Vehiculos.AnyAsync(v =>
+            v.EmpresaId == empresaId
+            && v.SucursalId == sucursalId
+        );
+    }
+
     public async Task UpdateAsync()
     {
         await _context.SaveChangesAsync();

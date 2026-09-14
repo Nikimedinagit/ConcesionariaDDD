@@ -7,13 +7,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, ChevronDown, Settings, Palette } from "lucide-react";
+import {
+  User,
+  ChevronDown,
+  Settings,
+  Palette,
+  ShieldCheck,
+  Building2,
+} from "lucide-react";
 import { THEMES } from "../../constants/themes";
 import { LogoutButton } from "./LogoutButton";
 import { useAuth } from "@/context/AuthContext";
+import SucursalService from "@/services/Ubicacion/sucursalService";
+import { AppSelect } from "@/components/ui/custom/AppSelect";
 
 export function UserDropdown() {
-  const { user, loading } = useAuth();
+  const { user, loading, activeSucursal, changeActiveSucursal } = useAuth();
+  const [sucursales, setSucursales] = useState([]);
 
   // 2. Estado para rastrear el ID del tema activo
   const [activeTheme, setActiveTheme] = useState(
@@ -27,6 +37,32 @@ export function UserDropdown() {
       setActiveTheme(savedTheme);
     }
   }, []);
+
+  const isAdministrator = user?.roles?.some(
+    (role) => String(role).toUpperCase() === "ADMINISTRADOR",
+  );
+
+  useEffect(() => {
+    if (!isAdministrator) return;
+
+    SucursalService.getActivas()
+      .then((result) => {
+        setSucursales(result);
+
+        const selectedIsActive = result.some(
+          (sucursal) => sucursal.sucursalId === activeSucursal?.id,
+        );
+
+        if (!selectedIsActive) {
+          const defaultSucursal =
+            result.find((sucursal) => sucursal.sucursalId === user.sucursalId) ||
+            result[0];
+
+          if (defaultSucursal) changeActiveSucursal(defaultSucursal);
+        }
+      })
+      .catch(() => setSucursales([]));
+  }, [isAdministrator, user?.sucursalId]);
 
   if (loading) return null;
   if (!user) return null;
@@ -56,17 +92,58 @@ export function UserDropdown() {
         className="w-64 p-2 shadow-2xl rounded-lg border-0 mt-1"
         style={{ backgroundColor: "hsl(var(--nav-bg))", border: "none" }}
       >
-        <div className="px-3 py-2">
-          <p className="text-sm font-semibold text-white">{user.name}</p>
-          <p className="text-sm font-medium text-white/60 truncate">
-            {user.email}
-          </p>
-          <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-white/70">
-            {user.role || "Sin rol asignado"}
-          </p>
-          <p className="mt-1 text-xs text-white/60">
-            {user.sucursalNombre}
-          </p>
+        <div className="px-2 py-2">
+          <div className="flex items-center gap-3 rounded-lg bg-white/[0.06] p-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-white/10 shadow-sm">
+              <img
+                src={user.avatarURL || "/logo-solo.png"}
+                alt="Perfil"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-white">
+                {user.name}
+              </p>
+              <p className="mt-0.5 truncate text-xs text-white/55">
+                {user.email}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-2 grid gap-1 px-1">
+            <div className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white/70">
+              <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-white/45" />
+              <span className="truncate font-medium">
+                {user.role || "Sin rol asignado"}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white/70">
+              <Building2 className="h-3.5 w-3.5 shrink-0 text-white/45" />
+              {isAdministrator ? (
+                <AppSelect
+                  value={activeSucursal?.id || user.sucursalId}
+                  onValueChange={(value) => {
+                    const sucursal = sucursales.find(
+                      (item) => item.sucursalId === value,
+                    );
+                    if (sucursal) changeActiveSucursal(sucursal);
+                  }}
+                  options={sucursales}
+                  optionValue="sucursalId"
+                  optionLabel="nombre"
+                  placeholder="Seleccione una sucursal"
+                  className="min-w-0 flex-1 [&_button]:h-8 [&_button]:border-white/15 [&_button]:bg-white/10 [&_button]:text-white [&_button]:shadow-none [&_button:hover]:bg-white/15"
+                />
+              ) : (
+                <span className="truncate">
+                  {user.sucursalNombre || "Sin sucursal asignada"}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         <DropdownMenuSeparator className="bg-white/10 my-1" />

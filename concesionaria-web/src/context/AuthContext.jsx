@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [activeSucursal, setActiveSucursal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(() => localStorage.getItem("app-theme") || "default");
 
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
           "/avatars/av-$1-optimized.webp",
         );
 
-        setUser({
+        const nextUser = {
           name: decoded.nombre || "Usuario",
           email: decoded.email || "",
           avatarURL,
@@ -36,12 +37,39 @@ export const AuthProvider = ({ children }) => {
           sucursalId: decoded.sucursalId || "",
           sucursalNombre: decoded.sucursalNombre || "Sin sucursal asignada",
           sessionVersion: decoded.sessionVersion || "",
-        });
+        };
+
+        setUser(nextUser);
+
+        const isAdministrator = roles.some(
+          (role) => String(role).toUpperCase() === "ADMINISTRADOR",
+        );
+        const storageKey = `active-sucursal-${nextUser.empresaId}`;
+        const savedSucursal = localStorage.getItem(storageKey);
+
+        if (isAdministrator && savedSucursal) {
+          try {
+            setActiveSucursal(JSON.parse(savedSucursal));
+          } catch {
+            localStorage.removeItem(storageKey);
+            setActiveSucursal({
+              id: nextUser.sucursalId,
+              nombre: nextUser.sucursalNombre,
+            });
+          }
+        } else {
+          setActiveSucursal({
+            id: nextUser.sucursalId,
+            nombre: nextUser.sucursalNombre,
+          });
+        }
       } catch {
         setUser(null);
+        setActiveSucursal(null);
       }
     } else {
       setUser(null);
+      setActiveSucursal(null);
     }
     setLoading(false);
   };
@@ -51,8 +79,34 @@ export const AuthProvider = ({ children }) => {
     updateUserData();
   }, []);
 
+  const changeActiveSucursal = (sucursal) => {
+    if (!user?.roles?.some(
+      (role) => String(role).toUpperCase() === "ADMINISTRADOR",
+    )) return;
+
+    const nextSucursal = {
+      id: sucursal.sucursalId,
+      nombre: sucursal.nombre,
+    };
+
+    localStorage.setItem(
+      `active-sucursal-${user.empresaId}`,
+      JSON.stringify(nextSucursal),
+    );
+    setActiveSucursal(nextSucursal);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, updateUserData, loading, theme, changeTheme }}>
+    <AuthContext.Provider value={{
+      user,
+      setUser,
+      updateUserData,
+      loading,
+      theme,
+      changeTheme,
+      activeSucursal,
+      changeActiveSucursal,
+    }}>
       {children}
     </AuthContext.Provider>
   );

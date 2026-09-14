@@ -11,12 +11,19 @@ import VehiculoService from "@/services/Vehiculo/vehiculoService";
 import ModeloVehiculoService from "@/services/Vehiculo/modeloVehiculoService";
 import SucursalService from "@/services/Ubicacion/sucursalService";
 import { toastService } from "@/services/toastService";
+import { useAuth } from "@/context/AuthContext";
 
 export const VehiculoPage = () => {
+  const { user, activeSucursal } = useAuth();
+  const isAdministrator = user?.roles?.some(
+    (role) => String(role).toUpperCase() === "ADMINISTRADOR",
+  );
   const [tipo, setTipo] = useState("disponibles");
   const [filtro, setFiltro] = useState("");
   const [debouncedFiltro, setDebouncedFiltro] = useState("");
-  const [sucursalFiltro, setSucursalFiltro] = useState("actual");
+  const sucursalFiltro = isAdministrator && activeSucursal?.id
+    ? activeSucursal.id
+    : "actual";
   const { data, loading, refetch } = useVehiculos(
     tipo,
     debouncedFiltro,
@@ -157,7 +164,7 @@ export const VehiculoPage = () => {
           onTipoChange={setTipo}
           onSearch={setFiltro}
           sucursalFiltro={sucursalFiltro}
-          onSucursalChange={setSucursalFiltro}
+          onSucursalChange={() => {}}
           sucursales={sucursales}
           onEdit={openModal}
           onDelete={handleDelete}
