@@ -39,6 +39,7 @@ public class VehiculoRepository : IVehiculoRepository
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
             .Include(vehiculo => vehiculo.Sucursal)
+            .Include(vehiculo => vehiculo.Imagenes.Where(imagen => !imagen.Eliminado))
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
@@ -75,6 +76,7 @@ public class VehiculoRepository : IVehiculoRepository
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
             .Include(vehiculo => vehiculo.Sucursal)
+            .Include(vehiculo => vehiculo.Imagenes.Where(imagen => !imagen.Eliminado))
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
@@ -111,6 +113,7 @@ public class VehiculoRepository : IVehiculoRepository
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
             .Include(vehiculo => vehiculo.Sucursal)
+            .Include(vehiculo => vehiculo.Imagenes.Where(imagen => !imagen.Eliminado))
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&
@@ -147,6 +150,7 @@ public class VehiculoRepository : IVehiculoRepository
             .Include(vehiculo => vehiculo.Modelo)
                 .ThenInclude(modelo => modelo.TipoVehiculo)
             .Include(vehiculo => vehiculo.Sucursal)
+            .Include(vehiculo => vehiculo.Imagenes.Where(imagen => !imagen.Eliminado))
             .Where(vehiculo =>
                 vehiculo.EmpresaId == empresaId &&
                 (!sucursalId.HasValue || vehiculo.SucursalId == sucursalId.Value) &&

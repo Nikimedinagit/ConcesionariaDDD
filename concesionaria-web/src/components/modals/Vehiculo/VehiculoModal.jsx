@@ -15,6 +15,9 @@ import { ModalCustom } from "../ModalCustom";
 import { AppInput } from "@/components/ui/custom/AppInput";
 import { AppSearchSelect, AppSelect } from "@/components/ui/custom/AppSelect";
 import { vehiculoSchema } from "@/validations/Vehiculo/vehiculo.validation";
+import { VehiculoImagenStep } from "./VehiculoImagenStep";
+import VehiculoService from "@/services/Vehiculo/vehiculoService";
+import { vehiculoImagesSchema } from "@/validations/Vehiculo/vehiculoImagen.validation";
 
 const condiciones = [
   { id: "1", nombre: "NUEVO" },
@@ -82,6 +85,12 @@ export function VehiculoModal({
 }) {
   const [form, setForm] = useState(initialForm);
   const [localErrors, setLocalErrors] = useState({});
+  const [step, setStep] = useState(1);
+  const [images, setImages] = useState([]);
+  const [removedImageIds, setRemovedImageIds] = useState([]);
+  const [imagesLoading, setImagesLoading] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [imageError, setImageError] = useState("");
 
   useEffect(() => {
     setForm({
@@ -97,7 +106,52 @@ export function VehiculoModal({
     });
 
     setLocalErrors({});
+    setStep(1);
+    setImages([]);
+    setRemovedImageIds([]);
+    setImagesLoaded(false);
+    setImageError("");
   }, [vehiculo, isOpen]);
+
+  useEffect(() => {
+    if (step !== 2 || !vehiculo?.vehiculoId || imagesLoaded) return;
+
+    let active = true;
+    setImagesLoading(true);
+    setImageError("");
+
+    VehiculoService.getImagenes(vehiculo.vehiculoId)
+      .then((data) => {
+        if (!active) return;
+
+        setImages(
+          data.map((image) => ({
+            id: image.imagenId,
+            file: null,
+            preview: image.url,
+            nombreOriginal: image.nombreOriginal,
+            tamanioBytes: image.tamanioBytes,
+            isPrincipal: image.esPrincipal,
+            isExisting: true,
+          })),
+        );
+        setImagesLoaded(true);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setImageError(
+          error.response?.data?.message ||
+            "No se pudieron cargar las imágenes del vehículo.",
+        );
+      })
+      .finally(() => {
+        if (active) setImagesLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [step, vehiculo?.vehiculoId, imagesLoaded]);
 
   useEffect(() => {
     if (Object.keys(serverFieldErrors).length === 0) return;
@@ -151,12 +205,29 @@ export function VehiculoModal({
 
     setLocalErrors({});
 
+    if (step === 1) {
+      setStep(2);
+      return;
+    }
+
+    const imagesResult = vehiculoImagesSchema.safeParse(images);
+
+    if (!imagesResult.success) {
+      setImageError(imagesResult.error.issues[0].message);
+      return;
+    }
+
+    setImageError("");
+
     onSave({
       vehiculoId: vehiculo?.vehiculoId,
       ...result.data,
       version: result.data.version.toUpperCase(),
       patente: result.data.patente.toUpperCase(),
       color: result.data.color.toUpperCase(),
+    }, {
+      images,
+      removedImageIds,
     });
   };
 
@@ -168,7 +239,9 @@ export function VehiculoModal({
       title={vehiculo ? "Editar Vehículo" : "Nuevo Vehículo"}
       icon={CarFront}
       loading={loading}
-      saveText={vehiculo ? "Actualizar" : "Guardar"}
+      saveText={step === 1 ? "Siguiente" : vehiculo ? "Actualizar" : "Guardar"}
+      cancelText={step === 1 ? "Cancelar" : "Atrás"}
+      onCancel={step === 1 ? onClose : () => setStep(1)}
       maxWidth="max-w-5xl"
     >
       {serverError && (
@@ -178,6 +251,15 @@ export function VehiculoModal({
         </div>
       )}
 
+      <div className="flex items-center justify-center pb-1">
+        <div className="flex w-full max-w-md items-center">
+          <StepIndicator number={1} label="Datos del vehículo" active={step === 1} completed={step > 1} />
+          <div className={`mx-3 h-px flex-1 ${step > 1 ? "bg-[hsl(var(--nav-bg))]" : "bg-slate-300"}`} />
+          <StepIndicator number={2} label="Imágenes" active={step === 2} />
+        </div>
+      </div>
+
+      {step === 1 ? (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
         <div className="md:col-span-6">
           <AppSearchSelect
@@ -314,6 +396,43 @@ export function VehiculoModal({
           />
         </div>
       </div>
+      ) : (
+        <VehiculoImagenStep
+          images={images}
+          onChange={(nextImages) => {
+            setImages(nextImages);
+            setImageError("");
+          }}
+          onRemoveExisting={(imageId) =>
+            setRemovedImageIds((current) => [...current, imageId])
+          }
+          loading={imagesLoading}
+          externalError={imageError}
+        />
+      )}
     </ModalCustom>
+  );
+}
+
+function StepIndicator({ number, label, active, completed = false }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span
+        className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-black ring-1 transition-colors ${
+          active || completed
+            ? "bg-[hsl(var(--nav-bg))] text-white ring-[hsl(var(--nav-bg))]"
+            : "bg-white text-slate-400 ring-slate-300"
+        }`}
+      >
+        {number}
+      </span>
+      <span
+        className={`hidden whitespace-nowrap text-sm font-bold sm:block ${
+          active || completed ? "text-slate-800" : "text-slate-400"
+        }`}
+      >
+        {label}
+      </span>
+    </div>
   );
 }

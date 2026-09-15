@@ -74,23 +74,94 @@ export const VehiculoPage = () => {
     setServerFieldErrors({});
   };
 
-  const handleSave = async (payload) => {
+  const saveVehicleImages = async (vehiculoId, imageChanges) => {
+    const images = imageChanges?.images || [];
+    const removedImageIds = imageChanges?.removedImageIds || [];
+    const newImages = images.filter((image) => !image.isExisting);
+
+    for (const imageId of removedImageIds) {
+      await VehiculoService.eliminarImagen(vehiculoId, imageId);
+    }
+
+    const uploadedImages = [];
+
+    for (const image of newImages) {
+      const response = await VehiculoService.agregarImagen(
+        vehiculoId,
+        image.file,
+        image.isPrincipal,
+      );
+      uploadedImages.push({
+        ...image,
+        id: response.imagen.imagenId,
+        isExisting: true,
+      });
+    }
+
+    const principalImage = images.find((image) => image.isPrincipal);
+    if (principalImage?.isExisting) {
+      await VehiculoService.establecerImagenPrincipal(
+        vehiculoId,
+        principalImage.id,
+      );
+    }
+
+    const uploadedByLocalId = new Map(
+      uploadedImages.map((image, index) => [newImages[index].id, image.id]),
+    );
+    const orderedImages = images.map((image, index) => ({
+      imagenId: image.isExisting ? image.id : uploadedByLocalId.get(image.id),
+      orden: index,
+    }));
+
+    if (orderedImages.length) {
+      await VehiculoService.reordenarImagenes(vehiculoId, orderedImages);
+    }
+  };
+
+  const handleSave = async (payload, imageChanges) => {
     setModalLoading(true);
     setServerError("");
     setServerFieldErrors({});
 
     try {
+      let vehiculoId;
+
       if (payload.vehiculoId) {
         await VehiculoService.actualizar(payload.vehiculoId, payload);
-        toastService.success("Éxito", {
-          description: "Vehículo actualizado correctamente",
-        });
+        vehiculoId = payload.vehiculoId;
       } else {
-        await VehiculoService.crear(payload);
-        toastService.success("Éxito", {
-          description: "Vehículo agregado correctamente",
-        });
+        const response = await VehiculoService.crear(payload);
+        vehiculoId = response.vehiculoId;
       }
+
+      try {
+        await saveVehicleImages(vehiculoId, imageChanges);
+      } catch (imageUploadError) {
+        const imageErrorData = imageUploadError.response?.data;
+        const validationMessage =
+          imageErrorData?.errors?.[0]?.errorMessage ||
+          imageErrorData?.Errors?.[0]?.ErrorMessage;
+
+        toastService.error("Vehículo guardado", {
+          description:
+            validationMessage ||
+            imageErrorData?.message ||
+            imageErrorData?.Message ||
+            imageErrorData?.mensaje ||
+            "Algunas operaciones de imágenes no pudieron completarse. Podés reintentarlas editando el vehículo.",
+        });
+
+        closeModal();
+        refetch();
+        return;
+      }
+
+      toastService.success("Éxito", {
+        description: payload.vehiculoId
+          ? "Vehículo actualizado correctamente"
+          : "Vehículo e imágenes guardados correctamente",
+      });
 
       closeModal();
       refetch();

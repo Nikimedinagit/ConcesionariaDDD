@@ -81,51 +81,69 @@ public static class DependencyInjection
         services.Configure<S3StorageOptions>(
             configuration.GetSection(S3StorageOptions.SectionName));
 
-        services.AddSingleton<IAmazonS3>(serviceProvider =>
+        services.Configure<LocalStorageOptions>(
+            configuration.GetSection(LocalStorageOptions.SectionName));
+
+        var storageProvider = configuration["FileStorage:Provider"] ?? "Local";
+
+        if (storageProvider.Equals("Local", StringComparison.OrdinalIgnoreCase))
         {
-            var options = serviceProvider
-                .GetRequiredService<IOptions<S3StorageOptions>>()
-                .Value;
-
-            var clientConfiguration = new AmazonS3Config
+            services.AddScoped<IFileStorage, LocalFileStorage>();
+        }
+        else if (storageProvider.Equals("S3", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IAmazonS3>(serviceProvider =>
             {
-                ForcePathStyle = options.ForcePathStyle
-            };
+                var options = serviceProvider
+                    .GetRequiredService<IOptions<S3StorageOptions>>()
+                    .Value;
 
-            if (!string.IsNullOrWhiteSpace(options.ServiceUrl))
-            {
-                clientConfiguration.ServiceURL = options.ServiceUrl;
-                clientConfiguration.AuthenticationRegion = options.Region;
-            }
-            else
-            {
-                clientConfiguration.RegionEndpoint =
-                    RegionEndpoint.GetBySystemName(options.Region);
-            }
+                var clientConfiguration = new AmazonS3Config
+                {
+                    ForcePathStyle = options.ForcePathStyle
+                };
 
-            var hasAccessKey = !string.IsNullOrWhiteSpace(options.AccessKey);
-            var hasSecretKey = !string.IsNullOrWhiteSpace(options.SecretKey);
+                if (!string.IsNullOrWhiteSpace(options.ServiceUrl))
+                {
+                    clientConfiguration.ServiceURL = options.ServiceUrl;
+                    clientConfiguration.AuthenticationRegion = options.Region;
+                }
+                else
+                {
+                    clientConfiguration.RegionEndpoint =
+                        RegionEndpoint.GetBySystemName(options.Region);
+                }
 
-            if (hasAccessKey != hasSecretKey)
-            {
-                throw new InvalidOperationException(
-                    "S3Storage:AccessKey y S3Storage:SecretKey deben configurarse juntos.");
-            }
+                var hasAccessKey = !string.IsNullOrWhiteSpace(options.AccessKey);
+                var hasSecretKey = !string.IsNullOrWhiteSpace(options.SecretKey);
 
-            if (hasAccessKey)
-            {
-                var credentials = new BasicAWSCredentials(
-                    options.AccessKey,
-                    options.SecretKey);
+                if (hasAccessKey != hasSecretKey)
+                {
+                    throw new InvalidOperationException(
+                        "S3Storage:AccessKey y S3Storage:SecretKey deben configurarse juntos.");
+                }
 
-                return new AmazonS3Client(credentials, clientConfiguration);
-            }
+                if (hasAccessKey)
+                {
+                    var credentials = new BasicAWSCredentials(
+                        options.AccessKey,
+                        options.SecretKey);
 
-            return new AmazonS3Client(clientConfiguration);
-        });
+                    return new AmazonS3Client(credentials, clientConfiguration);
+                }
+
+                return new AmazonS3Client(clientConfiguration);
+            });
+
+            services.AddScoped<IFileStorage, S3FileStorage>();
+        }
+        else
+        {
+            throw new InvalidOperationException(
+                $"El proveedor de archivos '{storageProvider}' no está soportado.");
+        }
 
         services.AddScoped<IImageProcessor, MagickImageProcessor>();
-        services.AddScoped<IFileStorage, S3FileStorage>();
 
         // =========================
         // Repositories

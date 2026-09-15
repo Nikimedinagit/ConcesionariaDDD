@@ -17,6 +17,7 @@ export function ModalCustom({
   loading = false,
   saveText = "Guardar",
   cancelText = "Cancelar",
+  onCancel,
   maxWidth = "max-w-lg",
   destructive = false,
 }) {
@@ -112,7 +113,7 @@ export function ModalCustom({
 
               <Button
                 variant="outline"
-                onClick={onClose}
+                onClick={onCancel || onClose}
                 disabled={loading}
                 className="
                   h-9 rounded-xl

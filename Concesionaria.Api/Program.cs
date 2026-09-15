@@ -80,6 +80,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+Directory.CreateDirectory(
+    Path.Combine(app.Environment.ContentRootPath, "wwwroot", "uploads"));
+
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseCors("FrontendCors");

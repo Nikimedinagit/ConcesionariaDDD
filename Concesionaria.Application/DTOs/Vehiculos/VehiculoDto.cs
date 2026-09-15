@@ -24,4 +24,6 @@ public class VehiculoDto
 
     public Guid SucursalId { get; set; }
     public string SucursalNombre { get; set; }
+
+    public string ImagenPrincipalUrl { get; set; }
 }

@@ -24,6 +24,7 @@ import { ProveedorDetallePage } from "@/pages/Personas/ProveedorDetallePage";
 import { ClienteDetallePage } from "@/pages/Personas/ClienteDetallePage";
 import { PermisosPage } from "@/pages/Acceso/PermisosPage";
 import { VehiculoPage } from "@/pages/Vehiculos/VehiculoPage";
+import { VehiculoDetallePage } from "@/pages/Vehiculos/VehiculoDetallePage";
 
 export default function AppRoutes() {
   return (
@@ -56,6 +57,7 @@ export default function AppRoutes() {
             <Route path="proveedores" element={<ProveedorPage />} />
             <Route path="proveedores/:id" element={<ProveedorDetallePage />} />
             <Route path="vehiculos" element={<VehiculoPage />} />
+            <Route path="vehiculos/:id" element={<VehiculoDetallePage />} />
           </Route>
         </Route>
       </Routes>
