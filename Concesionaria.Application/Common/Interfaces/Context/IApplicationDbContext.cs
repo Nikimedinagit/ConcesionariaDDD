@@ -25,6 +25,7 @@ public interface IApplicationDbContext
     DbSet<VehiculoImagen> VehiculoImagenes { get; }
     DbSet<Proveedor> Proveedores { get; }
     DbSet<Cliente> Clientes { get; }
+    DbSet<Vendedor> Vendedores { get; }
 
     Task<IApplicationTransaction> BeginTransactionAsync(
         IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
