@@ -169,6 +169,8 @@ public static class DependencyInjection
         
         services.AddScoped<IClienteRepository, ClienteRepository>();
 
+        services.AddScoped<IVendedorRepository, VendedorRepository>();
+
         return services;
     }
 }

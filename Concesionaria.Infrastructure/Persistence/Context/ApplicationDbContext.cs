@@ -43,6 +43,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<VehiculoImagen> VehiculoImagenes => Set<VehiculoImagen>();
     public DbSet<Proveedor> Proveedores => Set<Proveedor>();
     public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<Vendedor> Vendedores => Set<Vendedor>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -171,6 +172,26 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         entity.HasOne(m => m.Modelo)
         .WithMany()
         .HasForeignKey(m => m.ModeloId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        entity.HasOne(m => m.Sucursal)
+        .WithMany()
+        .HasForeignKey(m => m.SucursalId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        });
+
+         builder.Entity<Vendedor>(entity =>
+        {
+            
+        entity.HasOne(m => m.Empresa)
+        .WithMany()
+        .HasForeignKey(m => m.EmpresaId)
+        .OnDelete(DeleteBehavior.NoAction);
+      
+        entity.HasOne(m => m.Localidad)
+        .WithMany()
+        .HasForeignKey(m => m.LocalidadId)
         .OnDelete(DeleteBehavior.NoAction);
       
         entity.HasOne(m => m.Sucursal)
