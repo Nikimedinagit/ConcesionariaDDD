@@ -1,5 +1,6 @@
 using MediatR;
 
+namespace Application.Features.Personas.Commands.AgregarVendedor;
 public record AgregarVendedorCommand : IRequest<Guid>
 {
     public string NombreCompleto { get; init; } = string.Empty;

@@ -1,6 +1,8 @@
 using Concesionaria.Application.Common.Interfaces;
 using MediatR;
 
+namespace Application.Features.Personas.Commands.AgregarVendedor;
+
 public class AgregarVendedorCommandHandler
     : IRequestHandler<AgregarVendedorCommand, Guid>
 {

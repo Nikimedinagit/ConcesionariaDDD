@@ -1,3 +1,5 @@
+using Application.Features.Personas.Commands.ActualizarVendedor;
+using Application.Features.Personas.Commands.AgregarVendedor;
 using Concesionaria.Application.Features.Personas.Vendedores.Queries.ObtenerVendedoresActivas;
 using Concesionaria.Application.Features.Personas.Vendedores.Queries.ObtenerVendedoresInactivas;
 using MediatR;
@@ -51,5 +53,21 @@ public class VendedoresController : ControllerBase
         return Ok(
             new { mensaje = "Vendedor registrado correctamente.", vendedorId = id }
         );
+    }
+
+    // METODO ACTUALIZAR
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Actualizar(
+        Guid id,
+        [FromBody] ActualizarVendedorCommand command
+    )
+    {
+        if (id != command.VendedorId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Vendedor actualizado correctamente." });
     }
 }

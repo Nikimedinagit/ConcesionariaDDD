@@ -1,3 +1,4 @@
+namespace Application.Features.Personas.Commands.AgregarVendedor;
 using Concesionaria.Application.Common.Interfaces;
 using Concesionaria.Domain.Common.Enums;
 using Concesionaria.Domain.Interfaces.IRepositories;
