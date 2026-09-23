@@ -41,4 +41,15 @@ public class VendedoresController : ControllerBase
 
         return Ok(resultadoVendedoresInactivas);
     }
+
+     // METODO AGREGAR
+    [HttpPost]
+    public async Task<IActionResult> Agregar([FromBody] AgregarVendedorCommand command)
+    {
+        var id = await _mediator.Send(command);
+
+        return Ok(
+            new { mensaje = "Vendedor registrado correctamente.", vendedorId = id }
+        );
+    }
 }
