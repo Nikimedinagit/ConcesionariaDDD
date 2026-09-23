@@ -1,5 +1,6 @@
 using Application.Features.Personas.Commands.ActualizarVendedor;
 using Application.Features.Personas.Commands.AgregarVendedor;
+using Application.Features.Personas.Commands.DesactivarVendedor;
 using Concesionaria.Application.Features.Personas.Vendedores.Queries.ObtenerVendedoresActivas;
 using Concesionaria.Application.Features.Personas.Vendedores.Queries.ObtenerVendedoresInactivas;
 using MediatR;
@@ -69,5 +70,22 @@ public class VendedoresController : ControllerBase
         await _mediator.Send(command);
 
         return Ok(new { mensaje = "Vendedor actualizado correctamente." });
+    }
+
+     // METODO ACTUALIZAR ESTADO A DESACTIVAR
+    [HttpPut("desactivar/{id}")]
+    public async Task<IActionResult> Desactivar(
+        Guid id,
+        [FromBody] DesactivarVendedorCommand command
+    )
+    {
+        if (id != command.VendedorId)
+        {
+            return BadRequest(new { mensaje = "El Id no coincide." });
+        }
+        
+        await _mediator.Send(command);
+
+        return Ok(new { mensaje = "Vendedor desactivado correctamente." });
     }
 }
